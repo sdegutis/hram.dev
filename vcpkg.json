@@ -1,0 +1,8 @@
+{
+  "dependencies": [
+    "sdl3",
+    "fmt",
+    "wabt",
+    "tomlplusplus"
+  ]
+}
