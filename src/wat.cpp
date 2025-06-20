@@ -1,16 +1,5 @@
 #include "wat.hpp"
 
-//#include <fstream>
-//#include <sstream>
-//
-//std::string readFile(const char* name) {
-//	std::ifstream watFile;
-//	watFile.open(name);
-//	std::stringstream strStream;
-//	strStream << watFile.rdbuf();
-//	return strStream.str();
-//}
-
 #include "wabt/config.h"
 #include "wabt/binary-writer.h"
 #include "wabt/error-formatter.h"

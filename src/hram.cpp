@@ -10,8 +10,23 @@
 
 #include "wat.hpp"
 
+//#include <fstream>
+//#include <sstream>
+//
+//std::string readFile(const char* name) {
+//	std::ifstream watFile;
+//	watFile.open(name);
+//	std::stringstream strStream;
+//	strStream << watFile.rdbuf();
+//	return strStream.str();
+//}
+
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]) {
 	wasm_runtime_init();
+
+	//wasm_runtime_register_natives
+
+
 
 	//	auto s_infile = readFile(R"(C:\Users\sbdeg\projects\hram\hello.wat)");
 	//	std::vector<uint8_t> file_data;
