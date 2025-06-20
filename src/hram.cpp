@@ -17,14 +17,12 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]) {
 	//	std::vector<uint8_t> file_data;
 
 	auto out = parse_wat("(module)");
-	fmt::println("{}", out.has_value());
-
 	auto& val = out.value();
 
-	//char error_buf[128];
-	//auto mod = wasm_runtime_load(val.data(), val.size(), error_buf, sizeof(error_buf));
+	char error_buf[128];
+	auto mod = wasm_runtime_load(val.data(), val.size(), error_buf, sizeof(error_buf));
 
-	//fmt::println("{}", mod == NULL);
+	fmt::println("mod is null? {}", mod == NULL);
 	//fmt::println("{}", error_buf);
 
 	auto x = toml::parse("foo = 'bar'");
