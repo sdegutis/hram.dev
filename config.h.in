@@ -1,0 +1,2 @@
+#define VERMAJ @hram_VERSION_MAJOR@
+#define VERMIN @hram_VERSION_MINOR@

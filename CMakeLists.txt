@@ -13,8 +13,11 @@ project(hram VERSION 0.1.0)
 
 include(FetchContent)
 
-# Add source to this project's executable.
+configure_file(config.h.in config.h)
+
 add_executable (hram "src/hram.cpp"  "src/wat.cpp")
+
+target_include_directories(hram PUBLIC ${PROJECT_BINARY_DIR})
 
 find_package(SDL3 CONFIG REQUIRED)
 target_link_libraries(hram PRIVATE SDL3::SDL3)

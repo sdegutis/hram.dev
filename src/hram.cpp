@@ -10,6 +10,8 @@
 
 #include <print>
 
+#include <config.h>
+
 
 //#include <fstream>
 //#include <sstream>
@@ -34,7 +36,8 @@
 
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]) {
 
-	//fmt::println("maj {} min {}", tutvermaj, tutvermin);
+
+	std::println("maj {} min {}", VERMAJ, VERMIN);
 
 	argparse::ArgumentParser program("hram");
 	program.add_argument("boot").nargs(1).help("boot.wasm path").default_value("bla2");
