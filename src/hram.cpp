@@ -9,7 +9,9 @@
 #include "wat.hpp"
 
 #include <print>
-
+#include <format>
+#include <filesystem>
+#include <string>
 #include <config.h>
 
 
@@ -36,11 +38,16 @@
 
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]) {
 
-
+	std::filesystem::path configpath(SDL_GetPrefPath("90sdev", "hram"));
+	configpath.append("boot.wat");
+	//std::println("path {}", configpath.generic_string());
 	std::println("maj {} min {}", VERMAJ, VERMIN);
 
+	auto exists = std::filesystem::exists(configpath);
+	std::println("path {}", exists);
+
 	argparse::ArgumentParser program("hram");
-	program.add_argument("boot").nargs(1).help("boot.wasm path").default_value("bla2");
+	program.add_argument("--boot").nargs(argparse::nargs_pattern::optional).help("boot.wasm path").default_value(configpath.generic_string());
 
 	try {
 		program.parse_args(argc, argv);

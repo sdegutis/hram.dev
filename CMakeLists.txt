@@ -9,7 +9,7 @@ if (POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-project(hram VERSION 0.1.0 LANGUAGES C CXX)
+project(hram VERSION 0.1 LANGUAGES C CXX)
 
 include(FetchContent)
 
@@ -56,3 +56,9 @@ if (CMAKE_VERSION VERSION_GREATER 3.31)
 endif()
 
 # TODO: Add tests and install targets if needed.
+
+set(CPACK_PROJECT_NAME ${PROJECT_NAME})
+set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+set(CPACK_GENERATOR "TGZ")
+set(CPACK_SOURCE_GENERATOR "TGZ")
+include(CPack)
