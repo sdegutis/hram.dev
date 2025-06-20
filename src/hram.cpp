@@ -1,6 +1,4 @@
-﻿#include <fmt/core.h>
-
-#define SDL_MAIN_USE_CALLBACKS
+﻿#define SDL_MAIN_USE_CALLBACKS
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 
@@ -9,6 +7,9 @@
 #include <wasm_export.h>
 
 #include "wat.hpp"
+
+#include <print>
+
 
 //#include <fstream>
 //#include <sstream>
@@ -69,17 +70,17 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]) {
 
 	char error_buf[128];
 	auto mod = wasm_runtime_load(val.data(), val.size(), error_buf, sizeof(error_buf));
-	fmt::println("mod is null? {}", mod == NULL);
+	std::println("mod is null? {}", mod == NULL);
 
 	auto modinst = wasm_runtime_instantiate(mod, 8092, 8092, error_buf, sizeof(error_buf));
 
 	auto func = wasm_runtime_lookup_function(modinst, "add");
-	fmt::println("func is null? {}", func == NULL);
+	std::println("func is null? {}", func == NULL);
 
 	//fmt::println("{}", error_buf);
 
 	auto x = toml::parse("foo = 'bar'");
-	fmt::print("Hello World! {}\n", x.is_boolean());
+	std::print("Hello World! {}\n", x.is_boolean());
 
 	SDL_Window* win = SDL_CreateWindow("H-RAM", 320 * 3, 180 * 3, SDL_WINDOW_RESIZABLE);
 
@@ -97,7 +98,7 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* e) {
 		return SDL_APP_SUCCESS;
 
 	case SDL_EVENT_MOUSE_MOTION:
-		fmt::println("{},{}", e->motion.x, e->motion.y);
+		std::println("{},{}", e->motion.x, e->motion.y);
 		break;
 
 	}

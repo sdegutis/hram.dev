@@ -16,9 +16,6 @@ include(FetchContent)
 # Add source to this project's executable.
 add_executable (hram "src/hram.cpp"  "src/wat.cpp")
 
-find_package(fmt CONFIG REQUIRED)
-target_link_libraries(hram PRIVATE fmt::fmt)
-
 find_package(SDL3 CONFIG REQUIRED)
 target_link_libraries(hram PRIVATE SDL3::SDL3)
 
