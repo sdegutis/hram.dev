@@ -45,7 +45,7 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/bytecodealliance/wasm-micro-runtime.git
     GIT_TAG WAMR-2.3.1
 )
-#FetchContent_MakeAvailable(wamr)
+FetchContent_MakeAvailable(wamr)
 set (WAMR_ROOT_DIR ${CMAKE_CURRENT_BINARY_DIR}/_deps/wamr-src)
 include (${WAMR_ROOT_DIR}/build-scripts/runtime_lib.cmake)
 add_library(vmlib ${WAMR_RUNTIME_LIB_SOURCE})

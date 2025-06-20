@@ -35,6 +35,10 @@ std::string readFile(const char* name) {
 	watFile.open(name);
 	std::stringstream strStream;
 	strStream << watFile.rdbuf();
+
+	int _;
+	_ = 0;
+
 	return strStream.str();
 }
 
