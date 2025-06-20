@@ -14,7 +14,7 @@ include(FetchContent)
 project ("hram")
 
 # Add source to this project's executable.
-add_executable (hram "hram.cpp" )
+add_executable (hram "src/hram.cpp"  "src/wat.cpp")
 
 find_package(fmt CONFIG REQUIRED)
 target_link_libraries(hram PRIVATE fmt::fmt)
