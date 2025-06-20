@@ -3,6 +3,7 @@
     "sdl3",
     "fmt",
     "wabt",
-    "tomlplusplus"
+    "tomlplusplus",
+    "argparse"
   ]
 }

@@ -1,7 +1,7 @@
 ﻿# CMakeList.txt : CMake project for hram, include source and define
 # project specific logic here.
 #
-cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required (VERSION 3.10)
 
 # Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
@@ -9,9 +9,9 @@ if (POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-include(FetchContent)
+project(hram VERSION 0.1.0)
 
-project ("hram")
+include(FetchContent)
 
 # Add source to this project's executable.
 add_executable (hram "src/hram.cpp"  "src/wat.cpp")

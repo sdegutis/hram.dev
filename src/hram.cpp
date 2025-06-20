@@ -21,7 +21,33 @@
 //	return strStream.str();
 //}
 
+/**
+*
+* keybd = i8 * 512
+* mouse = i32 * 3
+*
+*
+*/
+
+#include <argparse/argparse.hpp>
+
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]) {
+
+	//fmt::println("maj {} min {}", tutvermaj, tutvermin);
+
+	argparse::ArgumentParser program("hram");
+	program.add_argument("boot").nargs(1).help("boot.wasm path").default_value("bla2");
+
+	try {
+		program.parse_args(argc, argv);
+	}
+	catch (const std::exception& err) {
+		std::cerr << err.what() << std::endl;
+		std::cerr << program;
+		return SDL_APP_FAILURE;
+	}
+
+
 	wasm_runtime_init();
 
 	//wasm_runtime_register_natives
