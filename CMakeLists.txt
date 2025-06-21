@@ -17,6 +17,8 @@ configure_file(config.h.in config.h)
 
 add_executable (hram "src/hram.cpp"  "src/wat.cpp")
 
+#set_property(TARGET hram PROPERTY WIN32_EXECUTABLE TRUE)
+
 target_include_directories(hram PUBLIC ${PROJECT_BINARY_DIR})
 
 find_package(SDL3 CONFIG REQUIRED)

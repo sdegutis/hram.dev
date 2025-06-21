@@ -15,6 +15,7 @@
 #include <config.h>
 
 
+
 //#include <fstream>
 //#include <sstream>
 //
@@ -28,26 +29,46 @@
 
 /**
 *
-* keybd = i8 * 512
-* mouse = i32 * 3
+* keybd = (512 bytes) i8 * 512
+* mouse = (12 bytes) i32 * 3
+* fontd = (96 bytes) i8 * 96 (16 * 6)
+* clock = (8 bytes) i64
+* gampd = (152 bytes) i16 * 6 + 26 * i8 * 4 controllers
 *
+* rand(i32) => (i32)
+* blit(insaddr: i32)
+* resize(i32,i32)
 *
-*/
+* start()
+* loop()
+*
+!*/
+
+
 
 #include <argparse/argparse.hpp>
 
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]) {
+
+	std::println("bool {}", sizeof(bool));
+	std::println("char {}", sizeof(char));
 
 	std::filesystem::path configpath(SDL_GetPrefPath("90sdev", "hram"));
 	configpath.append("boot.wat");
 	//std::println("path {}", configpath.generic_string());
 	std::println("maj {} min {}", VERMAJ, VERMIN);
 
+	//wasm_runtime_module_malloc()
+
 	auto exists = std::filesystem::exists(configpath);
 	std::println("path {}", exists);
 
-	argparse::ArgumentParser program("hram");
-	program.add_argument("--boot").nargs(argparse::nargs_pattern::optional).help("boot.wasm path").default_value(configpath.generic_string());
+	argparse::ArgumentParser program("hram", std::format("{}.{}", VERMAJ, VERMIN));
+	program
+		.add_argument("--boot")
+		.nargs(argparse::nargs_pattern::optional)
+		.help("boot.wasm path")
+		.default_value(configpath.generic_string());
 
 	try {
 		program.parse_args(argc, argv);
@@ -109,6 +130,10 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* e) {
 
 	case SDL_EVENT_MOUSE_MOTION:
 		std::println("{},{}", e->motion.x, e->motion.y);
+		break;
+
+	case SDL_EVENT_MOUSE_BUTTON_DOWN:
+	case SDL_EVENT_MOUSE_BUTTON_UP:
 		break;
 
 	}
