@@ -10,6 +10,8 @@ class App {
 	std::filesystem::path bootFile;
 	FileWatcher fileWatcher;
 
+	void loadFile();
+
 public:
 
 	App(std::string bootFile);
@@ -17,6 +19,5 @@ public:
 	void iterate();
 	void mouseMoved(int32_t x, int32_t y);
 	void mouseButton(int button, bool down);
-
 
 };

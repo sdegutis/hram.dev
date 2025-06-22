@@ -30,12 +30,11 @@ public:
 };
 
 FileWatcher::FileWatcher(std::filesystem::path file)
+	: file(file)
 {
 	auto fw = new efsw::FileWatcher();
 	fw->addWatch(file.parent_path().string(), new Updater(file.filename(), &lastBootFileUpdate));
 	fw->watch();
-	//std::println("watching {}", file.parent_path().string());
-
 }
 
 bool FileWatcher::didUpdate(uint64_t ticks)

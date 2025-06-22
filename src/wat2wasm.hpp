@@ -2,4 +2,4 @@
 #include <vector>
 #include <string>
 
-std::optional<std::vector<uint8_t>> wat2wasm(std::string input);
+std::optional<std::vector<uint8_t>> wat2wasm(std::string filename, std::vector<uint8_t> file_data);
