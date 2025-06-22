@@ -28,14 +28,14 @@
 *
 !*/
 
-App::App(argparse::ArgumentParser& program) :
-	userBootFile(program.get("-b"))
+App::App(std::string bootFile)
+	: bootFile(bootFile)
 {
 
 	wasm_runtime_init();
 
 
-	std::ifstream file(userBootFile);
+	std::ifstream file(bootFile);
 	std::stringstream buf;
 	buf << file.rdbuf();
 
@@ -57,7 +57,6 @@ App::App(argparse::ArgumentParser& program) :
 	//std::print("Hello World! {}\n", x.is_boolean());
 
 	win = SDL_CreateWindow("H-RAM", 320 * 3, 180 * 3, SDL_WINDOW_RESIZABLE);
-
 }
 
 void App::iterate()

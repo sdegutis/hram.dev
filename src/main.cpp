@@ -1,11 +1,10 @@
 ﻿#define SDL_MAIN_USE_CALLBACKS
 #include <SDL3/SDL_main.h>
 
-#include <format>
-#include <filesystem>
-#include <vars.h>
-
 #include "app.hpp"
+#include <argparse/argparse.hpp>
+#include <format>
+#include <vars.h>
 
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 {
@@ -19,7 +18,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 		std::filesystem::copy_options::skip_existing);
 
 	argparse::ArgumentParser program("hram", std::format("{}.{}", VERMAJ, VERMIN));
-	program.add_argument("-b", "--boot").help("path to boot file").default_value(userBootWat.generic_string()).required();
+	program.add_argument("-b", "--boot").help("path to boot file").default_value(userBootWat.string()).required();
 
 	try {
 		program.parse_args(argc, argv);
@@ -29,7 +28,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 		return SDL_APP_FAILURE;
 	}
 
-	auto app = new App(program);
+	auto app = new App(program.get("-b"));
 	*appstate = app;
 
 	return SDL_APP_CONTINUE;

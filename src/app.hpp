@@ -2,16 +2,15 @@
 
 #include <SDL3/SDL.h>
 #include <filesystem>
-#include <argparse/argparse.hpp>
 
 class App {
 
 	SDL_Window* win;
-	std::filesystem::path userBootFile;
+	std::filesystem::path bootFile;
 
 public:
 
-	App(argparse::ArgumentParser& program);
+	App(std::string bootFile);
 
 	void iterate();
 	void mouseMoved(int32_t x, int32_t y);
