@@ -3,6 +3,7 @@
     "sdl3",
     "wabt",
     "tomlplusplus",
-    "argparse"
+    "argparse",
+    "llvm"
   ]
 }

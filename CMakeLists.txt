@@ -13,13 +13,16 @@ project(hram VERSION 0.1 LANGUAGES C CXX)
 
 include(FetchContent)
 
-configure_file(config.h.in config.h)
+configure_file(vars.h.in vars.h)
+configure_file(hello.wat boot.wat COPYONLY)
 
-add_executable (hram "src/hram.cpp"  "src/wat.cpp")
+add_executable (hram "src/main.cpp"  "src/wat2wasm.cpp" "src/app.cpp")
 
 #set_property(TARGET hram PROPERTY WIN32_EXECUTABLE TRUE)
 
 target_include_directories(hram PUBLIC ${PROJECT_BINARY_DIR})
+
+#find_package(LLVM CONFIG REQUIRED)
 
 find_package(SDL3 CONFIG REQUIRED)
 target_link_libraries(hram PRIVATE SDL3::SDL3)
@@ -39,6 +42,7 @@ set (WAMR_BUILD_FAST_INTERP 1)
 
 set (WAMR_BUILD_AOT 1)
 set (WAMR_BUILD_JIT 0)
+#set (WAMR_BUILD_FAST_JIT 1)
 
 set (WAMR_BUILD_SIMD 0)
 
@@ -53,9 +57,8 @@ add_library(vmlib ${WAMR_RUNTIME_LIB_SOURCE})
 target_link_libraries (hram PRIVATE vmlib -lm)
 
 
-if (CMAKE_VERSION VERSION_GREATER 3.31)
-  set_property(TARGET hram PROPERTY CXX_STANDARD 26)
-endif()
+set_property(TARGET hram PROPERTY C_STANDARD 23)
+set_property(TARGET hram PROPERTY CXX_STANDARD 26)
 
 # TODO: Add tests and install targets if needed.
 
