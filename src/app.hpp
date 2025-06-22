@@ -7,7 +7,7 @@
 class App {
 
 	SDL_Window* win;
-	std::filesystem::path userBootWat;
+	std::filesystem::path userBootFile;
 
 public:
 

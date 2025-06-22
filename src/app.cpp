@@ -5,8 +5,11 @@
 
 #include <print>
 #include <format>
+#include <fstream>
 
 #include <SDL3/SDL.h>
+
+#include <efsw/efsw.h>
 
 /**
 *
@@ -26,28 +29,17 @@
 !*/
 
 App::App(argparse::ArgumentParser& program) :
-	userBootWat(program.get("-b"))
+	userBootFile(program.get("-b"))
 {
 
 	wasm_runtime_init();
 
-	//wasm_runtime_register_natives
 
+	std::ifstream file(userBootFile);
+	std::stringstream buf;
+	buf << file.rdbuf();
 
-
-	//	auto s_infile = readFile(R"(C:\Users\sbdeg\projects\hram\hello.wat)");
-	//	std::vector<uint8_t> file_data;
-
-	auto out = wat2wasm(R"(
-
-(module
-  (func $add)
-  (export "add" (func $add))
-  (func $foo)
-  (start $foo)
-)
-
-)");
+	auto out = wat2wasm(buf.str());
 	auto& val = out.value();
 
 	char error_buf[128];

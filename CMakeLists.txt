@@ -14,7 +14,7 @@ project(hram VERSION 0.1 LANGUAGES C CXX)
 include(FetchContent)
 
 configure_file(vars.h.in vars.h)
-configure_file(hello.wat boot.wat COPYONLY)
+configure_file(boot.wat boot.wat COPYONLY)
 
 add_executable (hram "src/main.cpp"  "src/wat2wasm.cpp" "src/app.cpp")
 
@@ -23,6 +23,9 @@ add_executable (hram "src/main.cpp"  "src/wat2wasm.cpp" "src/app.cpp")
 target_include_directories(hram PUBLIC ${PROJECT_BINARY_DIR})
 
 #find_package(LLVM CONFIG REQUIRED)
+
+find_package(efsw CONFIG REQUIRED)
+target_link_libraries(hram PRIVATE efsw::efsw)
 
 find_package(SDL3 CONFIG REQUIRED)
 target_link_libraries(hram PRIVATE SDL3::SDL3)

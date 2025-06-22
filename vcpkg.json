@@ -4,6 +4,7 @@
     "wabt",
     "tomlplusplus",
     "argparse",
-    "llvm"
+    "llvm",
+    "efsw"
   ]
 }
