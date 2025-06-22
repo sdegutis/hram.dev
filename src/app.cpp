@@ -9,7 +9,6 @@
 
 #include <SDL3/SDL.h>
 
-#include <efsw/efsw.h>
 
 /**
 *
@@ -28,9 +27,13 @@
 *
 !*/
 
-App::App(std::string bootFile)
-	: bootFile(bootFile)
+
+App::App(std::string bootFileStr)
+	: bootFile(bootFileStr)
+	, fileWatcher(bootFile)
 {
+
+
 
 	wasm_runtime_init();
 
@@ -61,6 +64,10 @@ App::App(std::string bootFile)
 
 void App::iterate()
 {
+	auto ticks = SDL_GetTicks();
+	if (fileWatcher.didUpdate(ticks)) {
+		std::println("now udpating");
+	}
 }
 
 void App::mouseMoved(int32_t x, int32_t y)
