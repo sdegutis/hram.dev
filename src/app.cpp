@@ -80,6 +80,12 @@ void App::loadFile() {
 	auto func = wasm_runtime_lookup_function(modinst, "add");
 	std::println("func is null? {}", func == NULL);
 
+	//wasm_runtime_create_exec_env
+
+	wasm_runtime_deinstantiate(modinst);
+
+	//wasm_runtime_destroy_exec_env
+
 	wasm_runtime_unload(mod);
 
 }
