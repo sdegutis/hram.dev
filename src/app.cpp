@@ -8,6 +8,23 @@
 
 #include <SDL3/SDL.h>
 
+/**
+*
+* keybd = (512 bytes) i8 * 512
+* mouse = (12 bytes) i32 * 3
+* fontd = (96 bytes) i8 * 96 (16 * 6)
+* clock = (8 bytes) i64
+* gampd = (152 bytes) i16 * 6 + 26 * i8 * 4 controllers
+*
+* rand(i32) => (i32)
+* blit(insaddr: i32)
+* resize(i32,i32)
+*
+* start()
+* loop()
+*
+!*/
+
 App::App(argparse::ArgumentParser& program) :
 	userBootWat(program.get("-b"))
 {
@@ -51,14 +68,16 @@ App::App(argparse::ArgumentParser& program) :
 
 }
 
-void App::update()
+void App::iterate()
 {
 }
 
-void App::mouseMoved(int x, int y)
+void App::mouseMoved(int32_t x, int32_t y)
 {
+	std::println("{},{}", x, y);
 }
 
 void App::mouseButton(int button, bool down)
 {
+	std::println("{},{}", button, down);
 }

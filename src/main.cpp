@@ -1,43 +1,14 @@
 ﻿#define SDL_MAIN_USE_CALLBACKS
-#include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 
-#include <toml++/toml.hpp>
-
-#include <wasm_export.h>
-
-#include "wat2wasm.hpp"
-
-#include <print>
 #include <format>
 #include <filesystem>
-#include <string>
 #include <vars.h>
-
-#include <argparse/argparse.hpp>
 
 #include "app.hpp"
 
-
-/**
-*
-* keybd = (512 bytes) i8 * 512
-* mouse = (12 bytes) i32 * 3
-* fontd = (96 bytes) i8 * 96 (16 * 6)
-* clock = (8 bytes) i64
-* gampd = (152 bytes) i16 * 6 + 26 * i8 * 4 controllers
-*
-* rand(i32) => (i32)
-* blit(insaddr: i32)
-* resize(i32,i32)
-*
-* start()
-* loop()
-*
-!*/
-
-
-SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]) {
+SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
+{
 	std::filesystem::path userDir(SDL_GetPrefPath("90sdev", "hram"));
 	std::filesystem::path appDir(SDL_GetBasePath());
 	std::filesystem::path userBootWat = userDir / "boot.wat";
@@ -64,28 +35,36 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]) {
 	return SDL_APP_CONTINUE;
 }
 
-SDL_AppResult SDL_AppIterate(void* appstate) {
+SDL_AppResult SDL_AppIterate(void* appstate)
+{
+	auto app = (App*)appstate;
+	app->iterate();
+
 	return SDL_APP_CONTINUE;
 }
 
-SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* e) {
+SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* e)
+{
+	auto app = (App*)appstate;
+
 	switch (e->type) {
 
 	case SDL_EVENT_QUIT:
 		return SDL_APP_SUCCESS;
 
 	case SDL_EVENT_MOUSE_MOTION:
-		std::println("{},{}", e->motion.x, e->motion.y);
+		app->mouseMoved(e->motion.x, e->motion.y);
 		break;
 
 	case SDL_EVENT_MOUSE_BUTTON_DOWN:
 	case SDL_EVENT_MOUSE_BUTTON_UP:
+		app->mouseButton(e->button.button, e->button.down);
 		break;
 
 	}
-
 	return SDL_APP_CONTINUE;
 }
 
-void SDL_AppQuit(void* appstate, SDL_AppResult result) {
+void SDL_AppQuit(void* appstate, SDL_AppResult result)
+{
 }

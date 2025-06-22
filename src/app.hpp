@@ -13,8 +13,8 @@ public:
 
 	App(argparse::ArgumentParser& program);
 
-	void update();
-	void mouseMoved(int x, int y);
+	void iterate();
+	void mouseMoved(int32_t x, int32_t y);
 	void mouseButton(int button, bool down);
 
 };
