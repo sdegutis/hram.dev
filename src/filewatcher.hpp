@@ -1,6 +1,7 @@
 #include <filesystem>
 
-class FileWatcher {
+class FileWatcher
+{
 
 	std::filesystem::path file;
 	uint64_t lastBootFileUpdate = 0;

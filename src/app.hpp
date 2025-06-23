@@ -4,7 +4,8 @@
 #include <filesystem>
 #include "filewatcher.hpp"
 
-class App {
+class App
+{
 
 	SDL_Window* win;
 	std::filesystem::path bootFile;

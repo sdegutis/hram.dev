@@ -57,7 +57,8 @@ void App::mouseButton(int button, bool down)
 	std::println("{},{}", button, down);
 }
 
-void App::loadFile() {
+void App::loadFile()
+{
 	std::println("loading file");
 
 	std::ifstream file(bootFile, std::ios::in | std::ios::binary);

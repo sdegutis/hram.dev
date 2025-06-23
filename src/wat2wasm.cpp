@@ -6,7 +6,8 @@
 #include "wabt/validator.h"
 #include "wabt/wast-parser.h"
 
-std::optional<std::vector<uint8_t>> wat2wasm(std::string filename, std::vector<uint8_t> file_data) {
+std::optional<std::vector<uint8_t>> wat2wasm(std::string filename, std::vector<uint8_t> file_data)
+{
 	wabt::Errors errors;
 	std::unique_ptr<wabt::WastLexer> lexer = wabt::WastLexer::CreateBufferLexer(
 		filename.c_str(), file_data.data(), file_data.size(), &errors);

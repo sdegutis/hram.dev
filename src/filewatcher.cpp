@@ -3,7 +3,8 @@
 #include <efsw/efsw.hpp>
 #include <SDL3/SDL.h>
 
-class Updater : public efsw::FileWatchListener {
+class Updater : public efsw::FileWatchListener
+{
 public:
 
 	uint64_t* lastBootFileUpdate;
