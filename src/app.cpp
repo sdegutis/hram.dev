@@ -75,10 +75,35 @@ void App::loadFile() {
 	auto mod = wasm_runtime_load(val.data(), val.size(), error_buf, sizeof(error_buf));
 	std::println("mod is null? {}", mod == NULL);
 
-	auto modinst = wasm_runtime_instantiate(mod, 8092, 8092, error_buf, sizeof(error_buf));
+	auto modinst = wasm_runtime_instantiate(mod, 256, 256, error_buf, sizeof(error_buf));
 
 	auto func = wasm_runtime_lookup_function(modinst, "add");
 	std::println("func is null? {}", func == NULL);
+
+	//wasm_memory_get_base_address
+	//wasm_runtime_addr_app_to_native
+
+	uint64_t in, o;
+	auto worked = wasm_runtime_get_app_addr_range(modinst, 0, &in, &o);
+	std::println("worked {}", worked);
+	if (worked) {
+		std::println("addr {} {}", in, o);
+	}
+
+	auto mem = wasm_runtime_get_memory(modinst, 0);
+	auto base = (uint8_t*)wasm_memory_get_base_address(mem);
+	std::println("base addr {}", base == NULL);
+
+	uint8_t* a, * b;
+	auto worked2 = wasm_runtime_get_native_addr_range(modinst, base, &a, &b);
+	std::println("worked 2 {}", worked2);
+	if (worked2) {
+		std::println("addr {}", base == a);
+		std::println("addr {}", b == base + o);
+		std::println("addr {}", (void*)base);
+		std::println("addr {}", (void*)a);
+		std::println("addr {}", (void*)b);
+	}
 
 	//wasm_runtime_create_exec_env
 
