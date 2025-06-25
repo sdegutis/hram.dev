@@ -70,15 +70,19 @@ void resize() {
 	destrect.y = h / 2 - destrect.h / 2;
 }
 
-void blit() {
-	//SDL_BlitSurfaceUncheckedScaled(appsurf, &srcrect, winsurf, &destrect, SDL_SCALEMODE_NEAREST);
-	//SDL_UpdateWindowSurface(window);
-}
-
 GLint attribute_coord2d;
 GLuint program;
 GLuint vbo;
 SDL_GLContext gl_context;
+
+void blit() {
+	glClear(GL_COLOR_BUFFER_BIT);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+	SDL_GL_SwapWindow(window);
+
+	//SDL_BlitSurfaceUncheckedScaled(appsurf, &srcrect, winsurf, &destrect, SDL_SCALEMODE_NEAREST);
+	//SDL_UpdateWindowSurface(window);
+}
 
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 {
@@ -174,12 +178,14 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	glViewport(0, 0, WIDTH, HEIGHT);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
+	glEnableVertexAttribArray(attribute_coord2d);
 
 
 
 	//appsurf = SDL_CreateSurfaceFrom(320, 180, SDL_PIXELFORMAT_XRGB8888, rawdata, 320 * 4);
 	//winsurf = SDL_GetWindowSurface(window);
 	resize();
+	blit();
 
 	return SDL_APP_CONTINUE;
 }
@@ -190,11 +196,6 @@ SDL_AppResult SDL_AppIterate(void* appstate)
 
 
 
-	glClear(GL_COLOR_BUFFER_BIT);
-	glEnableVertexAttribArray(attribute_coord2d);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
-	glDisableVertexAttribArray(attribute_coord2d);
-	SDL_GL_SwapWindow(window);
 
 
 
@@ -210,7 +211,7 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* e)
 		SDL_GetWindowSize(window, &WIDTH, &HEIGHT);
 		glViewport(0, 0, WIDTH, HEIGHT);
 		//resize();
-		//blit();
+		blit();
 		break;
 
 
