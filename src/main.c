@@ -4,7 +4,8 @@
 
 #include <vars.h>
 
-#include <lua.hpp>
+#include <lua.h>
+#include <lauxlib.h>
 
 SDL_Window* win;
 
