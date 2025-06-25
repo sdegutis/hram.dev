@@ -1,10 +1,6 @@
 {
   "dependencies": [
     "sdl3",
-    "wabt",
-    "tomlplusplus",
-    "argparse",
-    "llvm",
-    "efsw"
+    "lua"
   ]
 }

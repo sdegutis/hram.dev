@@ -2,12 +2,17 @@
 #include <SDL3/SDL_main.h>
 
 #include "app.hpp"
-#include <argparse/argparse.hpp>
 #include <format>
 #include <vars.h>
 
+#include <lua.hpp>
+#include <filesystem>
+
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 {
+	auto lib = luaL_newstate();
+	printf("%p\n", lib);
+
 	std::filesystem::path userDir(SDL_GetPrefPath("90sdev", "hram"));
 	std::filesystem::path appDir(SDL_GetBasePath());
 	std::filesystem::path userBootWat = userDir / "boot.wat";
@@ -17,18 +22,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 		userBootWat,
 		std::filesystem::copy_options::skip_existing);
 
-	argparse::ArgumentParser program("hram", std::format("{}.{}", VERMAJ, VERMIN));
-	program.add_argument("-b", "--boot").help("path to boot file").default_value(userBootWat.string()).required();
-
-	try {
-		program.parse_args(argc, argv);
-	}
-	catch (const std::exception& err) {
-		std::cerr << err.what() << std::endl << program;
-		return SDL_APP_FAILURE;
-	}
-
-	auto app = new App(program.get("-b"));
+	auto app = new App();
 	*appstate = app;
 
 	return SDL_APP_CONTINUE;
