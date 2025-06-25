@@ -28,6 +28,11 @@ target_include_directories(hram PUBLIC ${PROJECT_BINARY_DIR})
 find_package(SDL3 CONFIG REQUIRED)
 target_link_libraries(hram PRIVATE SDL3::SDL3)
 
+find_path(TEST_INCLUDE_PATH "epoxy/" REQUIRED)
+find_library(TEST_LIBRARY_PATH NAMES epoxy REQUIRED) 
+target_include_directories(hram PRIVATE ${TEST_INCLUDE_PATH})
+target_link_libraries(hram PRIVATE ${TEST_LIBRARY_PATH})
+
 find_package(Lua REQUIRED)
 target_include_directories(hram PRIVATE ${LUA_INCLUDE_DIR})
 target_link_libraries(hram PRIVATE ${LUA_LIBRARIES})
