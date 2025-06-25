@@ -46,6 +46,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	printf("%p ?\n", lib);
 
 	window = SDL_CreateWindow("H-RAM", 320 * 3, 180 * 3, SDL_WINDOW_RESIZABLE);
+	SDL_SetWindowMinimumSize(window, 320, 180);
 	appsurf = SDL_CreateSurfaceFrom(320, 180, SDL_PIXELFORMAT_XRGB8888, rawdata, 320 * 4);
 	winsurf = SDL_GetWindowSurface(window);
 	resize();
