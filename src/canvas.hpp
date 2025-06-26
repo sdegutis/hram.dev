@@ -9,7 +9,7 @@ class Canvas {
 	GLuint vao;
 	GLint resolutionLocation;
 	GLint imageLocation;
-	GLuint positionBuffer;
+	GLuint posBuf;
 
 	SDL_Rect srcrect = { .x = 0, .y = 0, .w = 320, .h = 180 };
 	SDL_Rect destrect;

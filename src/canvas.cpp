@@ -1,13 +1,13 @@
 #include <string>
+#include <print>
 #include <vector>
 
 #include "canvas.hpp"
 
 GLuint createShaders();
 
+std::string vertShader = R"(#version 300 es
 
-// Read the Vertex Shader code from the file
-std::string VertexShaderCode = R"(#version 300 es
 // an attribute is an input (in) to a vertex shader.
 // It will receive data from a buffer
 in vec2 a_position;
@@ -37,10 +37,11 @@ void main() {
   // The GPU will interpolate this value between points.
   v_texCoord = a_texCoord;
 }
+
 )";
 
-// Read the Fragment Shader code from the file
-std::string FragmentShaderCode = R"(#version 300 es
+std::string fragShader = R"(#version 300 es
+
 // fragment shaders don't have a default precision so we need
 // to pick one. highp is a good default. It means "high precision"
 precision highp float;
@@ -57,6 +58,7 @@ out vec4 outColor;
 void main() {
   outColor = texture(u_image, v_texCoord);
 }
+
 )";
 
 
@@ -68,21 +70,19 @@ Canvas::Canvas() {
 	glcontext = SDL_GL_CreateContext(window);
 
 	prog = createShaders();
+	resolutionLocation = glGetUniformLocation(prog, "u_resolution");
+	imageLocation = glGetUniformLocation(prog, "u_image");
 
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+	glClearColor(0, 0, .4, 1);
 
-
-
-
-	// Create one OpenGL texture
 	GLuint textureID;
 	glGenTextures(1, &textureID);
-
 	glActiveTexture(GL_TEXTURE0 + 0);
-
-	// "Bind" the newly created texture : all future texture functions will modify this texture
 	glBindTexture(GL_TEXTURE_2D, textureID);
-
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	unsigned char data[2 * 4 * 4] = {
 		255, 0, 0, 255,
 		255, 0, 255, 255,
@@ -93,55 +93,38 @@ Canvas::Canvas() {
 		255, 0, 255, 255,
 		255, 255, 0, 255,
 	};
-
-	// Give the image to OpenGL
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 
 
 
-	// look up where the vertex data needs to go.
-	auto positionAttributeLocation = glGetAttribLocation(prog, "a_position");
-	auto texCoordAttributeLocation = glGetAttribLocation(prog, "a_texCoord");
-
-	resolutionLocation = glGetUniformLocation(prog, "u_resolution");
-	imageLocation = glGetUniformLocation(prog, "u_image");
 
 	glGenVertexArrays(1, &vao);
-
 	glBindVertexArray(vao);
 
-	positionBuffer;
-	glGenBuffers(1, &positionBuffer);
+	glGenBuffers(1, &posBuf);
+	auto posAttrLoc = glGetAttribLocation(prog, "a_position");
+	glEnableVertexAttribArray(posAttrLoc);
+	glBindBuffer(GL_ARRAY_BUFFER, posBuf);
+	glVertexAttribPointer(posAttrLoc, 2, GL_FLOAT, false, 0, 0);
 
-	glEnableVertexAttribArray(positionAttributeLocation);
+	GLuint texNormBuf;
+	glGenBuffers(1, &texNormBuf);
+	glBindBuffer(GL_ARRAY_BUFFER, texNormBuf);
+	float texNormData[12] = { 0,0,1,0,0,1,0,1,1,0,1,1 };
+	glBufferData(GL_ARRAY_BUFFER, sizeof(texNormData), texNormData, GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
+	auto texNormAttrLoc = glGetAttribLocation(prog, "a_texCoord");
+	glEnableVertexAttribArray(texNormAttrLoc);
+	glVertexAttribPointer(texNormAttrLoc, 2, GL_FLOAT, false, 0, 0);
 
-	glVertexAttribPointer(positionAttributeLocation, 2, GL_FLOAT, false, 0, 0);
-
-	GLuint texCoordBuffer;
-	glGenBuffers(1, &texCoordBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, texCoordBuffer);
-	float coordinates[12] = { 0,0,1,0,0,1,0,1,1,0,1,1 };
-	glBufferData(GL_ARRAY_BUFFER, sizeof(coordinates), coordinates, GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(texCoordAttributeLocation);
-
-	glVertexAttribPointer(texCoordAttributeLocation, 2, GL_FLOAT, false, 0, 0);
-
-	draw();
+	resized();
 
 }
 
 void Canvas::resized()
 {
-
 	destrect = srcrect;
 	scale = 1;
 
@@ -163,14 +146,7 @@ void Canvas::resized()
 
 void Canvas::draw()
 {
-
-
-	glViewport(0, 0, 320, 180);
-
-	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
 
 	glUseProgram(prog);
 
@@ -179,7 +155,7 @@ void Canvas::draw()
 	glUniform2f(resolutionLocation, 320, 180);
 	glUniform1i(imageLocation, 0);
 
-	glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, posBuf);
 
 	float x1 = 100;
 	float x2 = 120;
@@ -217,65 +193,51 @@ Canvas::~Canvas() {
 }
 
 GLuint createShaders() {
+	GLuint vert = glCreateShader(GL_VERTEX_SHADER);
+	GLuint frag = glCreateShader(GL_FRAGMENT_SHADER);
 
+	GLint res = GL_FALSE;
+	int logi;
 
-	// Create the shaders
-	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
-
-	GLint Result = GL_FALSE;
-	int InfoLogLength;
-
-	// Compile Vertex Shader
-	char const* VertexSourcePointer = VertexShaderCode.c_str();
-	glShaderSource(VertexShaderID, 1, &VertexSourcePointer, NULL);
-	glCompileShader(VertexShaderID);
-
-	// Check Vertex Shader
-	glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
-	glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-	if (InfoLogLength > 0) {
-		std::vector<char> VertexShaderErrorMessage(InfoLogLength + 1);
-		glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
-		printf("%s\n", &VertexShaderErrorMessage[0]);
+	char const* vertsrc = vertShader.c_str();
+	glShaderSource(vert, 1, &vertsrc, NULL);
+	glCompileShader(vert);
+	glGetShaderiv(vert, GL_COMPILE_STATUS, &res);
+	glGetShaderiv(vert, GL_INFO_LOG_LENGTH, &logi);
+	if (logi > 0) {
+		std::vector<char> err(logi + 1);
+		glGetShaderInfoLog(vert, logi, NULL, &err[0]);
+		std::println("{}", &err[0]);
 	}
 
-	// Compile Fragment Shader
-	char const* FragmentSourcePointer = FragmentShaderCode.c_str();
-	glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer, NULL);
-	glCompileShader(FragmentShaderID);
-
-	// Check Fragment Shader
-	glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
-	glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-	if (InfoLogLength > 0) {
-		std::vector<char> FragmentShaderErrorMessage(InfoLogLength + 1);
-		glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
-		printf("%s\n", &FragmentShaderErrorMessage[0]);
+	char const* fragsrc = fragShader.c_str();
+	glShaderSource(frag, 1, &fragsrc, NULL);
+	glCompileShader(frag);
+	glGetShaderiv(frag, GL_COMPILE_STATUS, &res);
+	glGetShaderiv(frag, GL_INFO_LOG_LENGTH, &logi);
+	if (logi > 0) {
+		std::vector<char> err(logi + 1);
+		glGetShaderInfoLog(frag, logi, NULL, &err[0]);
+		std::println("{}", &err[0]);
 	}
 
-	// Link the program
-	printf("Linking program\n");
-	GLuint ProgramID = glCreateProgram();
-	auto program = ProgramID;
-	glAttachShader(ProgramID, VertexShaderID);
-	glAttachShader(ProgramID, FragmentShaderID);
-	glLinkProgram(ProgramID);
-
-	// Check the program
-	glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
-	glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-	if (InfoLogLength > 0) {
-		std::vector<char> ProgramErrorMessage(InfoLogLength + 1);
-		glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
-		printf("%s\n", &ProgramErrorMessage[0]);
+	GLuint prog = glCreateProgram();
+	glAttachShader(prog, vert);
+	glAttachShader(prog, frag);
+	glLinkProgram(prog);
+	glGetProgramiv(prog, GL_LINK_STATUS, &res);
+	glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &logi);
+	if (logi > 0) {
+		std::vector<char> err(logi + 1);
+		glGetProgramInfoLog(prog, logi, NULL, &err[0]);
+		std::println("{}", &err[0]);
 	}
 
-	glDetachShader(ProgramID, VertexShaderID);
-	glDetachShader(ProgramID, FragmentShaderID);
+	glDetachShader(prog, vert);
+	glDetachShader(prog, frag);
 
-	glDeleteShader(VertexShaderID);
-	glDeleteShader(FragmentShaderID);
+	glDeleteShader(vert);
+	glDeleteShader(frag);
 
-	return ProgramID;
+	return prog;
 }
