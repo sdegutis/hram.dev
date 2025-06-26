@@ -17,7 +17,7 @@ configure_file(vars.h.in vars.h)
 configure_file(boot.wat boot.wat COPYONLY)
 
 add_executable (hram
-	"src/main.c"
+	"src/main.cpp"
 	
 )
 
