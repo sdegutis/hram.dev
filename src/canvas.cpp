@@ -1,5 +1,3 @@
-#include <epoxy/gl.h>
-
 #include <string>
 #include <vector>
 
@@ -141,6 +139,29 @@ Canvas::Canvas() {
 
 }
 
+void Canvas::resized()
+{
+
+	destrect = srcrect;
+	scale = 1;
+
+	int w, h;
+	auto winsize = SDL_GetWindowSize(window, &w, &h);
+
+	while (destrect.w + srcrect.w <= w && destrect.h + srcrect.h <= h) {
+		scale++;
+		destrect.w += srcrect.w;
+		destrect.h += srcrect.h;
+	}
+
+	destrect.x = w / 2 - destrect.w / 2;
+	destrect.y = h / 2 - destrect.h / 2;
+
+
+	//SDL_GetWindowSize(window, &WIDTH, &HEIGHT);
+	//glViewport(0, 0, WIDTH, HEIGHT);
+}
+
 void Canvas::draw()
 {
 
@@ -174,6 +195,17 @@ void Canvas::draw()
 
 
 	SDL_GL_SwapWindow(window);
+
+}
+
+void Canvas::mouseMoved(int x, int y)
+{
+	printf("%d, %d\n", x, y);
+}
+
+void Canvas::iterate()
+{
+	//Uint64 ticks = SDL_GetTicks();
 
 }
 
