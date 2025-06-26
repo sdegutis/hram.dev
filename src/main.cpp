@@ -1,15 +1,21 @@
-﻿#include "canvas.hpp"
-
-#define SDL_MAIN_USE_CALLBACKS
+﻿#define SDL_MAIN_USE_CALLBACKS
 #include <SDL3/SDL_main.h>
 
 #include <vars.h>
 #include <lua.hpp>
 
+#include "canvas.hpp"
+
+#include "filemanager.hpp"
+
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 {
+	copyBootFiles();
+
 	lua_State* lib = luaL_newstate();
 	printf("%p %d.%d\n", lib, VERMAJ, VERMIN);
+
+	luaL_dofile(lib, bootFilePath.string().c_str());
 
 	SDL_Init(SDL_INIT_VIDEO);
 

@@ -36,7 +36,7 @@ Canvas::Canvas() {
 
 	for (int i = 0; i < 320 * 180 * 4; i++) data[i] = SDL_rand(256);
 	for (int i = 0; i < 320 * 180 * 4; i += 4) {
-		data[i + 0] = 255;
+		data[i + 0] = SDL_rand(256);
 		data[i + 1] = 0;
 		data[i + 2] = 0;
 		data[i + 3] = 0;
@@ -81,9 +81,6 @@ void Canvas::resized()
 
 	int w, h;
 	SDL_GetWindowSize(window, &w, &h);
-	glBindVertexArray(vao);
-	glViewport(0, 0, w, h);
-	glUniform2f(resolutionLocation, w, h);
 
 	while (destrect.w + srcrect.w <= w && destrect.h + srcrect.h <= h) {
 		scale++;
@@ -94,8 +91,11 @@ void Canvas::resized()
 	destrect.x = w / 2 - destrect.w / 2;
 	destrect.y = h / 2 - destrect.h / 2;
 
-
 	glBindVertexArray(vao);
+	glViewport(0, 0, w, h);
+	glUniform2f(resolutionLocation, w, h);
+
+
 
 
 	glBindBuffer(GL_ARRAY_BUFFER, posBuf);
@@ -121,15 +121,8 @@ void Canvas::draw()
 
 void Canvas::mouseMoved(int x, int y)
 {
-	printf("%d, %d\n", x, y);
-}
-
-void Canvas::iterate()
-{
-	//Uint64 ticks = SDL_GetTicks();
-
-	int x = SDL_rand(320);
-	int y = SDL_rand(180);
+	x = SDL_rand(320);
+	y = SDL_rand(180);
 
 	int i = y * 320 + x;
 
@@ -141,6 +134,14 @@ void Canvas::iterate()
 	glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data + i);
 
 	draw();
+
+	printf("%d, %d\n", x, y);
+}
+
+void Canvas::iterate()
+{
+	//Uint64 ticks = SDL_GetTicks();
+
 
 }
 
