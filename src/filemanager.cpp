@@ -3,11 +3,16 @@
 
 std::filesystem::path userDir{ SDL_GetPrefPath("90sdev", "hram") };
 std::filesystem::path appDir{ SDL_GetBasePath() };
-std::filesystem::path bootFilePath{ userDir / "boot.lua" };
 
-constexpr auto overwrite = false;
+constexpr auto overwrite = true;
 
-void copyBootFile(std::string name) {
+FileManager::FileManager() :
+	bootFilePath{ userDir / "boot.lua" }
+{
+}
+
+void copyBootFile(std::string name)
+{
 	std::filesystem::copy_file(appDir / name, userDir / name,
 		overwrite
 		? std::filesystem::copy_options::overwrite_existing
@@ -15,7 +20,8 @@ void copyBootFile(std::string name) {
 	);
 }
 
-void copyBootFiles() {
+void FileManager::copyBootFiles()
+{
 	copyBootFile("boot.lua");
 	copyBootFile("editor.lua");
 	copyBootFile("prompt.lua");

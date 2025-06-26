@@ -1,55 +1,42 @@
 ﻿#define SDL_MAIN_USE_CALLBACKS
 #include <SDL3/SDL_main.h>
 
-#include <vars.h>
-#include <lua.hpp>
-
-#include "canvas.hpp"
-
-#include "filemanager.hpp"
+#include "app.hpp"
 
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 {
-	copyBootFiles();
-
-	lua_State* lib = luaL_newstate();
-	printf("%p %d.%d\n", lib, VERMAJ, VERMIN);
-
-	luaL_dofile(lib, bootFilePath.string().c_str());
-
 	SDL_Init(SDL_INIT_VIDEO);
 
-	auto canvas = new Canvas();
-	*appstate = canvas;
-	canvas->draw();
+	auto app = new App();
+	*appstate = app;
 
 	return SDL_APP_CONTINUE;
 }
 
 SDL_AppResult SDL_AppIterate(void* appstate)
 {
-	auto canvas = (Canvas*)appstate;
-	canvas->iterate();
+	auto app = (App*)appstate;
+	app->iterate();
 	return SDL_APP_CONTINUE;
 }
 
 SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* e)
 {
-	auto canvas = (Canvas*)appstate;
+	auto app = (App*)appstate;
 
 	switch (e->type) {
 
 	case SDL_EVENT_WINDOW_RESIZED:
-		canvas->resized();
+		app->resized();
 		break;
 
 	case SDL_EVENT_MOUSE_MOTION:
-		canvas->mouseMoved(e->motion.x, e->motion.y);
+		app->mouseMoved(e->motion.x, e->motion.y);
 		break;
 
 	case SDL_EVENT_MOUSE_BUTTON_DOWN:
 	case SDL_EVENT_MOUSE_BUTTON_UP:
-		//printf("%d, %d", e->button.button, e->button.down);
+		app->mouseButton(e->button.button, e->button.down);
 		break;
 
 	case SDL_EVENT_QUIT:
@@ -61,6 +48,6 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* e)
 
 void SDL_AppQuit(void* appstate, SDL_AppResult result)
 {
-	auto canvas = (Canvas*)appstate;
-	delete canvas;
+	auto app = (App*)appstate;
+	delete app;
 }

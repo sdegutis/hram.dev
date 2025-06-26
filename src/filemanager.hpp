@@ -1,5 +1,12 @@
 #include <filesystem>
 
-void copyBootFiles();
+class FileManager {
 
-extern std::filesystem::path bootFilePath;
+public:
+
+	FileManager();
+
+	void copyBootFiles();
+	std::filesystem::path bootFilePath;
+
+};
