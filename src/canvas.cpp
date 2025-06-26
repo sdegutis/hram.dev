@@ -70,6 +70,8 @@ Canvas::Canvas() {
 	glcontext = SDL_GL_CreateContext(window);
 
 	prog = createShaders();
+	glUseProgram(prog);
+
 	resolutionLocation = glGetUniformLocation(prog, "u_resolution");
 	imageLocation = glGetUniformLocation(prog, "u_image");
 
@@ -103,6 +105,8 @@ Canvas::Canvas() {
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
+	glUniform1i(imageLocation, 0);
+
 	glGenBuffers(1, &posBuf);
 	auto posAttrLoc = glGetAttribLocation(prog, "a_position");
 	glEnableVertexAttribArray(posAttrLoc);
@@ -130,7 +134,9 @@ void Canvas::resized()
 
 	int w, h;
 	SDL_GetWindowSize(window, &w, &h);
+	glBindVertexArray(vao);
 	glViewport(0, 0, w, h);
+	glUniform2f(resolutionLocation, w, h);
 
 	while (destrect.w + srcrect.w <= w && destrect.h + srcrect.h <= h) {
 		scale++;
@@ -141,36 +147,29 @@ void Canvas::resized()
 	destrect.x = w / 2 - destrect.w / 2;
 	destrect.y = h / 2 - destrect.h / 2;
 
+
+	glBindVertexArray(vao);
+
+
+	glBindBuffer(GL_ARRAY_BUFFER, posBuf);
+
+	float x1 = destrect.x;
+	float x2 = destrect.x + destrect.w;
+	float y1 = destrect.y;
+	float y2 = destrect.y + destrect.h;
+	float xys[12] = { x1,y1,x2,y1,x1,y2,x1,y2,x2,y1,x2,y2 };
+	glBufferData(GL_ARRAY_BUFFER, sizeof(xys), xys, GL_STATIC_DRAW);
+
+
 	draw();
 }
 
 void Canvas::draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glUseProgram(prog);
-
 	glBindVertexArray(vao);
-
-	glUniform2f(resolutionLocation, 320, 180);
-	glUniform1i(imageLocation, 0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, posBuf);
-
-	float x1 = 100;
-	float x2 = 120;
-	float y1 = 100;
-	float y2 = 120;
-	float xys[12] = { x1,y1,x2,y1,x1,y2,x1,y2,x2,y1,x2,y2 };
-	glBufferData(GL_ARRAY_BUFFER, sizeof(xys), xys, GL_STATIC_DRAW);
-
 	glDrawArrays(GL_TRIANGLES, 0, 6);
-
-
-
-
 	SDL_GL_SwapWindow(window);
-
 }
 
 void Canvas::mouseMoved(int x, int y)

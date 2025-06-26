@@ -15,6 +15,9 @@ class Canvas {
 	SDL_Rect destrect;
 	int scale = 1;
 
+	unsigned char data[320 * 180 * 4];
+
+
 public:
 
 	Canvas();
