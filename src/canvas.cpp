@@ -34,6 +34,12 @@ Canvas::Canvas() {
 
 
 	for (int i = 0; i < 320 * 180 * 4; i++) data[i] = SDL_rand(256);
+	for (int i = 0; i < 320 * 180 * 4; i += 4) {
+		data[i + 0] = 255;
+		data[i + 1] = 0;
+		data[i + 2] = 0;
+		data[i + 3] = 0;
+	}
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 320, 180, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
@@ -129,7 +135,7 @@ void Canvas::iterate()
 	data[i + 0] = 255;
 	data[i + 1] = 255;
 	data[i + 2] = 255;
-	data[i + 3] = 255;
+	data[i + 3] = 0;
 
 	glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data + i);
 
