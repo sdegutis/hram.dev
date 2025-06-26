@@ -22,7 +22,7 @@ Canvas::Canvas() {
 	resolutionLocation = glGetUniformLocation(prog, "u_resolution");
 	imageLocation = glGetUniformLocation(prog, "u_image");
 
-	glClearColor(0, 0, .4, 1);
+	glClearColor(0.f, 0.f, .4f, 1.f);
 
 	GLuint textureID;
 	glGenTextures(1, &textureID);

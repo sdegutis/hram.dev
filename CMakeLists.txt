@@ -21,7 +21,9 @@ FetchContent_MakeAvailable(battery-embed)
 # vars
 
 configure_file(vars.h.in genvars/vars.h)
-configure_file(boot.wat boot.wat COPYONLY)
+configure_file(lua/boot.lua boot.lua COPYONLY)
+configure_file(lua/editor.lua editor.lua COPYONLY)
+configure_file(lua/prompt.lua prompt.lua COPYONLY)
 
 # exe
 
@@ -44,7 +46,7 @@ target_include_directories(hram PUBLIC "${PROJECT_BINARY_DIR}/genvars")
 # sdl
 
 find_package(SDL3 CONFIG REQUIRED)
-target_link_libraries(hram PUBLIC SDL3::SDL3)
+target_link_libraries(hram PRIVATE SDL3::SDL3)
 
 # lua
 
@@ -62,6 +64,9 @@ set_property(TARGET hram PROPERTY CXX_STANDARD 26)
 install(TARGETS hram DESTINATION .)
 install(FILES $<TARGET_FILE:SDL3::SDL3> DESTINATION .)
 install(FILES $<TARGET_FILE:${LUA_LIBRARIES}> DESTINATION .)
+install(FILES "${PROJECT_BINARY_DIR}/boot.lua" DESTINATION .)
+install(FILES "${PROJECT_BINARY_DIR}/editor.lua" DESTINATION .)
+install(FILES "${PROJECT_BINARY_DIR}/prompt.lua" DESTINATION .)
 
 # cpack
 
