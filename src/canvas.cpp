@@ -85,17 +85,11 @@ Canvas::Canvas() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	unsigned char data[2 * 4 * 4] = {
-		255, 0, 0, 255,
-		255, 0, 255, 255,
-		255, 255, 0, 255,
-		255, 0, 255, 255,
-		255, 255, 0, 255,
-		255, 0, 255, 255,
-		255, 0, 255, 255,
-		255, 255, 0, 255,
-	};
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+
+	for (int i = 0; i < 320 * 180 * 4; i++) data[i] = SDL_rand(256);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 320, 180, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
 
 
@@ -180,6 +174,20 @@ void Canvas::mouseMoved(int x, int y)
 void Canvas::iterate()
 {
 	//Uint64 ticks = SDL_GetTicks();
+
+	int x = SDL_rand(320);
+	int y = SDL_rand(180);
+
+	int i = y * 320 + x;
+
+	data[i + 0] = 255;
+	data[i + 1] = 255;
+	data[i + 2] = 255;
+	data[i + 3] = 255;
+
+	glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data + i);
+
+	draw();
 
 }
 
