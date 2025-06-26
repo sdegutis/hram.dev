@@ -146,7 +146,8 @@ void Canvas::resized()
 	scale = 1;
 
 	int w, h;
-	auto winsize = SDL_GetWindowSize(window, &w, &h);
+	SDL_GetWindowSize(window, &w, &h);
+	glViewport(0, 0, w, h);
 
 	while (destrect.w + srcrect.w <= w && destrect.h + srcrect.h <= h) {
 		scale++;
@@ -157,9 +158,7 @@ void Canvas::resized()
 	destrect.x = w / 2 - destrect.w / 2;
 	destrect.y = h / 2 - destrect.h / 2;
 
-
-	//SDL_GetWindowSize(window, &WIDTH, &HEIGHT);
-	//glViewport(0, 0, WIDTH, HEIGHT);
+	draw();
 }
 
 void Canvas::draw()
