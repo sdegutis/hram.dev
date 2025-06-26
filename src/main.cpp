@@ -166,19 +166,55 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
 	// Read the Vertex Shader code from the file
-	std::string VertexShaderCode = R"(#version 330 core
-layout(location = 0) in vec3 vertexPosition_modelspace;
-void main(){
-  gl_Position.xyz = vertexPosition_modelspace;
-  gl_Position.w = 1.0;
+	std::string VertexShaderCode = R"(#version 300 es
+// an attribute is an input (in) to a vertex shader.
+// It will receive data from a buffer
+in vec2 a_position;
+in vec2 a_texCoord;
+
+// Used to pass in the resolution of the canvas
+uniform vec2 u_resolution;
+
+// Used to pass the texture coordinates to the fragment shader
+out vec2 v_texCoord;
+
+// all shaders have a main function
+void main() {
+
+  // convert the position from pixels to 0.0 to 1.0
+  vec2 zeroToOne = a_position / u_resolution;
+
+  // convert from 0->1 to 0->2
+  vec2 zeroToTwo = zeroToOne * 2.0;
+
+  // convert from 0->2 to -1->+1 (clipspace)
+  vec2 clipSpace = zeroToTwo - 1.0;
+
+  gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+
+  // pass the texCoord to the fragment shader
+  // The GPU will interpolate this value between points.
+  v_texCoord = a_texCoord;
 }
 )";
 
 	// Read the Fragment Shader code from the file
-	std::string FragmentShaderCode = R"(#version 330 core
-out vec3 color;
-void main(){
-  color = vec3(1,0,0);
+	std::string FragmentShaderCode = R"(#version 300 es
+// fragment shaders don't have a default precision so we need
+// to pick one. highp is a good default. It means "high precision"
+precision highp float;
+
+// our texture
+uniform sampler2D u_image;
+
+// the texCoords passed in from the vertex shader.
+in vec2 v_texCoord;
+
+// we need to declare an output for the fragment shader
+out vec4 outColor;
+
+void main() {
+  outColor = texture(u_image, v_texCoord);
 }
 )";
 
@@ -216,6 +252,7 @@ void main(){
 	// Link the program
 	printf("Linking program\n");
 	GLuint ProgramID = glCreateProgram();
+	auto program = ProgramID;
 	glAttachShader(ProgramID, VertexShaderID);
 	glAttachShader(ProgramID, FragmentShaderID);
 	glLinkProgram(ProgramID);
@@ -241,47 +278,154 @@ void main(){
 
 
 
+	//// An array of 3 vectors which represents 3 vertices
+	//static const GLfloat g_vertex_buffer_data[] = {
+	//   -1.0f, -1.0f, 0.0f,
+	//   1.0f, -1.0f, 0.0f,
+	//   0.0f,  1.0f, 0.0f,
+	//};
+
+	//// This will identify our vertex buffer
+	//GLuint vertexbuffer;
+	//// Generate 1 buffer, put the resulting identifier in vertexbuffer
+	//glGenBuffers(1, &vertexbuffer);
+	//// The following commands will talk about our 'vertexbuffer' buffer
+	//glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+	//// Give our vertices to OpenGL.
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
 
 
 
 
 
-	static const GLfloat g_vertex_buffer_data[] = {
-	-1.0f, -1.0f, 0.0f,
-	 1.0f, -1.0f, 0.0f,
-	 0.0f,  1.0f, 0.0f,
+	//glClear(GL_COLOR_BUFFER_BIT);
+
+	//// Use our shader
+	//glUseProgram(ProgramID);
+
+	//// 1st attribute buffer : vertices
+	//glEnableVertexAttribArray(0);
+	//glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+	//glVertexAttribPointer(
+	//	0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+	//	3,                  // size
+	//	GL_FLOAT,           // type
+	//	GL_FALSE,           // normalized?
+	//	0,                  // stride
+	//	(void*)0            // array buffer offset
+	//);
+	//// Draw the triangle !
+	//glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
+	//glDisableVertexAttribArray(0);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	// Create one OpenGL texture
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+
+	glActiveTexture(GL_TEXTURE0 + 0);
+
+	// "Bind" the newly created texture : all future texture functions will modify this texture
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	unsigned char data[2 * 4 * 4] = {
+		255, 0, 0, 255,
+		255, 0, 255, 255,
+		255, 255, 0, 255,
+		255, 0, 255, 255,
+		255, 255, 0, 255,
+		255, 0, 255, 255,
+		255, 0, 255, 255,
+		255, 255, 0, 255,
 	};
 
-	GLuint vertexbuffer;
-	glGenBuffers(1, &vertexbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+	// Give the image to OpenGL
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+
+
+
+	// look up where the vertex data needs to go.
+	auto positionAttributeLocation = glGetAttribLocation(program, "a_position");
+	auto texCoordAttributeLocation = glGetAttribLocation(program, "a_texCoord");
+
+	auto resolutionLocation = glGetUniformLocation(program, "u_resolution");
+	auto imageLocation = glGetUniformLocation(program, "u_image");
+
+	GLuint vao;
+	glGenVertexArrays(1, &vao);
+
+	glBindVertexArray(vao);
+
+	GLuint positionBuffer;
+	glGenBuffers(1, &positionBuffer);
+
+	glEnableVertexAttribArray(positionAttributeLocation);
+
+	glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
+
+	glVertexAttribPointer(positionAttributeLocation, 2, GL_FLOAT, false, 0, 0);
+
+	GLuint texCoordBuffer;
+	glGenBuffers(1, &texCoordBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, texCoordBuffer);
+	float coordinates[12] = { 0,0,1,0,0,1,0,1,1,0,1,1 };
+	glBufferData(GL_ARRAY_BUFFER, sizeof(coordinates), coordinates, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(texCoordAttributeLocation);
+
+	glVertexAttribPointer(texCoordAttributeLocation, 2, GL_FLOAT, false, 0, 0);
 
 
 
 
 
-	glClear(GL_COLOR_BUFFER_BIT);
 
-	// Use our shader
-	glUseProgram(ProgramID);
 
-	// 1rst attribute buffer : vertices
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glVertexAttribPointer(
-		0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-		3,                  // size
-		GL_FLOAT,           // type
-		GL_FALSE,           // normalized?
-		0,                  // stride
-		(void*)0            // array buffer offset
-	);
 
-	// Draw the triangle !
-	glDrawArrays(GL_TRIANGLES, 0, 3); // 3 indices starting at 0 -> 1 triangle
+	glViewport(0, 0, 320, 180);
 
-	glDisableVertexAttribArray(0);
+	glClearColor(0, 0, 0, 0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+
+	glUseProgram(program);
+
+	glBindVertexArray(vao);
+
+	glUniform2f(resolutionLocation, 320, 180);
+	glUniform1i(imageLocation, 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
+
+	float x1 = 100;
+	float x2 = 120;
+	float y1 = 100;
+	float y2 = 120;
+	float xys[12] = { x1,y1,x2,y1,x1,y2,x1,y2,x2,y1,x2,y2 };
+	glBufferData(GL_ARRAY_BUFFER, sizeof(xys), xys, GL_STATIC_DRAW);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+
 
 
 	SDL_GL_SwapWindow(window);
