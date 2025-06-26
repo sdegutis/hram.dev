@@ -19,7 +19,7 @@ configure_file(boot.wat boot.wat COPYONLY)
 add_executable (hram
 	"src/main.cpp"
 	
-)
+ "src/canvas.cpp")
 
 #set_property(TARGET hram PROPERTY WIN32_EXECUTABLE TRUE)
 
