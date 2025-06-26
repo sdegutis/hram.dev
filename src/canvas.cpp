@@ -14,6 +14,7 @@ Canvas::Canvas() {
 	SDL_SetWindowMinimumSize(window, 320, 180);
 
 	glcontext = SDL_GL_CreateContext(window);
+	gladLoadGL(SDL_GL_GetProcAddress);
 
 	prog = createShaders();
 	glUseProgram(prog);

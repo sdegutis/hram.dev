@@ -1,9 +1,5 @@
-﻿# CMakeList.txt : CMake project for hram, include source and define
-# project specific logic here.
-#
-cmake_minimum_required (VERSION 3.10)
+﻿cmake_minimum_required (VERSION 3.10)
 
-# Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
   cmake_policy(SET CMP0141 NEW)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
@@ -13,7 +9,7 @@ project(hram VERSION 0.1 LANGUAGES C CXX)
 
 include(FetchContent)
 
-# embed
+# battery-embed
 
 FetchContent_Declare(
   battery-embed
@@ -24,34 +20,31 @@ FetchContent_MakeAvailable(battery-embed)
 
 # vars
 
-configure_file(vars.h.in vars.h)
+configure_file(vars.h.in genvars/vars.h)
 configure_file(boot.wat boot.wat COPYONLY)
 
 # exe
 
 add_executable (hram
+	# WIN32
+	MACOSX_BUNDLE
 	"src/main.cpp"
 	"src/canvas.cpp"
+	"glad/src/gl.c"
 )
 
 b_embed(hram "resources/vert.shader")
 b_embed(hram "resources/frag.shader")
 
-#set_property(TARGET hram PROPERTY WIN32_EXECUTABLE TRUE)
+# opengl
 
-target_include_directories(hram PUBLIC ${PROJECT_BINARY_DIR})
+target_include_directories(hram PUBLIC "${PROJECT_SOURCE_DIR}/glad/include")
+target_include_directories(hram PUBLIC "${PROJECT_BINARY_DIR}/genvars")
 
 # sdl
 
 find_package(SDL3 CONFIG REQUIRED)
-target_link_libraries(hram PRIVATE SDL3::SDL3)
-
-# opengl
-
-find_path(TEST_INCLUDE_PATH "epoxy/" REQUIRED)
-find_library(TEST_LIBRARY_PATH NAMES epoxy REQUIRED) 
-target_include_directories(hram PRIVATE ${TEST_INCLUDE_PATH})
-target_link_libraries(hram PRIVATE ${TEST_LIBRARY_PATH})
+target_link_libraries(hram PUBLIC SDL3::SDL3)
 
 # lua
 
@@ -64,12 +57,16 @@ target_link_libraries(hram PRIVATE ${LUA_LIBRARIES})
 set_property(TARGET hram PROPERTY C_STANDARD 23)
 set_property(TARGET hram PROPERTY CXX_STANDARD 26)
 
-# TODO: Add tests and install targets if needed.
+# install
+
+install(TARGETS hram DESTINATION .)
+install(FILES $<TARGET_FILE:SDL3::SDL3> DESTINATION .)
+install(FILES $<TARGET_FILE:${LUA_LIBRARIES}> DESTINATION .)
 
 # cpack
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
-set(CPACK_GENERATOR "TGZ")
-set(CPACK_SOURCE_GENERATOR "TGZ")
+set(CPACK_GENERATOR "ZIP")
+set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY OFF)
 include(CPack)

@@ -1,4 +1,4 @@
-#include <epoxy/gl.h>
+#include <glad/gl.h>
 #include <SDL3/SDL.h>
 
 class Canvas {
