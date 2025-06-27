@@ -9,8 +9,8 @@ App::App()
 
 	lua_State* lua = luaL_newstate();
 	printf("%p\n", lua);
-
-	//luaL_dofile(lua, bootFilePath.string().c_str());
+	luaL_openlibs(lua);
+	luaL_dofile(lua, fileManager.bootFilePath.string().c_str());
 
 }
 
