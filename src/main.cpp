@@ -14,6 +14,8 @@ GLuint vao;
 GLint resolutionLocation;
 GLuint posBuf;
 
+lua_State* L;
+
 SDL_Rect srcrect = { .x = 0, .y = 0, .w = 320, .h = 180 };
 SDL_Rect destrect;
 int scale = 1;
@@ -28,15 +30,10 @@ GLuint createShaders();
 
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 {
-	std::filesystem::path userDir{ SDL_GetPrefPath("90sdev", "hram") };
-	std::filesystem::path appDir{ SDL_GetBasePath() };
-
-	std::filesystem::create_directories(userDir);
-
-	lua_State* L = luaL_newstate();
-	printf("%p\n", L);
+	L = luaL_newstate();
 	luaL_openlibs(L);
 
+	std::filesystem::path userDir{ SDL_GetPrefPath("", "progma0x140") };
 
 	lua_getglobal(L, "package");
 	lua_getfield(L, -1, "path");
@@ -45,7 +42,6 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	lua_pop(L, 1);
 	lua_pushstring(L, newpath.c_str());
 	lua_setfield(L, -2, "path");
-	lua_getfield(L, -1, "path");
 
 	lua_getglobal(L, "require");
 	lua_pushstring(L, "boot");
@@ -113,7 +109,13 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 
 SDL_AppResult SDL_AppIterate(void* appstate)
 {
-	//Uint64 ticks = SDL_GetTicks();
+	lua_getglobal(L, "tick");
+	if (lua_isfunction(L, -1)) {
+		lua_pushinteger(L, SDL_GetTicks());
+		lua_call(L, 1, 0);
+	}
+	lua_settop(L, 0);
+
 	return SDL_APP_CONTINUE;
 }
 
