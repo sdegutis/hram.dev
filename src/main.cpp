@@ -76,7 +76,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	memset(data, 0, 320 * 180 * 4);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 320, 180, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 320, 180, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
 
 
 
@@ -119,6 +119,8 @@ SDL_AppResult SDL_AppIterate(void* appstate)
 	return SDL_APP_CONTINUE;
 }
 
+bool fullscreen = false;
+
 SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* e)
 {
 	switch (e->type) {
@@ -129,6 +131,14 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* e)
 
 	case SDL_EVENT_MOUSE_MOTION:
 		mouseMoved(e->motion.x, e->motion.y);
+		break;
+
+	case SDL_EVENT_KEY_DOWN:
+		if (e->key.scancode == SDL_SCANCODE_F11) {
+			fullscreen = !fullscreen;
+			SDL_SetWindowFullscreen(window, fullscreen);
+			resized();
+		}
 		break;
 
 	case SDL_EVENT_MOUSE_BUTTON_DOWN:
