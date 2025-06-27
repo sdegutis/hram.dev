@@ -95,9 +95,25 @@ static int updatescreen(lua_State* L) {
 		int w = lua_tonumber(L, 3);
 		int h = lua_tonumber(L, 4);
 		int i = y * 320 + x;
-		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, GL_BGRA, GL_UNSIGNED_BYTE, data + i);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, GL_BGRA, GL_UNSIGNED_BYTE, (uint32_t*)data + i);
 	}
 
+	return 0;
+}
+
+static int memorycopy(lua_State* L) {
+
+	//memcpy()
+
+	return 0;
+}
+
+static int memoryset(lua_State* L) {
+	uint32_t* data = lua_touserdata(L, 1);
+	uint64_t off = lua_tointeger(L, 2);
+	uint64_t val = lua_tointeger(L, 3);
+	uint64_t siz = lua_tointeger(L, 4);
+	memset(data + off, val, siz);
 	return 0;
 }
 
@@ -115,6 +131,11 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	lua_register(L, "updatescreen", updatescreen);
 	lua_register(L, "opendir", opendir);
 	lua_register(L, "setfullscreen", setfullscreen);
+	lua_register(L, "memcpy", memorycopy);
+	lua_register(L, "memset", memoryset);
+
+	lua_pushlightuserdata(L, data);
+	lua_setglobal(L, "video");
 
 	lua_getglobal(L, "require");
 	lua_pushstring(L, "boot");
