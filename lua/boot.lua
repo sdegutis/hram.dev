@@ -1,5 +1,4 @@
--- boot loader 3 4
+-- boot loader
 
-print "hello world!"
-
-print(package.path)
+print "in boot laoder"
+require "init"

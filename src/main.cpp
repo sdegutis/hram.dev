@@ -25,41 +25,52 @@ uint8_t data[320 * 180 * 4];
 
 static void resized();
 static void draw();
-static void mouseMoved(int x, int y);
 static GLuint createShaders();
+
+static int blit(lua_State* L) {
+	draw();
+	return 0;
+}
+
+static int opendir(lua_State* L) {
+	auto s = lua_tostring(L, -1);
+	auto res = SDL_OpenURL(s);
+	lua_pushboolean(L, res);
+	return 1;
+}
+
+static int setfullscreen(lua_State* L) {
+	auto b = lua_toboolean(L, -1);
+	auto res = SDL_SetWindowFullscreen(window, b);
+	if (res) resized();
+	lua_pushboolean(L, res);
+	return 1;
+}
 
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 {
 	L = luaL_newstate();
 	luaL_openlibs(L);
 
-	std::filesystem::path userDir{ SDL_GetPrefPath("", "progma0x140") };
+	lua_pushstring(L, SDL_GetPrefPath("", "progma0xb4"));
+	lua_setglobal(L, "userdir");
 
-	// set package path
-
-	lua_getglobal(L, "package");
-	lua_getfield(L, -1, "path");
-	auto oldpath = lua_tostring(L, -1);
-	auto newpath = (userDir / "?.lua").string() + ";" + oldpath;
-	lua_pop(L, 1);
-	lua_pushstring(L, newpath.c_str());
-	lua_setfield(L, -2, "path");
-
-	// load boot.lua
+	luaL_dostring(L, "package.path = userdir .. '?.lua;' .. package.path");
 
 	lua_getglobal(L, "require");
 	lua_pushstring(L, "boot");
-	lua_call(L, 1, 0);
-
-	// cleanup lua
-
+	lua_pcall(L, 1, 0, 0);
 	lua_settop(L, 0);
 
-	// init sdl
+	lua_register(L, "blit", blit);
+	lua_register(L, "opendir", opendir);
+	lua_register(L, "setfullscreen", setfullscreen);
 
-	SDL_Init(SDL_INIT_VIDEO);
 
-	window = SDL_CreateWindow("PROGMA 0x140", 320 * 3 + (padding * 2), 180 * 3 + (padding * 2), SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+	SDL_SetAppMetadata("PROGMA 0xB4", "0.1", "com.90sdev.progma0xb4");
+	SDL_InitSubSystem(SDL_INIT_VIDEO);
+
+	window = SDL_CreateWindow("PROGMA 0xB4", 320 * 3 + (padding * 2), 180 * 3 + (padding * 2), SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
 	SDL_SetWindowMinimumSize(window, 320, 180);
 
 	glcontext = SDL_GL_CreateContext(window);
@@ -116,10 +127,8 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 SDL_AppResult SDL_AppIterate(void* appstate)
 {
 	lua_getglobal(L, "tick");
-	if (lua_isfunction(L, -1)) {
-		lua_pushinteger(L, SDL_GetTicks());
-		lua_call(L, 1, 0);
-	}
+	lua_pushinteger(L, SDL_GetTicks());
+	lua_pcall(L, 1, 0, 0);
 	lua_settop(L, 0);
 
 	return SDL_APP_CONTINUE;
@@ -136,20 +145,36 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* e)
 		break;
 
 	case SDL_EVENT_MOUSE_MOTION:
-		mouseMoved(e->motion.x, e->motion.y);
+	{
+		lua_getglobal(L, "mousemove");
+		int x = e->motion.x;
+		int y = e->motion.y;
+		lua_pushinteger(L, x);
+		lua_pushinteger(L, y);
+		lua_pcall(L, 2, 0, 0);
+		lua_settop(L, 0);
 		break;
+	}
 
 	case SDL_EVENT_KEY_DOWN:
-		if (e->key.scancode == SDL_SCANCODE_F11) {
-			fullscreen = !fullscreen;
-			SDL_SetWindowFullscreen(window, fullscreen);
-			resized();
-		}
+		lua_getglobal(L, "keydown");
+		lua_pushinteger(L, e->key.scancode);
+		lua_pcall(L, 1, 0, 0);
+		lua_settop(L, 0);
 		break;
 
 	case SDL_EVENT_MOUSE_BUTTON_DOWN:
+		lua_getglobal(L, "mousedown");
+		lua_pushinteger(L, e->button.button);
+		lua_pcall(L, 1, 0, 0);
+		lua_settop(L, 0);
+		break;
+
 	case SDL_EVENT_MOUSE_BUTTON_UP:
-		printf("%d, %d\n", e->button.button, e->button.down);
+		lua_getglobal(L, "mouseup");
+		lua_pushinteger(L, e->button.button);
+		lua_pcall(L, 1, 0, 0);
+		lua_settop(L, 0);
 		break;
 
 	case SDL_EVENT_QUIT:
@@ -211,24 +236,24 @@ static void draw()
 	SDL_GL_SwapWindow(window);
 }
 
-static void mouseMoved(int x, int y)
-{
-	x = SDL_rand(320);
-	y = SDL_rand(180);
-
-	int i = y * 320 + x;
-
-	data[i + 0] = 255;
-	data[i + 1] = 255;
-	data[i + 2] = 255;
-	data[i + 3] = 0;
-
-	glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data + i);
-
-	draw();
-
-	printf("%d, %d\n", x, y);
-}
+//static void mouseMoved(int x, int y)
+//{
+//	x = SDL_rand(320);
+//	y = SDL_rand(180);
+//
+//	int i = y * 320 + x;
+//
+//	data[i + 0] = 255;
+//	data[i + 1] = 255;
+//	data[i + 2] = 255;
+//	data[i + 3] = 0;
+//
+//	glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data + i);
+//
+//	draw();
+//
+//	printf("%d, %d\n", x, y);
+//}
 
 static GLuint createShaders() {
 	std::string vertShader = b::embed<"resources/vert.shader">();
