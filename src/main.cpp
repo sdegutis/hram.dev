@@ -33,10 +33,25 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 
 	std::filesystem::create_directories(userDir);
 
-	lua_State* lua = luaL_newstate();
-	printf("%p\n", lua);
-	luaL_openlibs(lua);
-	//luaL_dofile(lua, fileManager.bootFilePath.string().c_str());
+	lua_State* L = luaL_newstate();
+	printf("%p\n", L);
+	luaL_openlibs(L);
+
+
+	lua_getglobal(L, "package");
+	lua_getfield(L, -1, "path");
+	auto oldpath = lua_tostring(L, -1);
+	auto newpath = (userDir / "?.lua").string() + ";" + oldpath;
+	lua_pop(L, 1);
+	lua_pushstring(L, newpath.c_str());
+	lua_setfield(L, -2, "path");
+	lua_getfield(L, -1, "path");
+
+	lua_getglobal(L, "require");
+	lua_pushstring(L, "boot");
+	lua_call(L, 1, 0);
+
+	lua_settop(L, 0);
 
 	SDL_Init(SDL_INIT_VIDEO);
 
