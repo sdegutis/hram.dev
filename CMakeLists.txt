@@ -31,7 +31,7 @@ add_executable (hram
 	# WIN32
 	MACOSX_BUNDLE
 	"glad/src/gl.c"
-	"src/main.cpp" "src/canvas.cpp" "src/app.cpp" "src/filemanager.cpp")
+	"src/main.cpp"   )
 
 b_embed(hram "resources/vert.shader")
 b_embed(hram "resources/frag.shader")
