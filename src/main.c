@@ -3,6 +3,8 @@
 #include <SDL3/SDL_main.h>
 #include <SDL3/SDL.h>
 #include <lauxlib.h>
+#include <lua.h>
+#include <lualib.h>
 #include "shaders.h"
 
 int padding = 30;
@@ -97,15 +99,28 @@ static int updatescreen(lua_State* L) {
 		int i = y * 320 + x;
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, GL_BGRA, GL_UNSIGNED_BYTE, (uint32_t*)data + i);
 	}
-
 	return 0;
 }
 
 static int memorycopy(lua_State* L) {
-
-	//memcpy()
-
+	uint32_t* dst = lua_touserdata(L, 1);
+	uint64_t dstoff = lua_tointeger(L, 2);
+	uint32_t* src = lua_touserdata(L, 3);
+	uint64_t srcoff = lua_tointeger(L, 4);
+	uint64_t siz = lua_tointeger(L, 5);
+	if (dstoff < 0 || dstoff >= 320 * 180) return 0;
+	if (srcoff < 0 || srcoff >= 320 * 180) return 0;
+	if (dstoff + siz >= 320 * 180) return 0;
+	if (srcoff + siz >= 320 * 180) return 0;
+	memcpy(dst + dstoff, src + srcoff, siz * 4);
 	return 0;
+}
+
+static int newmem(lua_State* L) {
+	uint32_t w = lua_tonumber(L, 1);
+	uint32_t h = lua_tonumber(L, 2);
+	lua_newuserdata(L, w * h * 4);
+	return 1;
 }
 
 static int memoryset(lua_State* L) {
@@ -113,7 +128,13 @@ static int memoryset(lua_State* L) {
 	uint64_t off = lua_tointeger(L, 2);
 	uint64_t val = lua_tointeger(L, 3);
 	uint64_t siz = lua_tointeger(L, 4);
-	memset(data + off, val, siz);
+	if (off < 0 || off >= 320 * 180) return 0;
+	if (off + siz >= 320 * 180) return 0;
+
+	data += off;
+	for (uint32_t* done = data + siz; data != done; data++)
+		*data = val;
+
 	return 0;
 }
 
@@ -133,6 +154,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	lua_register(L, "setfullscreen", setfullscreen);
 	lua_register(L, "memcpy", memorycopy);
 	lua_register(L, "memset", memoryset);
+	lua_register(L, "newmem", newmem);
 
 	lua_pushlightuserdata(L, data);
 	lua_setglobal(L, "video");
@@ -142,10 +164,10 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	lua_call(L, 1, 0);
 
 
-	SDL_SetAppMetadata("PROGMA 0xB4", "0.1", "com.90sdev.progma0xb4");
+	SDL_SetAppMetadata("PROPIMA 0xB4", "0.1", "com.90sdev.propima0xb4");
 	SDL_InitSubSystem(SDL_INIT_VIDEO);
 
-	window = SDL_CreateWindow("PROGMA 0xB4", 320 * 3 + (padding * 2), 180 * 3 + (padding * 2), SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+	window = SDL_CreateWindow("PROPIMA 0xB4", 320 * 3 + (padding * 2), 180 * 3 + (padding * 2), SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
 	SDL_SetWindowMinimumSize(window, 320, 180);
 
 	glcontext = SDL_GL_CreateContext(window);
@@ -167,8 +189,9 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	memset(data, 0, 320 * 180 * 4);
+	//memset(data, 0, 320 * 180 * 4);
 
+	//uint8_t data[320 * 180 * 4] = { 0 };
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 320, 180, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
 
 
