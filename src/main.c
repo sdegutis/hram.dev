@@ -2,10 +2,8 @@
 #include <glad/gl.h>
 #include <SDL3/SDL_main.h>
 #include <SDL3/SDL.h>
-#include <filesystem>
-#include <print>
-#include <lua.hpp>
-#include <battery/embed.hpp>
+#include <lauxlib.h>
+#include "shaders.h"
 
 int padding = 30;
 SDL_Window* window;
@@ -23,9 +21,49 @@ int scale = 1;
 
 uint8_t data[320 * 180 * 4];
 
-static void resized();
-static void draw();
-static GLuint createShaders();
+static void draw()
+{
+	glClear(GL_COLOR_BUFFER_BIT);
+	glBindVertexArray(vao);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	SDL_GL_SwapWindow(window);
+}
+
+static void resized()
+{
+	destrect = srcrect;
+	scale = 1;
+
+	int w, h;
+	SDL_GetWindowSize(window, &w, &h);
+
+	while (destrect.w + srcrect.w <= w && destrect.h + srcrect.h <= h) {
+		scale++;
+		destrect.w += srcrect.w;
+		destrect.h += srcrect.h;
+	}
+
+	destrect.x = w / 2 - destrect.w / 2;
+	destrect.y = h / 2 - destrect.h / 2;
+
+	glBindVertexArray(vao);
+	glViewport(0, 0, w, h);
+	glUniform2f(resolutionLocation, w, h);
+
+
+
+
+	glBindBuffer(GL_ARRAY_BUFFER, posBuf);
+
+	float x1 = destrect.x;
+	float x2 = destrect.x + destrect.w;
+	float y1 = destrect.y;
+	float y2 = destrect.y + destrect.h;
+	float xys[12] = { x1,y1,x2,y1,x1,y2,x1,y2,x2,y1,x2,y2 };
+	glBufferData(GL_ARRAY_BUFFER, sizeof(xys), xys, GL_STATIC_DRAW);
+
+	draw();
+}
 
 static int blit(lua_State* L) {
 	draw();
@@ -33,18 +71,34 @@ static int blit(lua_State* L) {
 }
 
 static int opendir(lua_State* L) {
-	auto s = lua_tostring(L, -1);
-	auto res = SDL_OpenURL(s);
+	char* s = lua_tostring(L, -1);
+	bool res = SDL_OpenURL(s);
 	lua_pushboolean(L, res);
 	return 1;
 }
 
 static int setfullscreen(lua_State* L) {
-	auto b = lua_toboolean(L, -1);
-	auto res = SDL_SetWindowFullscreen(window, b);
+	bool b = lua_toboolean(L, -1);
+	bool res = SDL_SetWindowFullscreen(window, b);
 	if (res) resized();
 	lua_pushboolean(L, res);
 	return 1;
+}
+
+static int updatescreen(lua_State* L) {
+	if (lua_gettop(L) == 0) {
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 320, 180, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
+	}
+	else {
+		int x = lua_tonumber(L, 1);
+		int y = lua_tonumber(L, 2);
+		int w = lua_tonumber(L, 3);
+		int h = lua_tonumber(L, 4);
+		int i = y * 320 + x;
+		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, GL_BGRA, GL_UNSIGNED_BYTE, data + i);
+	}
+
+	return 0;
 }
 
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
@@ -57,14 +111,14 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 
 	luaL_dostring(L, "package.path = userdir .. '?.lua;' .. package.path");
 
-	lua_getglobal(L, "require");
-	lua_pushstring(L, "boot");
-	lua_pcall(L, 1, 0, 0);
-	lua_settop(L, 0);
-
 	lua_register(L, "blit", blit);
+	lua_register(L, "updatescreen", updatescreen);
 	lua_register(L, "opendir", opendir);
 	lua_register(L, "setfullscreen", setfullscreen);
+
+	lua_getglobal(L, "require");
+	lua_pushstring(L, "boot");
+	lua_call(L, 1, 0);
 
 
 	SDL_SetAppMetadata("PROGMA 0xB4", "0.1", "com.90sdev.progma0xb4");
@@ -93,6 +147,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	memset(data, 0, 320 * 180 * 4);
+
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 320, 180, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
 
 
@@ -103,7 +158,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	glUniform1i(imageLocation, 0);
 
 	glGenBuffers(1, &posBuf);
-	auto posAttrLoc = glGetAttribLocation(prog, "a_position");
+	GLint posAttrLoc = glGetAttribLocation(prog, "a_position");
 	glEnableVertexAttribArray(posAttrLoc);
 	glBindBuffer(GL_ARRAY_BUFFER, posBuf);
 	glVertexAttribPointer(posAttrLoc, 2, GL_FLOAT, false, 0, 0);
@@ -114,7 +169,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	float texNormData[12] = { 0,0,1,0,0,1,0,1,1,0,1,1 };
 	glBufferData(GL_ARRAY_BUFFER, sizeof(texNormData), texNormData, GL_STATIC_DRAW);
 
-	auto texNormAttrLoc = glGetAttribLocation(prog, "a_texCoord");
+	GLint texNormAttrLoc = glGetAttribLocation(prog, "a_texCoord");
 	glEnableVertexAttribArray(texNormAttrLoc);
 	glVertexAttribPointer(texNormAttrLoc, 2, GL_FLOAT, false, 0, 0);
 
@@ -133,8 +188,6 @@ SDL_AppResult SDL_AppIterate(void* appstate)
 
 	return SDL_APP_CONTINUE;
 }
-
-bool fullscreen = false;
 
 SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* e)
 {
@@ -189,121 +242,4 @@ void SDL_AppQuit(void* appstate, SDL_AppResult result)
 	glDeleteProgram(prog);
 	SDL_GL_DestroyContext(glcontext);
 	SDL_DestroyWindow(window);
-}
-
-static void resized()
-{
-	destrect = srcrect;
-	scale = 1;
-
-	int w, h;
-	SDL_GetWindowSize(window, &w, &h);
-
-	while (destrect.w + srcrect.w <= w && destrect.h + srcrect.h <= h) {
-		scale++;
-		destrect.w += srcrect.w;
-		destrect.h += srcrect.h;
-	}
-
-	destrect.x = w / 2 - destrect.w / 2;
-	destrect.y = h / 2 - destrect.h / 2;
-
-	glBindVertexArray(vao);
-	glViewport(0, 0, w, h);
-	glUniform2f(resolutionLocation, w, h);
-
-
-
-
-	glBindBuffer(GL_ARRAY_BUFFER, posBuf);
-
-	float x1 = destrect.x;
-	float x2 = destrect.x + destrect.w;
-	float y1 = destrect.y;
-	float y2 = destrect.y + destrect.h;
-	float xys[12] = { x1,y1,x2,y1,x1,y2,x1,y2,x2,y1,x2,y2 };
-	glBufferData(GL_ARRAY_BUFFER, sizeof(xys), xys, GL_STATIC_DRAW);
-
-
-	draw();
-}
-
-static void draw()
-{
-	glClear(GL_COLOR_BUFFER_BIT);
-	glBindVertexArray(vao);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	SDL_GL_SwapWindow(window);
-}
-
-//static void mouseMoved(int x, int y)
-//{
-//	x = SDL_rand(320);
-//	y = SDL_rand(180);
-//
-//	int i = y * 320 + x;
-//
-//	data[i + 0] = 255;
-//	data[i + 1] = 255;
-//	data[i + 2] = 255;
-//	data[i + 3] = 0;
-//
-//	glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data + i);
-//
-//	draw();
-//
-//	printf("%d, %d\n", x, y);
-//}
-
-static GLuint createShaders() {
-	std::string vertShader = b::embed<"resources/vert.shader">();
-	std::string fragShader = b::embed<"resources/frag.shader">();
-
-	GLuint vert = glCreateShader(GL_VERTEX_SHADER);
-	GLuint frag = glCreateShader(GL_FRAGMENT_SHADER);
-
-	GLint res = GL_FALSE;
-	int logi;
-
-	char const* vertsrc = vertShader.c_str();
-	glShaderSource(vert, 1, &vertsrc, NULL);
-	glCompileShader(vert);
-	glGetShaderiv(vert, GL_COMPILE_STATUS, &res);
-	glGetShaderiv(vert, GL_INFO_LOG_LENGTH, &logi);
-	if (logi > 0) {
-		std::vector<char> err(logi + 1);
-		glGetShaderInfoLog(vert, logi, NULL, &err[0]);
-		std::println("{}", &err[0]);
-	}
-
-	char const* fragsrc = fragShader.c_str();
-	glShaderSource(frag, 1, &fragsrc, NULL);
-	glCompileShader(frag);
-	glGetShaderiv(frag, GL_COMPILE_STATUS, &res);
-	glGetShaderiv(frag, GL_INFO_LOG_LENGTH, &logi);
-	if (logi > 0) {
-		std::vector<char> err(logi + 1);
-		glGetShaderInfoLog(frag, logi, NULL, &err[0]);
-		std::println("{}", &err[0]);
-	}
-
-	GLuint prog = glCreateProgram();
-	glAttachShader(prog, vert);
-	glAttachShader(prog, frag);
-	glLinkProgram(prog);
-	glGetProgramiv(prog, GL_LINK_STATUS, &res);
-	glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &logi);
-	if (logi > 0) {
-		std::vector<char> err(logi + 1);
-		glGetProgramInfoLog(prog, logi, NULL, &err[0]);
-		std::println("{}", &err[0]);
-	}
-
-	glDetachShader(prog, vert);
-	glDetachShader(prog, frag);
-
-	glDeleteShader(vert);
-	glDeleteShader(frag);
-
-	return prog;
 }
