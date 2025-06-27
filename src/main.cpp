@@ -7,6 +7,7 @@
 #include <lua.hpp>
 #include <battery/embed.hpp>
 
+int padding = 30;
 SDL_Window* window;
 SDL_GLContext glcontext;
 GLuint prog;
@@ -22,11 +23,10 @@ int scale = 1;
 
 uint8_t data[320 * 180 * 4];
 
-void resized();
-void draw();
-void mouseMoved(int x, int y);
-
-GLuint createShaders();
+static void resized();
+static void draw();
+static void mouseMoved(int x, int y);
+static GLuint createShaders();
 
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 {
@@ -34,6 +34,8 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	luaL_openlibs(L);
 
 	std::filesystem::path userDir{ SDL_GetPrefPath("", "progma0x140") };
+
+	// set package path
 
 	lua_getglobal(L, "package");
 	lua_getfield(L, -1, "path");
@@ -43,17 +45,21 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	lua_pushstring(L, newpath.c_str());
 	lua_setfield(L, -2, "path");
 
+	// load boot.lua
+
 	lua_getglobal(L, "require");
 	lua_pushstring(L, "boot");
 	lua_call(L, 1, 0);
 
+	// cleanup lua
+
 	lua_settop(L, 0);
+
+	// init sdl
 
 	SDL_Init(SDL_INIT_VIDEO);
 
-
-
-	window = SDL_CreateWindow("H-RAM", 320 * 3, 180 * 3, SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+	window = SDL_CreateWindow("PROGMA 0x140", 320 * 3 + (padding * 2), 180 * 3 + (padding * 2), SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
 	SDL_SetWindowMinimumSize(window, 320, 180);
 
 	glcontext = SDL_GL_CreateContext(window);
@@ -65,7 +71,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	resolutionLocation = glGetUniformLocation(prog, "u_resolution");
 	GLint imageLocation = glGetUniformLocation(prog, "u_image");
 
-	glClearColor(0.f, 0.f, 0.f, 1.f);
+	glClearColor(.1f, .1f, .1f, 1.f);
 
 	GLuint textureID;
 	glGenTextures(1, &textureID);
@@ -160,7 +166,7 @@ void SDL_AppQuit(void* appstate, SDL_AppResult result)
 	SDL_DestroyWindow(window);
 }
 
-void resized()
+static void resized()
 {
 	destrect = srcrect;
 	scale = 1;
@@ -197,15 +203,15 @@ void resized()
 	draw();
 }
 
-void draw()
+static void draw()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT);
 	glBindVertexArray(vao);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	SDL_GL_SwapWindow(window);
 }
 
-void mouseMoved(int x, int y)
+static void mouseMoved(int x, int y)
 {
 	x = SDL_rand(320);
 	y = SDL_rand(180);
@@ -224,7 +230,7 @@ void mouseMoved(int x, int y)
 	printf("%d, %d\n", x, y);
 }
 
-GLuint createShaders() {
+static GLuint createShaders() {
 	std::string vertShader = b::embed<"resources/vert.shader">();
 	std::string fragShader = b::embed<"resources/frag.shader">();
 
