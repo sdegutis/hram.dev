@@ -198,19 +198,22 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* e)
 		break;
 
 	case SDL_EVENT_MOUSE_MOTION:
-	{
 		lua_getglobal(L, "mousemove");
-		int x = e->motion.x;
-		int y = e->motion.y;
-		lua_pushinteger(L, x);
-		lua_pushinteger(L, y);
+		lua_pushinteger(L, floor((float)(e->motion.x - destrect.x) / (float)scale));
+		lua_pushinteger(L, floor((float)(e->motion.y - destrect.y) / (float)scale));
 		lua_pcall(L, 2, 0, 0);
 		lua_settop(L, 0);
 		break;
-	}
 
 	case SDL_EVENT_KEY_DOWN:
 		lua_getglobal(L, "keydown");
+		lua_pushinteger(L, e->key.scancode);
+		lua_pcall(L, 1, 0, 0);
+		lua_settop(L, 0);
+		break;
+
+	case SDL_EVENT_KEY_UP:
+		lua_getglobal(L, "keyup");
 		lua_pushinteger(L, e->key.scancode);
 		lua_pcall(L, 1, 0, 0);
 		lua_settop(L, 0);
@@ -227,6 +230,14 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* e)
 		lua_getglobal(L, "mouseup");
 		lua_pushinteger(L, e->button.button);
 		lua_pcall(L, 1, 0, 0);
+		lua_settop(L, 0);
+		break;
+
+	case SDL_EVENT_MOUSE_WHEEL:
+		lua_getglobal(L, "mousewheel");
+		lua_pushnumber(L, e->wheel.x);
+		lua_pushnumber(L, e->wheel.y);
+		lua_pcall(L, 2, 0, 0);
 		lua_settop(L, 0);
 		break;
 
