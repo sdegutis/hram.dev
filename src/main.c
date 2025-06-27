@@ -179,12 +179,22 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	return SDL_APP_CONTINUE;
 }
 
+static uint64_t last = 0;
+
 SDL_AppResult SDL_AppIterate(void* appstate)
 {
-	lua_getglobal(L, "tick");
-	lua_pushinteger(L, SDL_GetTicks());
-	lua_pcall(L, 1, 0, 0);
-	lua_settop(L, 0);
+	uint64_t now = SDL_GetTicks();
+	uint64_t diff = now - last;
+
+	if (diff >= 33) {
+		last = now;
+		lua_getglobal(L, "tick");
+		if (!lua_isnil(L, -1)) {
+			lua_pushinteger(L, diff);
+			lua_pcall(L, 1, 0, 0);
+		}
+		lua_settop(L, 0);
+	}
 
 	return SDL_APP_CONTINUE;
 }
@@ -206,18 +216,25 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* e)
 		break;
 
 	case SDL_EVENT_KEY_DOWN:
+	{
 		lua_getglobal(L, "keydown");
 		lua_pushinteger(L, e->key.scancode);
-		lua_pcall(L, 1, 0, 0);
+		int key = SDL_GetKeyFromScancode(e->key.scancode, e->key.mod, false);
+		if (key >= 32 && key <= 126) lua_pushlstring(L, &key, 1); else lua_pushnil(L);
+		lua_pcall(L, 2, 0, 0);
 		lua_settop(L, 0);
 		break;
+	}
 
-	case SDL_EVENT_KEY_UP:
+	case SDL_EVENT_KEY_UP: {
 		lua_getglobal(L, "keyup");
 		lua_pushinteger(L, e->key.scancode);
-		lua_pcall(L, 1, 0, 0);
+		int key = SDL_GetKeyFromScancode(e->key.scancode, e->key.mod, false);
+		if (key >= 32 && key <= 126) lua_pushlstring(L, &key, 1); else lua_pushnil(L);
+		lua_pcall(L, 2, 0, 0);
 		lua_settop(L, 0);
 		break;
+	}
 
 	case SDL_EVENT_MOUSE_BUTTON_DOWN:
 		lua_getglobal(L, "mousedown");
