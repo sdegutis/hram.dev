@@ -88,17 +88,7 @@ static int setfullscreen(lua_State* L) {
 }
 
 static int updatescreen(lua_State* L) {
-	if (lua_gettop(L) == 0) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 320, 180, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
-	}
-	else {
-		int x = lua_tonumber(L, 1);
-		int y = lua_tonumber(L, 2);
-		int w = lua_tonumber(L, 3);
-		int h = lua_tonumber(L, 4);
-		int i = y * 320 + x;
-		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, GL_BGRA, GL_UNSIGNED_BYTE, (uint32_t*)data + i);
-	}
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 320, 180, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
 	return 0;
 }
 
@@ -117,9 +107,7 @@ static int memorycopy(lua_State* L) {
 }
 
 static int newmem(lua_State* L) {
-	uint32_t w = lua_tonumber(L, 1);
-	uint32_t h = lua_tonumber(L, 2);
-	lua_newuserdata(L, w * h * 4);
+	lua_newuserdata(L, 320 * 180 * 4);
 	return 1;
 }
 
@@ -189,9 +177,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	//memset(data, 0, 320 * 180 * 4);
-
-	//uint8_t data[320 * 180 * 4] = { 0 };
+	memset(data, 0, 320 * 180 * 4);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 320, 180, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
 
 
