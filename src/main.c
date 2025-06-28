@@ -142,10 +142,6 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	lua_pushlightuserdata(L, data);
 	lua_setglobal(L, "video");
 
-	lua_getglobal(L, "require");
-	lua_pushstring(L, "boot");
-	lua_call(L, 1, 0);
-
 
 	SDL_SetAppMetadata("PROPIMA 0xB4", "0.1", "com.90sdev.propima0xb4");
 	SDL_InitSubSystem(SDL_INIT_VIDEO);
@@ -199,6 +195,11 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	glVertexAttribPointer(texNormAttrLoc, 2, GL_FLOAT, false, 0, 0);
 
 	resized();
+
+
+	lua_getglobal(L, "require");
+	lua_pushstring(L, "boot");
+	lua_call(L, 1, 0);
 
 
 	return SDL_APP_CONTINUE;
