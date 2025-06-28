@@ -94,12 +94,17 @@ static int memorycopy(lua_State* L) {
 	uint32_t* src = lua_touserdata(L, 3);
 	uint64_t srcoff = lua_tointeger(L, 4);
 	uint64_t siz = lua_tointeger(L, 5);
-	if (dstoff < 0 || dstoff >= 320 * 180) return 0;
-	if (srcoff < 0 || srcoff >= 320 * 180) return 0;
-	if (dstoff + siz >= 320 * 180) return 0;
-	if (srcoff + siz >= 320 * 180) return 0;
+	if (dstoff < 0 || dstoff >= 320 * 180 ||
+		srcoff < 0 || srcoff >= 320 * 180 ||
+		dstoff + siz > 320 * 180 ||
+		srcoff + siz > 320 * 180)
+	{
+		lua_pushboolean(L, false);
+		return 1;
+	}
 	memcpy(dst + dstoff, src + srcoff, siz * 4);
-	return 0;
+	lua_pushboolean(L, true);
+	return 1;
 }
 
 static int newmem(lua_State* L) {
@@ -112,14 +117,19 @@ static int memoryset(lua_State* L) {
 	uint64_t off = lua_tointeger(L, 2);
 	uint64_t val = lua_tointeger(L, 3);
 	uint64_t siz = lua_tointeger(L, 4);
-	if (off < 0 || off >= 320 * 180) return 0;
-	if (off + siz >= 320 * 180) return 0;
+	if (off < 0 || off >= 320 * 180 ||
+		off + siz > 320 * 180)
+	{
+		lua_pushboolean(L, false);
+		return 1;
+	}
 
 	data += off;
 	for (uint32_t* done = data + siz; data != done; data++)
 		*data = val;
 
-	return 0;
+	lua_pushboolean(L, true);
+	return 1;
 }
 
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
