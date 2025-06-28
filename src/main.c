@@ -67,8 +67,22 @@ static void resized()
 	draw();
 }
 
+static int updatescreen(lua_State* L) {
+	if (lua_gettop(L) == 0) {
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 320, 180, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
+	}
+	else {
+		int x = lua_tonumber(L, 1);
+		int y = lua_tonumber(L, 2);
+		int w = lua_tonumber(L, 3);
+		int h = lua_tonumber(L, 4);
+		int i = y * 320 + x;
+		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, GL_BGRA, GL_UNSIGNED_BYTE, (uint32_t*)data + i);
+	}
+	return 0;
+}
+
 static int blit(lua_State* L) {
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 320, 180, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
 	draw();
 	return 0;
 }
@@ -109,7 +123,8 @@ static int memorycopy(lua_State* L) {
 }
 
 static int newmem(lua_State* L) {
-	lua_newuserdata(L, 320 * 180 * 4);
+	uint64_t size = lua_tointeger(L, 1);
+	lua_newuserdata(L, size * 4);
 	return 1;
 }
 
@@ -156,6 +171,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	luaL_dostring(L, "package.path = userdir .. '?.lua;' .. package.path");
 
 	lua_register(L, "blit", blit);
+	lua_register(L, "updatescreen", updatescreen);
 	lua_register(L, "opendir", opendir);
 	lua_register(L, "setfullscreen", setfullscreen);
 	lua_register(L, "memcpy", memorycopy);
