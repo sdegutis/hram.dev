@@ -99,6 +99,7 @@ static int memorycopy(lua_State* L) {
 		dstoff + siz > 320 * 180 ||
 		srcoff + siz > 320 * 180)
 	{
+		lua_warning(L, "memcpy outside bounds", false);
 		lua_pushboolean(L, false);
 		return 1;
 	}
@@ -120,6 +121,7 @@ static int memoryset(lua_State* L) {
 	if (off < 0 || off >= 320 * 180 ||
 		off + siz > 320 * 180)
 	{
+		lua_warning(L, "memset outside bounds", false);
 		lua_pushboolean(L, false);
 		return 1;
 	}
@@ -134,6 +136,17 @@ static int memoryset(lua_State* L) {
 
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 {
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 0);
+	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 0);
+	SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+
 	L = luaL_newstate();
 	luaL_openlibs(L);
 
@@ -156,6 +169,8 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	SDL_SetAppMetadata("PROPIMA 0xB4", "0.1", "com.90sdev.propima0xb4");
 	SDL_InitSubSystem(SDL_INIT_VIDEO);
 
+	SDL_HideCursor();
+
 	window = SDL_CreateWindow("PROPIMA 0xB4", 320 * 3 + (padding * 2), 180 * 3 + (padding * 2), SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
 	SDL_SetWindowMinimumSize(window, 320, 180);
 
@@ -170,17 +185,29 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 
 	glClearColor(.1f, .1f, .1f, 1.f);
 
-	GLuint textureID;
-	glGenTextures(1, &textureID);
+	memset(data, 0, 320 * 180 * 4);
+
+	GLuint texture1;
+	glGenTextures(1, &texture1);
 	glActiveTexture(GL_TEXTURE0 + 0);
-	glBindTexture(GL_TEXTURE_2D, textureID);
+	glBindTexture(GL_TEXTURE_2D, texture1);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	memset(data, 0, 320 * 180 * 4);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 320, 180, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
 
+	//GLuint texture2;
+	//glGenTextures(1, &texture2);
+	//glActiveTexture(GL_TEXTURE0 + 1);
+	//glBindTexture(GL_TEXTURE_2D, texture2);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 100, 100, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
+
+	//glActiveTexture(GL_TEXTURE0 + 0);
 
 
 	glGenVertexArrays(1, &vao);
