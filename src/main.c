@@ -68,6 +68,7 @@ static void resized()
 }
 
 static int blit(lua_State* L) {
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 320, 180, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
 	draw();
 	return 0;
 }
@@ -85,11 +86,6 @@ static int setfullscreen(lua_State* L) {
 	if (res) resized();
 	lua_pushboolean(L, res);
 	return 1;
-}
-
-static int updatescreen(lua_State* L) {
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 320, 180, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
-	return 0;
 }
 
 static int memorycopy(lua_State* L) {
@@ -137,7 +133,6 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	luaL_dostring(L, "package.path = userdir .. '?.lua;' .. package.path");
 
 	lua_register(L, "blit", blit);
-	lua_register(L, "updatescreen", updatescreen);
 	lua_register(L, "opendir", opendir);
 	lua_register(L, "setfullscreen", setfullscreen);
 	lua_register(L, "memcpy", memorycopy);
