@@ -9,15 +9,6 @@ project(hram VERSION 0.1 LANGUAGES C CXX)
 
 include(FetchContent)
 
-# battery-embed
-
-FetchContent_Declare(
-  battery-embed
-  GIT_REPOSITORY https://github.com/batterycenter/embed.git
-  GIT_TAG        v1.2.19
-)
-FetchContent_MakeAvailable(battery-embed)
-
 # vars
 
 configure_file(vars.h.in genvars/vars.h)
@@ -30,11 +21,7 @@ configure_file(lua/prompt.lua prompt.lua COPYONLY)
 add_executable (hram
 	# WIN32
 	MACOSX_BUNDLE
-	"glad/src/gl.c"
-	"src/main.c"    "src/shaders.cpp")
-
-b_embed(hram "resources/vert.shader")
-b_embed(hram "resources/frag.shader")
+	"src/main.c"    )
 
 # opengl
 
