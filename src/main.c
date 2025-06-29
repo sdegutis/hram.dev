@@ -21,8 +21,6 @@ SDL_Rect srcrect = { .x = 0, .y = 0, .w = 320, .h = 180 };
 SDL_Rect destrect;
 int scale = 1;
 
-uint8_t data[320 * 180 * 4];
-
 static void draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -67,18 +65,19 @@ static void resized()
 	draw();
 }
 
-static int updatescreen(lua_State* L) {
-	if (lua_gettop(L) == 0) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 320, 180, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
-	}
-	else {
-		int x = lua_tonumber(L, 1);
-		int y = lua_tonumber(L, 2);
-		int w = lua_tonumber(L, 3);
-		int h = lua_tonumber(L, 4);
-		int i = y * 320 + x;
-		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, GL_BGRA, GL_UNSIGNED_BYTE, (uint32_t*)data + i);
-	}
+static int drawimg(lua_State* L) {
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 320, 180, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
+
+	uint8_t* data = lua_touserdata(L, 1);
+	int sx = lua_tonumber(L, 2);
+	int sy = lua_tonumber(L, 3);
+	int sw = lua_tonumber(L, 4);
+	int sh = lua_tonumber(L, 5);
+	int dx = lua_tonumber(L, 6);
+	int dy = lua_tonumber(L, 7);
+
+	int i = sy * 320 + sx;
+	glTexSubImage2D(GL_TEXTURE_2D, 0, dx, dy, sw, sh, GL_BGRA, GL_UNSIGNED_BYTE, (uint32_t*)data + i);
 	return 0;
 }
 
@@ -171,15 +170,13 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	luaL_dostring(L, "package.path = userdir .. '?.lua;' .. package.path");
 
 	lua_register(L, "blit", blit);
-	lua_register(L, "updatescreen", updatescreen);
+	lua_register(L, "drawimg", drawimg);
 	lua_register(L, "opendir", opendir);
 	lua_register(L, "setfullscreen", setfullscreen);
 	lua_register(L, "memcpy", memorycopy);
 	lua_register(L, "memset", memoryset);
 	lua_register(L, "newmem", newmem);
 
-	lua_pushlightuserdata(L, data);
-	lua_setglobal(L, "video");
 
 
 	SDL_SetAppMetadata("PROPIMA 0xB4", "0.1", "com.90sdev.propima0xb4");
@@ -201,8 +198,6 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 
 	glClearColor(.1f, .1f, .1f, 1.f);
 
-	memset(data, 0, 320 * 180 * 4);
-
 	GLuint texture1;
 	glGenTextures(1, &texture1);
 	glActiveTexture(GL_TEXTURE0 + 0);
@@ -211,7 +206,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 320, 180, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 320, 180, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
 
 	//GLuint texture2;
 	//glGenTextures(1, &texture2);
