@@ -190,10 +190,25 @@ static int deltexture(lua_State* L) {
 }
 
 static int setcolor(lua_State* L) {
-	uint64_t r = lua_tointeger(L, 1);
-	uint64_t g = lua_tointeger(L, 2);
-	uint64_t b = lua_tointeger(L, 3);
-	uint64_t a = lua_tointeger(L, 4);
+	uint64_t r;
+	uint64_t g;
+	uint64_t b;
+	uint64_t a;
+
+	if (lua_gettop(L) == 1) {
+		uint64_t c = lua_tointeger(L, 1);
+		r = (c >> 24) & 0xff;
+		g = (c >> 16) & 0xff;
+		b = (c >> 8) & 0xff;
+		a = (c) & 0xff;
+	}
+	else {
+		r = lua_tointeger(L, 1);
+		g = lua_tointeger(L, 2);
+		b = lua_tointeger(L, 3);
+		a = lua_tointeger(L, 4);
+	}
+
 	SDL_SetRenderDrawColor(renderer, r, g, b, a);
 	return 0;
 }
