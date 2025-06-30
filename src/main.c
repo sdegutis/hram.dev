@@ -299,6 +299,8 @@ SDL_AppResult SDL_AppIterate(void* appstate)
 		lua_settop(L, 0);
 	}
 
+	SDL_Delay(10);
+
 	return SDL_APP_CONTINUE;
 }
 
