@@ -151,6 +151,12 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	lua_register(L, "clearout", clearout);
 	lua_register(L, "setcolor", setcolor);
 
+	lua_newtable(L);
+	lua_pushinteger(L, SDL_TEXTUREACCESS_TARGET);    lua_setfield(L, -2, "target");
+	lua_pushinteger(L, SDL_TEXTUREACCESS_STATIC);    lua_setfield(L, -2, "static");
+	lua_pushinteger(L, SDL_TEXTUREACCESS_STREAMING); lua_setfield(L, -2, "streaming");
+	lua_setglobal(L, "texturetype");
+
 	SDL_SetAppMetadata("PROPIMA 0xB4", "0.1", "com.90sdev.propima0xb4");
 	SDL_InitSubSystem(SDL_INIT_VIDEO);
 	SDL_HideCursor();
