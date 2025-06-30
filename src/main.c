@@ -100,28 +100,6 @@ static int drawtexture(lua_State* L) {
 	return 1;
 }
 
-static int newmem(lua_State* L) {
-	int len = lua_tointeger(L, 1);
-	uint32_t* data = malloc(len * 4);
-	if (data) lua_pushlightuserdata(L, data);
-	else      lua_pushnil(L);
-	return 1;
-}
-
-static int putmem(lua_State* L) {
-	uint32_t* data = lua_touserdata(L, 1);
-	size_t idx = lua_tointeger(L, 2);
-	uint32_t val = lua_tointeger(L, 3);
-	data[idx] = val;
-	return 0;
-}
-
-static int delmem(lua_State* L) {
-	uint32_t* data = lua_touserdata(L, 1);
-	free(data);
-	return 0;
-}
-
 static int updatetexture(lua_State* L) {
 	SDL_Texture* tex = lua_touserdata(L, 1);
 
@@ -140,11 +118,11 @@ static int updatetexture(lua_State* L) {
 		lua_pushboolean(L, false);
 		return 1;
 	}
-	int i = 0;
+
+	uint32_t* iter = pixels;
 	lua_pushnil(L);
 	while (lua_next(L, 2) != 0) {
-		uint32_t color = lua_tonumber(L, -1);
-		pixels[i++] = color;
+		*iter++ = (uint32_t)lua_tonumber(L, -1);
 		lua_pop(L, 1);
 	}
 	bool worked = SDL_UpdateTexture(tex, &r, pixels, r.w * 4);
@@ -152,6 +130,28 @@ static int updatetexture(lua_State* L) {
 
 	lua_pushboolean(L, worked);
 	return 1;
+}
+
+static int streampixels(lua_State* L) {
+	uint32_t* pixels = lua_touserdata(L, lua_upvalueindex(1));
+	uint32_t pitch = lua_tointeger(L, lua_upvalueindex(2));
+	uint32_t w = lua_tointeger(L, lua_upvalueindex(3));
+
+	lua_len(L, 1);
+	size_t len = lua_tointeger(L, -1);
+	lua_pop(L, 1);
+
+	int i = 0;
+	uint32_t* iter = pixels;
+	lua_pushnil(L);
+	while (lua_next(L, 1) != 0) {
+		*iter = lua_tonumber(L, -1);
+		iter++;
+		if ((i++ % w) == w - 1) iter += pitch - w;
+		lua_pop(L, 1);
+	}
+
+	return 0;
 }
 
 static int locktexture(lua_State* L) {
@@ -167,16 +167,14 @@ static int locktexture(lua_State* L) {
 	int pitch;
 	bool worked = SDL_LockTexture(tex, &r, &pixels, &pitch);
 
-	lua_pushboolean(L, worked);
-
 	if (worked) {
 		lua_pushlightuserdata(L, pixels);
-		lua_pushinteger(L, pitch);
+		lua_pushinteger(L, pitch / 4);
+		lua_pushinteger(L, r.w);
+		lua_pushcclosure(L, streampixels, 3);
+		return 1;
 	}
-	else {
-		lua_pushnil(L);
-		return 2;
-	}
+	return 0;
 }
 
 static int unlocktexture(lua_State* L) {
@@ -225,9 +223,6 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 
 	luaL_dostring(L, "package.path = userdir .. '?.lua;' .. package.path");
 
-	lua_register(L, "newmem", newmem);
-	lua_register(L, "delmem", delmem);
-	lua_register(L, "putmem", putmem);
 	lua_register(L, "blit", blit);
 	lua_register(L, "opendir", opendir);
 	lua_register(L, "setfullscreen", setfullscreen);
