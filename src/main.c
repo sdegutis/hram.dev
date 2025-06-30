@@ -7,7 +7,6 @@
 #include <lua.h>
 #include <lualib.h>
 
-int padding = 30;
 SDL_Window* window;
 SDL_Renderer* renderer;
 lua_State* L;
@@ -73,7 +72,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	SDL_SetAppMetadata("PROPIMA 0xB4", "0.1", "com.90sdev.propima0xb4");
 	SDL_InitSubSystem(SDL_INIT_VIDEO);
 	SDL_HideCursor();
-	window = SDL_CreateWindow("PROPIMA 0xB4", 320 * 3 + (padding * 2), 180 * 3 + (padding * 2), SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+	window = SDL_CreateWindow("PROPIMA 0xB4", 320 * 3 + (30 * 2), 180 * 3 + (30 * 2), SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
 	renderer = SDL_CreateRenderer(window, NULL);
 	SDL_SetWindowMinimumSize(window, 320, 180);
 
@@ -100,6 +99,9 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 
 	SDL_FRect r3 = { .x = 300, .y = 0, .w = 10, .h = 10 };
 	SDL_RenderTexture(renderer, tex, NULL, &r3);
+
+
+	SDL_DestroyTexture(tex);
 
 
 	SDL_RenderPresent(renderer);
