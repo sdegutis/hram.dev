@@ -18,6 +18,8 @@ int scale = 1;
 lua_State* L;
 
 static void blit() {
+	SDL_SetRenderTarget(renderer, NULL);
+
 	SDL_SetRenderDrawColor(renderer, 0x11, 0x11, 0x11, 0xff);
 	SDL_RenderClear(renderer);
 
@@ -27,11 +29,11 @@ static void blit() {
 
 static void resized()
 {
-	destrect = srcrect;
-	scale = 1;
-
 	int w, h;
 	SDL_GetWindowSize(window, &w, &h);
+
+	destrect = srcrect;
+	scale = 1;
 
 	while (destrect.w + srcrect.w <= w && destrect.h + srcrect.h <= h) {
 		scale++;
@@ -61,18 +63,70 @@ static int setfullscreen(lua_State* L) {
 }
 
 static int newtexture(lua_State* L) {
-	int type = lua_tonumber(L, 1);
-	int w = lua_tonumber(L, 1);
-	int h = lua_tonumber(L, 1);
+	int type = lua_tointeger(L, 1);
+	int w = lua_tointeger(L, 2);
+	int h = lua_tointeger(L, 3);
 	SDL_Texture* tex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, type, w, h);
 	SDL_SetTextureScaleMode(tex, SDL_SCALEMODE_NEAREST);
 	lua_pushlightuserdata(L, tex);
 	return 1;
 }
 
+static int settexture(lua_State* L) {
+	SDL_Texture* tex = lua_touserdata(L, 1);
+	if (tex == NULL) tex = screen;
+	bool worked = SDL_SetRenderTarget(renderer, tex);
+	lua_pushboolean(L, worked);
+	return 1;
+}
+
+static int drawtexture(lua_State* L) {
+	SDL_Texture* tex = lua_touserdata(L, 1);
+
+	SDL_FRect dstrect;
+	dstrect.x = lua_tointeger(L, 2);
+	dstrect.y = lua_tointeger(L, 3);
+	dstrect.w = lua_tointeger(L, 4);
+	dstrect.h = lua_tointeger(L, 5);
+
+	SDL_FRect srcrect;
+	srcrect.x = lua_tointeger(L, 6);
+	srcrect.y = lua_tointeger(L, 7);
+	srcrect.w = lua_tointeger(L, 8);
+	srcrect.h = lua_tointeger(L, 9);
+
+	bool worked = SDL_RenderTexture(renderer, tex, &srcrect, &dstrect);
+	lua_pushboolean(L, worked);
+	return 1;
+}
+
 static int deltexture(lua_State* L) {
 	SDL_Texture* tex = lua_touserdata(L, 1);
 	SDL_DestroyTexture(tex);
+	return 0;
+}
+
+static int setcolor(lua_State* L) {
+	uint64_t r = lua_tointeger(L, 1);
+	uint64_t g = lua_tointeger(L, 2);
+	uint64_t b = lua_tointeger(L, 3);
+	uint64_t a = lua_tointeger(L, 4);
+	SDL_SetRenderDrawColor(renderer, r, g, b, a);
+	return 0;
+}
+
+static int rectfill(lua_State* L) {
+	SDL_FRect r;
+	r.x = lua_tonumber(L, 1);
+	r.y = lua_tonumber(L, 2);
+	r.w = lua_tonumber(L, 3);
+	r.h = lua_tonumber(L, 4);
+	SDL_RenderFillRect(renderer, &r);
+	return 0;
+}
+
+static int clearout(lua_State* L) {
+	SDL_RenderClear(renderer);
 	return 0;
 }
 
@@ -86,11 +140,16 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 
 	luaL_dostring(L, "package.path = userdir .. '?.lua;' .. package.path");
 
-	//lua_register(L, "blit", blit);
+	lua_register(L, "blit", blit);
 	lua_register(L, "opendir", opendir);
 	lua_register(L, "setfullscreen", setfullscreen);
-
-
+	lua_register(L, "newtexture", newtexture);
+	lua_register(L, "deltexture", deltexture);
+	lua_register(L, "settexture", settexture);
+	lua_register(L, "drawtexture", drawtexture);
+	lua_register(L, "rectfill", rectfill);
+	lua_register(L, "clearout", clearout);
+	lua_register(L, "setcolor", setcolor);
 
 	SDL_SetAppMetadata("PROPIMA 0xB4", "0.1", "com.90sdev.propima0xb4");
 	SDL_InitSubSystem(SDL_INIT_VIDEO);
@@ -102,36 +161,12 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	screen = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 320, 180);
 	SDL_SetTextureScaleMode(screen, SDL_SCALEMODE_NEAREST);
 
-
-
 	SDL_SetRenderTarget(renderer, screen);
 	SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xff);
 	SDL_FRect r = { .x = 0, .y = 0, .w = 320, .h = 180 };
 	SDL_RenderFillRect(renderer, &r);
-	SDL_SetRenderTarget(renderer, NULL);
 
 	resized();
-
-
-	//SDL_UnlockTexture(tex);
-
-	//SDL_SetRenderTarget(renderer, tex);
-
-	//SDL_SetRenderDrawColor(renderer, 255, 127, 0, 255);
-
-	//SDL_FRect r2 = { .x = 0, .y = 0, .w = 10, .h = 10 };
-	//SDL_RenderRect(renderer, &r2);
-
-	//SDL_SetRenderTarget(renderer, NULL);
-
-
-	//SDL_FRect r3 = { .x = 300, .y = 0, .w = 10, .h = 10 };
-	//SDL_RenderTexture(renderer, screen, NULL, &r3);
-
-
-
-
-
 
 	lua_getglobal(L, "require");
 	lua_pushstring(L, "boot");
@@ -163,10 +198,6 @@ SDL_AppResult SDL_AppIterate(void* appstate)
 SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* e)
 {
 	switch (e->type) {
-
-	case SDL_EVENT_WINDOW_RESIZED:
-		resized();
-		break;
 
 	case SDL_EVENT_MOUSE_MOTION:
 		lua_getglobal(L, "mousemove");
@@ -217,6 +248,10 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* e)
 		lua_pushnumber(L, e->wheel.y);
 		lua_pcall(L, 2, 0, 0);
 		lua_settop(L, 0);
+		break;
+
+	case SDL_EVENT_WINDOW_RESIZED:
+		resized();
 		break;
 
 	case SDL_EVENT_QUIT:
