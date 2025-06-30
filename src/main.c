@@ -9,11 +9,21 @@
 
 SDL_Window* window;
 SDL_Renderer* renderer;
+SDL_Texture* screen;
+
+SDL_FRect srcrect = { .x = 0, .y = 0, .w = 320, .h = 180 };
+SDL_FRect destrect;
+int scale = 1;
+
 lua_State* L;
 
-SDL_Rect srcrect = { .x = 0, .y = 0, .w = 320, .h = 180 };
-SDL_Rect destrect;
-int scale = 1;
+static void blit() {
+	SDL_SetRenderDrawColor(renderer, 0x11, 0x11, 0x11, 0xff);
+	SDL_RenderClear(renderer);
+
+	SDL_RenderTexture(renderer, screen, &srcrect, &destrect);
+	SDL_RenderPresent(renderer);
+}
 
 static void resized()
 {
@@ -32,9 +42,7 @@ static void resized()
 	destrect.x = w / 2 - destrect.w / 2;
 	destrect.y = h / 2 - destrect.h / 2;
 
-	//SDL_SetRenderDrawColor(renderer, 127, 0, 0, 255);
-	//SDL_RenderClear(renderer);
-	//SDL_RenderPresent(renderer);
+	blit();
 }
 
 static int opendir(lua_State* L) {
@@ -52,6 +60,21 @@ static int setfullscreen(lua_State* L) {
 	return 1;
 }
 
+static int newtexture(lua_State* L) {
+	int type = lua_tonumber(L, 1);
+	int w = lua_tonumber(L, 1);
+	int h = lua_tonumber(L, 1);
+	SDL_Texture* tex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, type, w, h);
+	SDL_SetTextureScaleMode(tex, SDL_SCALEMODE_NEAREST);
+	lua_pushlightuserdata(L, tex);
+	return 1;
+}
+
+static int deltexture(lua_State* L) {
+	SDL_Texture* tex = lua_touserdata(L, 1);
+	SDL_DestroyTexture(tex);
+	return 0;
+}
 
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 {
@@ -76,35 +99,37 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	renderer = SDL_CreateRenderer(window, NULL);
 	SDL_SetWindowMinimumSize(window, 320, 180);
 
+	screen = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 320, 180);
+	SDL_SetTextureScaleMode(screen, SDL_SCALEMODE_NEAREST);
 
 
 
-
-
-	SDL_SetRenderScale(renderer, 3, 3);
-
-
-	SDL_Texture* tex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 10, 10);
-	SDL_SetTextureScaleMode(tex, SDL_SCALEMODE_NEAREST);
-
-	SDL_SetRenderTarget(renderer, tex);
-
-	SDL_SetRenderDrawColor(renderer, 255, 127, 0, 255);
-
-	SDL_FRect r2 = { .x = 0, .y = 0, .w = 10, .h = 10 };
-	SDL_RenderRect(renderer, &r2);
-
+	SDL_SetRenderTarget(renderer, screen);
+	SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xff);
+	SDL_FRect r = { .x = 0, .y = 0, .w = 320, .h = 180 };
+	SDL_RenderFillRect(renderer, &r);
 	SDL_SetRenderTarget(renderer, NULL);
 
-
-	SDL_FRect r3 = { .x = 300, .y = 0, .w = 10, .h = 10 };
-	SDL_RenderTexture(renderer, tex, NULL, &r3);
+	resized();
 
 
-	SDL_DestroyTexture(tex);
+	//SDL_UnlockTexture(tex);
+
+	//SDL_SetRenderTarget(renderer, tex);
+
+	//SDL_SetRenderDrawColor(renderer, 255, 127, 0, 255);
+
+	//SDL_FRect r2 = { .x = 0, .y = 0, .w = 10, .h = 10 };
+	//SDL_RenderRect(renderer, &r2);
+
+	//SDL_SetRenderTarget(renderer, NULL);
 
 
-	SDL_RenderPresent(renderer);
+	//SDL_FRect r3 = { .x = 300, .y = 0, .w = 10, .h = 10 };
+	//SDL_RenderTexture(renderer, screen, NULL, &r3);
+
+
+
 
 
 
