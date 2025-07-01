@@ -3,9 +3,13 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_gpu.h>
-#include <lauxlib.h>
-#include <lua.h>
-#include <lualib.h>
+#include <lua.hpp>
+#include <wasm_export.h>
+#include "wat2wasm.hpp"
+
+#include <print>
+#include <string>
+#include <vector>
 
 SDL_Window* window;
 SDL_Renderer* renderer;
@@ -17,7 +21,7 @@ int scale = 1;
 
 lua_State* L;
 
-static void blit() {
+static int blit(lua_State* L) {
 	SDL_SetRenderTarget(renderer, NULL);
 
 	SDL_SetRenderDrawColor(renderer, 0x11, 0x11, 0x11, 0xff);
@@ -25,6 +29,8 @@ static void blit() {
 
 	SDL_RenderTexture(renderer, screen, &srcrect, &destrect);
 	SDL_RenderPresent(renderer);
+
+	return 0;
 }
 
 static void resized()
@@ -44,11 +50,11 @@ static void resized()
 	destrect.x = w / 2 - destrect.w / 2;
 	destrect.y = h / 2 - destrect.h / 2;
 
-	blit();
+	blit(L);
 }
 
 static int opendir(lua_State* L) {
-	char* s = lua_tostring(L, -1);
+	const char* s = lua_tostring(L, -1);
 	bool res = SDL_OpenURL(s);
 	lua_pushboolean(L, res);
 	return 1;
@@ -63,7 +69,7 @@ static int setfullscreen(lua_State* L) {
 }
 
 static int newtexture(lua_State* L) {
-	int type = lua_tointeger(L, 1);
+	auto type = (SDL_TextureAccess)lua_tointeger(L, 1);
 	int w = lua_tointeger(L, 2);
 	int h = lua_tointeger(L, 3);
 	SDL_Texture* tex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, type, w, h);
@@ -73,7 +79,7 @@ static int newtexture(lua_State* L) {
 }
 
 static int settexture(lua_State* L) {
-	SDL_Texture* tex = lua_touserdata(L, 1);
+	auto tex = (SDL_Texture*)lua_touserdata(L, 1);
 	if (tex == NULL) tex = screen;
 	bool worked = SDL_SetRenderTarget(renderer, tex);
 	lua_pushboolean(L, worked);
@@ -81,7 +87,7 @@ static int settexture(lua_State* L) {
 }
 
 static int drawtexture(lua_State* L) {
-	SDL_Texture* tex = lua_touserdata(L, 1);
+	auto tex = (SDL_Texture*)lua_touserdata(L, 1);
 
 	SDL_FRect dstrect;
 	dstrect.x = lua_tointeger(L, 2);
@@ -101,7 +107,7 @@ static int drawtexture(lua_State* L) {
 }
 
 static int updatetexture(lua_State* L) {
-	SDL_Texture* tex = lua_touserdata(L, 1);
+	SDL_Texture* tex = (SDL_Texture*)lua_touserdata(L, 1);
 
 	lua_len(L, 2);
 	size_t len = lua_tointeger(L, -1);
@@ -113,7 +119,7 @@ static int updatetexture(lua_State* L) {
 	r.w = lua_tointeger(L, 5);
 	r.h = lua_tointeger(L, 6);
 
-	uint32_t* pixels = malloc(len * 4);
+	auto pixels = (uint32_t*)malloc(len * 4);
 	if (!pixels) {
 		lua_pushboolean(L, false);
 		return 1;
@@ -133,7 +139,7 @@ static int updatetexture(lua_State* L) {
 }
 
 static int streampixels(lua_State* L) {
-	uint32_t* pixels = lua_touserdata(L, lua_upvalueindex(1));
+	auto pixels = (uint32_t*)lua_touserdata(L, lua_upvalueindex(1));
 	uint32_t pitch = lua_tointeger(L, lua_upvalueindex(2));
 	uint32_t w = lua_tointeger(L, lua_upvalueindex(3));
 
@@ -154,37 +160,8 @@ static int streampixels(lua_State* L) {
 	return 0;
 }
 
-static int locktexture(lua_State* L) {
-	SDL_Texture* tex = lua_touserdata(L, 1);
-
-	SDL_Rect r;
-	r.x = lua_tointeger(L, 2);
-	r.y = lua_tointeger(L, 3);
-	r.w = lua_tointeger(L, 4);
-	r.h = lua_tointeger(L, 5);
-
-	uint32_t* pixels;
-	int pitch;
-	bool worked = SDL_LockTexture(tex, &r, &pixels, &pitch);
-
-	if (worked) {
-		lua_pushlightuserdata(L, pixels);
-		lua_pushinteger(L, pitch / 4);
-		lua_pushinteger(L, r.w);
-		lua_pushcclosure(L, streampixels, 3);
-		return 1;
-	}
-	return 0;
-}
-
-static int unlocktexture(lua_State* L) {
-	SDL_Texture* tex = lua_touserdata(L, 1);
-	SDL_UnlockTexture(tex);
-	return 0;
-}
-
 static int deltexture(lua_State* L) {
-	SDL_Texture* tex = lua_touserdata(L, 1);
+	auto tex = (SDL_Texture*)lua_touserdata(L, 1);
 	SDL_DestroyTexture(tex);
 	return 0;
 }
@@ -228,8 +205,66 @@ static int clearout(lua_State* L) {
 	return 0;
 }
 
+static void foo() {
+	printf("IN FOO!!!\n");
+}
+
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 {
+	wasm_runtime_init();
+
+	static NativeSymbol native_symbols[] = {
+		EXPORT_WASM_API_WITH_SIG(foo, "()")
+	};
+
+	wasm_runtime_register_natives("os", native_symbols, sizeof(native_symbols) / sizeof(NativeSymbol));
+
+	std::string s = R"(
+
+(module
+	(import "os" "foo" (func $foo))
+	(memory 1 1)
+	(func $boot (export "boot")
+		(call $foo)
+		(call $foo)
+		(call $foo)
+	)
+)
+
+)";
+
+	std::vector<uint8_t> file_data(s.begin(), s.end());
+
+	auto out = wat2wasm(s, file_data);
+	auto& val = out.value();
+
+
+	char error_buf[128];
+	auto mod = wasm_runtime_load(val.data(), val.size(), error_buf, sizeof(error_buf));
+	std::println("mod is null? {}", mod == NULL);
+
+	if (mod == NULL) {
+		printf("%s\n", error_buf);
+		return SDL_APP_FAILURE;
+	}
+
+	auto modinst = wasm_runtime_instantiate(mod, 256, 256, error_buf, sizeof(error_buf));
+
+	auto func = wasm_runtime_lookup_function(modinst, "boot");
+	std::println("func is null? {}", func == NULL);
+
+	if (func == NULL) {
+		return SDL_APP_FAILURE;
+	}
+
+	auto exec_env = wasm_runtime_create_exec_env(modinst, 8192);
+
+	auto worked3 = wasm_runtime_call_wasm(exec_env, func, 0, {});
+	std::println("worked 3? {}", worked3);
+
+
+
+
 	L = luaL_newstate();
 	luaL_openlibs(L);
 
@@ -245,8 +280,6 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	lua_register(L, "deltexture", deltexture);
 	lua_register(L, "settexture", settexture);
 	lua_register(L, "drawtexture", drawtexture);
-	lua_register(L, "locktexture", locktexture);
-	lua_register(L, "unlocktexture", unlocktexture);
 	lua_register(L, "updatetexture", updatetexture);
 	lua_register(L, "rectfill", rectfill);
 	lua_register(L, "clearout", clearout);
@@ -320,7 +353,7 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* e)
 	{
 		lua_getglobal(L, "keydown");
 		lua_pushinteger(L, e->key.scancode);
-		int key = SDL_GetKeyFromScancode(e->key.scancode, e->key.mod, false);
+		const char key = SDL_GetKeyFromScancode(e->key.scancode, e->key.mod, false);
 		if (key >= 32 && key <= 126) lua_pushlstring(L, &key, 1); else lua_pushnil(L);
 		lua_pcall(L, 2, 0, 0);
 		lua_settop(L, 0);
@@ -330,7 +363,7 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* e)
 	case SDL_EVENT_KEY_UP: {
 		lua_getglobal(L, "keyup");
 		lua_pushinteger(L, e->key.scancode);
-		int key = SDL_GetKeyFromScancode(e->key.scancode, e->key.mod, false);
+		const char key = SDL_GetKeyFromScancode(e->key.scancode, e->key.mod, false);
 		if (key >= 32 && key <= 126) lua_pushlstring(L, &key, 1); else lua_pushnil(L);
 		lua_pcall(L, 2, 0, 0);
 		lua_settop(L, 0);
