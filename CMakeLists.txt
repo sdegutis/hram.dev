@@ -23,9 +23,8 @@ add_executable (hram
 	MACOSX_BUNDLE
 	"src/main.cpp" "src/wat2wasm.cpp")
 
-# opengl
+# version vars
 
-target_include_directories(hram PUBLIC "${PROJECT_SOURCE_DIR}/glad/include")
 target_include_directories(hram PUBLIC "${PROJECT_BINARY_DIR}/genvars")
 
 # sdl
