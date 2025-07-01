@@ -16,7 +16,7 @@ include(FetchContent)
 configure_file(vars.h.in vars.h)
 configure_file(boot.wat boot.wat COPYONLY)
 
-add_executable (hram "src/main.cpp"  )
+add_executable (hram "src/main.c"  )
 
 #set_property(TARGET hram PROPERTY WIN32_EXECUTABLE TRUE)
 
@@ -25,19 +25,9 @@ target_include_directories(hram PUBLIC ${PROJECT_BINARY_DIR})
 find_package(SDL3 CONFIG REQUIRED)
 target_link_libraries(hram PRIVATE SDL3::SDL3)
 
-FetchContent_Declare(
-    wasmtime
-    GIT_REPOSITORY https://github.com/bytecodealliance/wasmtime.git
-    SOURCE_SUBDIR crates/c-api
-    OVERRIDE_FIND_PACKAGE
-    SYSTEM
-    GIT_TAG v34.0.1
-)
-FetchContent_MakeAvailable(wasmtime)
-
-target_link_libraries(hram PUBLIC wasmtime)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/wasmtime/crates/c-api ${CMAKE_CURRENT_BINARY_DIR}/wasmtime)
 target_include_directories(hram PUBLIC wasmtime)
-
+target_link_libraries(hram PUBLIC wasmtime)
 
 set_property(TARGET hram PROPERTY C_STANDARD 23)
 set_property(TARGET hram PROPERTY CXX_STANDARD 26)
