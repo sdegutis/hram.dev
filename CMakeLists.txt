@@ -21,7 +21,7 @@ configure_file(lua/prompt.lua prompt.lua COPYONLY)
 add_executable (hram
 	# WIN32
 	MACOSX_BUNDLE
-	"src/main.cpp" "src/wat2wasm.cpp")
+	"src/main.c" )
 
 # version vars
 
@@ -37,41 +37,6 @@ target_link_libraries(hram PRIVATE SDL3::SDL3)
 find_package(Lua REQUIRED)
 target_include_directories(hram PRIVATE ${LUA_INCLUDE_DIR})
 target_link_libraries(hram PRIVATE ${LUA_LIBRARIES})
-
-# wamr
-
-set (WAMR_BUILD_PLATFORM "windows")
-set (WAMR_BUILD_TARGET "X86_64")
-
-set (WAMR_BUILD_BULK_MEMORY 1)
-set (WAMR_BUILD_REF_TYPES 1)
-
-set (WAMR_BUILD_LIBC_BUILTIN 0)
-set (WAMR_BUILD_LIBC_WASI 0)
-set (WAMR_BUILD_LIBC_UVWASI 0)
-
-set (WAMR_BUILD_INTERP 1)
-set (WAMR_BUILD_FAST_INTERP 1)
-
-set (WAMR_BUILD_AOT 1)
-set (WAMR_BUILD_JIT 0)
-#set (WAMR_BUILD_FAST_JIT 1)
-
-set (WAMR_BUILD_SIMD 0)
-FetchContent_Declare(
-    wamr
-    GIT_REPOSITORY https://github.com/bytecodealliance/wasm-micro-runtime.git
-    GIT_TAG "WAMR-2.3.1"
-)
-FetchContent_Populate(wamr)
-include (${wamr_SOURCE_DIR}/build-scripts/runtime_lib.cmake)
-add_library(vmlib ${WAMR_RUNTIME_LIB_SOURCE})
-target_link_libraries (hram PRIVATE vmlib -lm)
-
-# wabt
-
-find_package(wabt CONFIG REQUIRED)
-target_link_libraries(hram PRIVATE wabt::wabt)
 
 # c / cxx standards
 
