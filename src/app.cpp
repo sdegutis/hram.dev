@@ -72,6 +72,8 @@ void App::loadFile()
 	auto out = wat2wasm(bootFile.string(), file_data);
 	auto& val = out.value();
 
+	wasm_runtime_init();
+
 	char error_buf[128];
 	auto mod = wasm_runtime_load(val.data(), val.size(), error_buf, sizeof(error_buf));
 	std::println("mod is null? {}", mod == NULL);
@@ -80,6 +82,12 @@ void App::loadFile()
 
 	auto func = wasm_runtime_lookup_function(modinst, "add");
 	std::println("func is null? {}", func == NULL);
+
+	//wasm_val_t results;
+
+	//wasm_runtime_call_wasm()
+	//wasm_runtime_call_wasm_a()
+	//wasm_runtime_call_wasm_v()
 
 	//wasm_memory_get_base_address
 	//wasm_runtime_addr_app_to_native
