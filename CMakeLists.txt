@@ -36,6 +36,9 @@ target_link_libraries(hram PRIVATE wabt::wabt)
 set (WAMR_BUILD_PLATFORM "windows")
 set (WAMR_BUILD_TARGET "X86_64")
 
+set (WAMR_BUILD_BULK_MEMORY 1)
+set (WAMR_BUILD_REF_TYPES 1)
+
 set (WAMR_BUILD_LIBC_BUILTIN 0)
 set (WAMR_BUILD_LIBC_WASI 0)
 set (WAMR_BUILD_LIBC_UVWASI 0)
