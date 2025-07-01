@@ -94,7 +94,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	bool worked = wasm_runtime_get_app_addr_range(modinst, 0, &in, &o);
 	printf("worked %d\n", worked);
 	if (worked) {
-		printf("addr %p %p\n", in, o);
+		printf("addr %llu %llu\n", in, o);
 	}
 
 
