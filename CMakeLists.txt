@@ -16,51 +16,27 @@ include(FetchContent)
 configure_file(vars.h.in vars.h)
 configure_file(boot.wat boot.wat COPYONLY)
 
-add_executable (hram "src/main.cpp"  "src/wat2wasm.cpp"  )
+add_executable (hram "src/main.cpp"  )
 
 #set_property(TARGET hram PROPERTY WIN32_EXECUTABLE TRUE)
 
 target_include_directories(hram PUBLIC ${PROJECT_BINARY_DIR})
 
-#find_package(LLVM CONFIG REQUIRED)
-
-find_package(efsw CONFIG REQUIRED)
-target_link_libraries(hram PRIVATE efsw::efsw)
-
 find_package(SDL3 CONFIG REQUIRED)
 target_link_libraries(hram PRIVATE SDL3::SDL3)
 
-find_package(wabt CONFIG REQUIRED)
-target_link_libraries(hram PRIVATE wabt::wabt)
-
-set (WAMR_BUILD_PLATFORM "windows")
-set (WAMR_BUILD_TARGET "X86_64")
-
-set (WAMR_BUILD_BULK_MEMORY 1)
-set (WAMR_BUILD_REF_TYPES 1)
-
-set (WAMR_BUILD_LIBC_BUILTIN 0)
-set (WAMR_BUILD_LIBC_WASI 0)
-set (WAMR_BUILD_LIBC_UVWASI 0)
-
-set (WAMR_BUILD_INTERP 1)
-set (WAMR_BUILD_FAST_INTERP 1)
-
-set (WAMR_BUILD_AOT 1)
-set (WAMR_BUILD_JIT 0)
-#set (WAMR_BUILD_FAST_JIT 1)
-
-set (WAMR_BUILD_SIMD 0)
-
 FetchContent_Declare(
-    wamr
-    GIT_REPOSITORY https://github.com/bytecodealliance/wasm-micro-runtime.git
-    GIT_TAG WAMR-2.3.1
+    wasmtime
+    GIT_REPOSITORY https://github.com/bytecodealliance/wasmtime.git
+    SOURCE_SUBDIR crates/c-api
+    OVERRIDE_FIND_PACKAGE
+    SYSTEM
+    GIT_TAG v34.0.1
 )
-FetchContent_Populate(wamr)
-include (${wamr_SOURCE_DIR}/build-scripts/runtime_lib.cmake)
-add_library(vmlib ${WAMR_RUNTIME_LIB_SOURCE})
-target_link_libraries (hram PRIVATE vmlib -lm)
+FetchContent_MakeAvailable(wasmtime)
+
+target_link_libraries(hram PUBLIC wasmtime)
+target_include_directories(hram PUBLIC wasmtime)
 
 
 set_property(TARGET hram PROPERTY C_STANDARD 23)
