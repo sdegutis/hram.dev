@@ -16,7 +16,7 @@ include(FetchContent)
 configure_file(vars.h.in vars.h)
 configure_file(boot.wat boot.wat COPYONLY)
 
-add_executable (hram "src/main.cpp"  "src/wat2wasm.cpp" "src/app.cpp" "src/filewatcher.cpp")
+add_executable (hram "src/main.cpp"  "src/wat2wasm.cpp"  )
 
 #set_property(TARGET hram PROPERTY WIN32_EXECUTABLE TRUE)
 
