@@ -55,7 +55,7 @@ add_executable (hram
 	"lua55/lapi.c"
 	"lua55/lauxlib.c"
 
-	"src/main.c"
+	"src/main.cpp"
 )
 
 # version vars
@@ -67,6 +67,11 @@ target_include_directories(hram PUBLIC "${PROJECT_BINARY_DIR}/genvars")
 
 find_package(SDL3 CONFIG REQUIRED)
 target_link_libraries(hram PRIVATE SDL3::SDL3)
+
+# wabt
+
+find_package(wabt CONFIG REQUIRED)
+target_link_libraries(hram PRIVATE wabt::wabt)
 
 # c / cxx standards
 
