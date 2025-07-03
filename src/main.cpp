@@ -235,9 +235,9 @@ wabt::Result run() {
 	wabt::Features s_features;
 	s_features.EnableAll();
 
-	std::unique_ptr<wabt::FileStream> s_log_stream = wabt::FileStream::CreateStderr();
+	//std::unique_ptr<wabt::FileStream> s_log_stream = wabt::FileStream::CreateStderr();
 
-	auto opts = wabt::ReadBinaryOptions(s_features, s_log_stream.get(), true, true, true);
+	auto opts = wabt::ReadBinaryOptions(s_features, nullptr, true, true, true);
 
 	std::string src = R"(
 		(module
@@ -289,11 +289,13 @@ wabt::Result run() {
 		if (export_.type.type->kind == wabt::ExternalKind::Func && export_.type.name == "foo") {
 
 			auto f = store.UnsafeGet<wabt::interp::Func>(c->funcs()[export_.index]);
-			printf("got it %p !\n", f);
+			//printf("got it %p !\n", f);
 
-			wabt::interp::Values runparams = { wabt::interp::Value::Make(123) };
-			wabt::interp::Values runresults;
-			auto res = f->Call(store, runparams, runresults, &trap, nullptr);
+			wabt::interp::Value v;
+			v.Set(wabt::interp::u32(123));
+			wabt::interp::Values runresults(1);
+			//std::println("{}", f->type());
+			auto res = f->Call(store, { v }, runresults, &trap, nullptr);
 			//printf("%d\n", res.Ok);
 		}
 	}
