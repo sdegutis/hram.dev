@@ -137,28 +137,6 @@ static int updatetexture(lua_State* L) {
 	return 1;
 }
 
-static int streampixels(lua_State* L) {
-	uint32_t* pixels = lua_touserdata(L, lua_upvalueindex(1));
-	uint32_t pitch = lua_tointeger(L, lua_upvalueindex(2));
-	uint32_t w = lua_tointeger(L, lua_upvalueindex(3));
-
-	lua_len(L, 1);
-	size_t len = lua_tointeger(L, -1);
-	lua_pop(L, 1);
-
-	int i = 0;
-	uint32_t* iter = pixels;
-	lua_pushnil(L);
-	while (lua_next(L, 1) != 0) {
-		*iter = lua_tonumber(L, -1);
-		iter++;
-		if ((i++ % w) == w - 1) iter += pitch - w;
-		lua_pop(L, 1);
-	}
-
-	return 0;
-}
-
 static int deltexture(lua_State* L) {
 	SDL_Texture* tex = lua_touserdata(L, 1);
 	SDL_DestroyTexture(tex);
@@ -243,7 +221,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 
 	wasmtime_store_t* store = wasmtime_store_new(engine, NULL, NULL);
 
-	wasm_module_t* mod;
+	wasmtime_module_t* mod;
 	err = wasmtime_module_new(engine, wasm.data, wasm.size, &mod);
 	wasm_byte_vec_delete(&wasm);
 	if (err) {
