@@ -181,104 +181,150 @@ static void resized()
 
 
 
-#include <wasmtime.h>
+#include <wasmtime.hh>
+#include <wasmtime/engine.hh>
+#include <print>
 // #include <wasm.h>
 
 
 
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 {
-	wasm_engine_t* engine = wasm_engine_new();
-	printf("%p\n", engine);
+	wasmtime::Engine engine;
+	wasmtime::Store store(engine);
 
-	const char* src =
-		"(module\n"
-		"  (import \"host\" \"video\" (memory 1 1))\n"
-		"  (func (export \"foo\") (param $a i32) (result i32)\n"
-		"    local.get $a\n"
-		"    i32.const 1\n"
-		"    i32.add\n"
+	std::string src = R"(
+		(module
+		  (import "host" "video" (memory 1 1))
+		  (func (export "foo") (param $a i32) (result i32)
+			local.get $a
+			i32.const 1
+			i32.add
+			i32.const 3
+			i32.load
+			i32.add
+		  )
+		)
+	)";
 
-		"    i32.const 3\n"
-		"    i32.load\n"
-		"    i32.add\n"
-		"  )\n"
-		")\n";
 
-	wasm_byte_vec_t wasm;
-	wasmtime_error_t* err = wasmtime_wat2wasm(src, strlen(src), &wasm);
-	if (err) {
-		wasm_name_t error;
-		wasmtime_error_message(err, &error);
-		wasmtime_error_delete(err);
-		printf("error: %.*s\n", error.size, error.data);
+	auto res = wasmtime::Module::compile(engine, src);
+	if (!res) {
+		std::println("got an err: {}", res.err().message());
 		return SDL_APP_FAILURE;
 	}
 
+	auto module = res.unwrap();
 
-	wasmtime_store_t* store = wasmtime_store_new(engine, NULL, NULL);
+	auto mem = wasmtime::Memory::create(store, wasmtime::MemoryType(1, 1)).unwrap();
 
-	wasmtime_module_t* mod;
-	err = wasmtime_module_new(engine, (uint8_t*)wasm.data, wasm.size, &mod);
-	wasm_byte_vec_delete(&wasm);
-	if (err) {
-		wasm_name_t error;
-		wasmtime_error_message(err, &error);
-		wasmtime_error_delete(err);
-		printf("error: %.*s\n", error.size, error.data);
-		return SDL_APP_FAILURE;
-	}
-
-	wasmtime_context_t* context = wasmtime_store_context(store);
-
-	wasm_memorytype_t* memtype = wasmtime_memorytype_new(1, true, 1, false, false);
-
-	wasmtime_memory_t mem;
-	err = wasmtime_memory_new(context, memtype, &mem);
-
-
-	wasm_trap_t* trap;
-
-	wasmtime_instance_t inst;
-	wasmtime_extern_t imports[1];
-	imports[0].kind = WASMTIME_EXTERN_MEMORY;
-	imports[0].of.memory = mem;
-	err = wasmtime_instance_new(context, mod, imports, 1, &inst, &trap);
-	if (err) {
-		wasm_name_t error;
-		wasmtime_error_message(err, &error);
-		wasmtime_error_delete(err);
-		printf("error: %.*s\n", error.size, error.data);
-		return SDL_APP_FAILURE;
-	}
-
-	uint8_t* data = wasmtime_memory_data(context, &mem);
-	printf("data = %p\n", data);
-
+	auto data = mem.data(store).data();
 	data[3] = 5;
 
-	const char* name = "foo";
-	wasmtime_extern_t f;
-	bool worked = wasmtime_instance_export_get(context, &inst, name, strlen(name), &f);
+	auto inst = wasmtime::Instance::create(store, module, { mem }).unwrap();
 
-	wasmtime_func_t func = f.of.func;
+	auto foo = std::get<wasmtime::Func>(*inst.get(store, "foo"));
 
-	printf("%d\n", worked);
+	//auto val = wasmtime::Val::i32(456);
 
-	wasmtime_val_t args[1];
-	args[0].kind = WASMTIME_I32;
-	args[0].of.i32 = 456;
-	wasmtime_val_t res[1];
-	err = wasmtime_func_call(context, &func, args, 1, res, 1, &trap);
-	if (err) {
-		wasm_name_t error;
-		wasmtime_error_message(err, &error);
-		wasmtime_error_delete(err);
-		printf("error: %.*s\n", error.size, error.data);
-		return SDL_APP_FAILURE;
-	}
+	auto result = foo.call(store, { 456 }).unwrap();
 
-	printf("res = %d\n", res[0].of.i32);
+	std::println("{}", result[0].i32());
+
+
+
+
+	//wasm_engine_t* engine = wasm_engine_new();
+	//printf("%p\n", engine);
+
+	//const char* src =
+	//	"(module\n"
+	//	"  (import \"host\" \"video\" (memory 1 1))\n"
+	//	"  (func (export \"foo\") (param $a i32) (result i32)\n"
+	//	"    local.get $a\n"
+	//	"    i32.const 1\n"
+	//	"    i32.add\n"
+
+	//	"    i32.const 3\n"
+	//	"    i32.load\n"
+	//	"    i32.add\n"
+	//	"  )\n"
+	//	")\n";
+
+	//wasm_byte_vec_t wasm;
+	//wasmtime_error_t* err = wasmtime_wat2wasm(src, strlen(src), &wasm);
+	//if (err) {
+	//	wasm_name_t error;
+	//	wasmtime_error_message(err, &error);
+	//	wasmtime_error_delete(err);
+	//	printf("error: %.*s\n", error.size, error.data);
+	//	return SDL_APP_FAILURE;
+	//}
+
+
+	//wasmtime_store_t* store = wasmtime_store_new(engine, NULL, NULL);
+
+	//wasmtime_module_t* mod;
+	//err = wasmtime_module_new(engine, (uint8_t*)wasm.data, wasm.size, &mod);
+	//wasm_byte_vec_delete(&wasm);
+	//if (err) {
+	//	wasm_name_t error;
+	//	wasmtime_error_message(err, &error);
+	//	wasmtime_error_delete(err);
+	//	printf("error: %.*s\n", error.size, error.data);
+	//	return SDL_APP_FAILURE;
+	//}
+
+	//wasmtime_context_t* context = wasmtime_store_context(store);
+
+	//wasm_memorytype_t* memtype = wasmtime_memorytype_new(1, true, 1, false, false);
+
+	//wasmtime_memory_t mem;
+	//err = wasmtime_memory_new(context, memtype, &mem);
+
+
+	//wasm_trap_t* trap;
+
+	//wasmtime_instance_t inst;
+	//wasmtime_extern_t imports[1];
+	//imports[0].kind = WASMTIME_EXTERN_MEMORY;
+	//imports[0].of.memory = mem;
+	//err = wasmtime_instance_new(context, mod, imports, 1, &inst, &trap);
+	//if (err) {
+	//	wasm_name_t error;
+	//	wasmtime_error_message(err, &error);
+	//	wasmtime_error_delete(err);
+	//	printf("error: %.*s\n", error.size, error.data);
+	//	return SDL_APP_FAILURE;
+	//}
+
+	//uint8_t* data = wasmtime_memory_data(context, &mem);
+	//printf("data = %p\n", data);
+
+	//data[3] = 5;
+
+	//const char* name = "foo";
+	//wasmtime_extern_t f;
+	//bool worked = wasmtime_instance_export_get(context, &inst, name, strlen(name), &f);
+
+	//wasmtime_func_t func = f.of.func;
+
+	//printf("%d\n", worked);
+
+	//wasmtime_val_t args[1];
+	//args[0].kind = WASMTIME_I32;
+	//args[0].of.i32 = 456;
+	//wasmtime_val_t res[1];
+	//err = wasmtime_func_call(context, &func, args, 1, res, 1, &trap);
+	//if (err) {
+	//	wasm_name_t error;
+	//	wasmtime_error_message(err, &error);
+	//	wasmtime_error_delete(err);
+	//	printf("error: %.*s\n", error.size, error.data);
+	//	return SDL_APP_FAILURE;
+	//}
+
+	//printf("res = %d\n", res[0].of.i32);
 
 
 
