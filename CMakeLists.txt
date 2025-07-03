@@ -56,7 +56,8 @@ add_executable (hram
 	"lua55/lauxlib.c"
 
 	"src/main.cpp"
-)
+	"src/wat2wasm.cpp"
+ "src/wasm.h")
 
 # version vars
 

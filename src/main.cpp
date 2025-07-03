@@ -5,6 +5,35 @@
 #include <SDL3/SDL_gpu.h>
 #include <lua.hpp>
 
+
+
+#include "wasm.h"
+#include "wat2wasm.hpp"
+
+
+
+
+#include <cstdio>
+
+#include <wabt/binary-reader.h>
+#include <wabt/interp/binary-reader-interp.h>
+#include <wabt/interp/interp-util.h>
+#include <wabt/interp/interp.h>
+#include <wabt/result.h>
+#include <wabt/cast.h>
+#include <wabt/error-formatter.h>
+
+
+
+
+
+#include <print>
+
+
+
+
+
+
 SDL_Window* window;
 SDL_Renderer* renderer;
 SDL_Texture* screen;
@@ -197,8 +226,86 @@ static int clearout(lua_State* L) {
 	return 0;
 }
 
+
+
+
+
+
+wabt::Result run() {
+	wabt::Features s_features;
+	s_features.EnableAll();
+
+	std::unique_ptr<wabt::FileStream> s_log_stream = wabt::FileStream::CreateStderr();
+
+	auto opts = wabt::ReadBinaryOptions(s_features, s_log_stream.get(), true, true, true);
+
+	std::string src = R"(
+		(module
+			(import "host" "video" (memory 1 1))
+            (func (export "foo") (param $a i32) (result i32)
+              local.get $a
+              i32.const 1
+              i32.add
+          	)
+		)
+	)";
+
+	std::vector<uint8_t> file_data(src.begin(), src.end());
+	auto out = wat2wasm("foo.wat", file_data);
+	auto& val = out.value();
+
+	wabt::Errors errors;
+	wabt::interp::ModuleDesc module_desc;
+	CHECK_RESULT(ReadBinaryInterp("<internal>", val.data(), val.size(), opts, &errors, &module_desc));
+
+	wabt::interp::Store store(s_features);
+	auto thing = wabt::interp::Module::New(store, module_desc);
+
+	//for (auto&& import : thing->desc().imports) {
+	//	if (import.type.type->kind == wabt::interp::ExternKind::Memory
+	//		&& import.type.module == "host"
+	//		&& import.type.name == "video")
+	//	{
+
+	//		std::println("import = [{}]", import.type.module);
+	//	}
+
+
+	//}
+
+	//wabt::interp::Memory::New(*store, MemoryType::)
+
+	wabt::interp::RefVec imports;
+
+	wabt::interp::MemoryType memtype(wabt::Limits(1, 1));
+	auto mem = wabt::interp::Memory::New(store, memtype);
+
+	imports.push_back(mem.ref());
+
+	wabt::interp::Trap::Ptr trap;
+	auto c = wabt::interp::Instance::Instantiate(store, thing.ref(), imports, &trap);
+
+	for (auto&& export_ : thing->desc().exports) {
+		if (export_.type.type->kind == wabt::ExternalKind::Func && export_.type.name == "foo") {
+
+			auto f = store.UnsafeGet<wabt::interp::Func>(c->funcs()[export_.index]);
+			printf("got it %p !\n", f);
+
+			wabt::interp::Values runparams = { wabt::interp::Value::Make(123) };
+			wabt::interp::Values runresults;
+			auto res = f->Call(store, runparams, runresults, &trap, nullptr);
+			//printf("%d\n", res.Ok);
+		}
+	}
+
+	printf("%p\n", c);
+
+}
+
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 {
+	run();
+
 	L = luaL_newstate();
 	luaL_openlibs(L);
 
