@@ -55,7 +55,7 @@ add_executable (hram
 	"lua55/lapi.c"
 	"lua55/lauxlib.c"
 
-	"src/main.cpp"
+	"src/main.c"
 	
  )
 

@@ -3,7 +3,9 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_gpu.h>
-#include <lua.hpp>
+#include <lualib.h>
+#include <lua.h>
+#include <lauxlib.h>
 
 
 
@@ -66,7 +68,7 @@ static int setfullscreen(lua_State* L) {
 }
 
 static int newtexture(lua_State* L) {
-	auto type = (SDL_TextureAccess)lua_tointeger(L, 1);
+	SDL_TextureAccess type = lua_tointeger(L, 1);
 	int w = lua_tointeger(L, 2);
 	int h = lua_tointeger(L, 3);
 	SDL_Texture* tex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, type, w, h);
@@ -76,7 +78,7 @@ static int newtexture(lua_State* L) {
 }
 
 static int settexture(lua_State* L) {
-	auto tex = (SDL_Texture*)lua_touserdata(L, 1);
+	SDL_Texture* tex = lua_touserdata(L, 1);
 	if (tex == NULL) tex = screen;
 	bool worked = SDL_SetRenderTarget(renderer, tex);
 	lua_pushboolean(L, worked);
@@ -84,7 +86,7 @@ static int settexture(lua_State* L) {
 }
 
 static int drawtexture(lua_State* L) {
-	auto tex = (SDL_Texture*)lua_touserdata(L, 1);
+	SDL_Texture* tex = lua_touserdata(L, 1);
 
 	SDL_FRect dstrect;
 	dstrect.x = lua_tointeger(L, 2);
@@ -104,7 +106,7 @@ static int drawtexture(lua_State* L) {
 }
 
 static int updatetexture(lua_State* L) {
-	auto tex = (SDL_Texture*)lua_touserdata(L, 1);
+	SDL_Texture* tex = lua_touserdata(L, 1);
 
 	lua_len(L, 2);
 	size_t len = lua_tointeger(L, -1);
@@ -116,7 +118,7 @@ static int updatetexture(lua_State* L) {
 	r.w = lua_tointeger(L, 5);
 	r.h = lua_tointeger(L, 6);
 
-	auto pixels = (uint32_t*)malloc(len * 4);
+	uint32_t* pixels = malloc(len * 4);
 	if (!pixels) {
 		lua_pushboolean(L, false);
 		return 1;
@@ -136,7 +138,7 @@ static int updatetexture(lua_State* L) {
 }
 
 static int streampixels(lua_State* L) {
-	auto pixels = (uint32_t*)lua_touserdata(L, lua_upvalueindex(1));
+	uint32_t* pixels = lua_touserdata(L, lua_upvalueindex(1));
 	uint32_t pitch = lua_tointeger(L, lua_upvalueindex(2));
 	uint32_t w = lua_tointeger(L, lua_upvalueindex(3));
 
@@ -158,7 +160,7 @@ static int streampixels(lua_State* L) {
 }
 
 static int deltexture(lua_State* L) {
-	auto tex = (SDL_Texture*)lua_touserdata(L, 1);
+	SDL_Texture* tex = lua_touserdata(L, 1);
 	SDL_DestroyTexture(tex);
 	return 0;
 }
@@ -212,6 +214,7 @@ static int clearout(lua_State* L) {
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 {
 	wasm_engine_t* e = wasm_engine_new();
+	printf("%p\n", e);
 
 
 	L = luaL_newstate();
@@ -222,7 +225,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 
 	luaL_dostring(L, "package.path = userdir .. '?.lua;' .. package.path");
 
-	lua_register(L, "blit", (lua_CFunction)blit);
+	lua_register(L, "blit", blit);
 	lua_register(L, "opendir", opendir);
 	lua_register(L, "setfullscreen", setfullscreen);
 	lua_register(L, "newtexture", newtexture);
