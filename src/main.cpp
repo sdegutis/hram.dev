@@ -186,16 +186,13 @@ static void resized()
 #include <print>
 // #include <wasm.h>
 
+static wasmtime::Engine engine;
+static wasmtime::Store store(engine);
+auto mem = wasmtime::Memory::create(store, wasmtime::MemoryType(2, 2)).unwrap();
 
-
-SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
-{
-	wasmtime::Engine engine;
-	wasmtime::Store store(engine);
-
-	std::string src = R"(
+static std::string src = R"(
 		(module
-		  (import "host" "video" (memory 1 1))
+		  (import "host" "video" (memory 2 2))
 		  (func (export "foo") (param $a i32) (result i32)
 			local.get $a
 			i32.const 1
@@ -207,6 +204,11 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 		)
 	)";
 
+static auto foo = (wasmtime::Func*)malloc(sizeof(wasmtime::Func));
+
+SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
+{
+
 
 	auto res = wasmtime::Module::compile(engine, src);
 	if (!res) {
@@ -216,20 +218,14 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 
 	auto module = res.unwrap();
 
-	auto mem = wasmtime::Memory::create(store, wasmtime::MemoryType(1, 1)).unwrap();
 
 	auto data = mem.data(store).data();
 	data[3] = 5;
 
 	auto inst = wasmtime::Instance::create(store, module, { mem }).unwrap();
 
-	auto foo = std::get<wasmtime::Func>(*inst.get(store, "foo"));
+	*foo = std::get<wasmtime::Func>(*inst.get(store, "foo"));
 
-	//auto val = wasmtime::Val::i32(456);
-
-	auto result = foo.call(store, { 456 }).unwrap();
-
-	std::println("{}", result[0].i32());
 
 
 
@@ -389,6 +385,10 @@ SDL_AppResult SDL_AppIterate(void* appstate)
 
 	if (diff >= 33) {
 		last = now;
+
+		auto result = (*foo).call(store, { 456 }).unwrap();
+		std::println("{}", result[0].i32());
+
 		// lua_getglobal(L, "tick");
 		// if (!lua_isnil(L, -1)) {
 		// 	lua_pushinteger(L, diff);
