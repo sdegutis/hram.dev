@@ -56,8 +56,8 @@ add_executable (hram
 	"lua55/lauxlib.c"
 
 	"src/main.cpp"
-	"src/wat2wasm.cpp"
- "src/wasm.h")
+	
+ )
 
 # version vars
 
@@ -66,13 +66,29 @@ target_include_directories(hram PUBLIC "${PROJECT_BINARY_DIR}/genvars")
 
 # sdl
 
-find_package(SDL3 CONFIG REQUIRED)
-target_link_libraries(hram PRIVATE SDL3::SDL3)
+set(SDL_STATIC ON)
+FetchContent_Declare(
+    sdl3
+    GIT_REPOSITORY https://github.com/libsdl-org/SDL
+    GIT_TAG release-3.2.16
+)
+FetchContent_MakeAvailable(sdl3)
+target_link_libraries(hram PRIVATE SDL3::SDL3-static)
+target_include_directories(hram PUBLIC SDL3::Headers)
 
-# wabt
+# wasmtime
 
-find_package(wabt CONFIG REQUIRED)
-target_link_libraries(hram PRIVATE wabt::wabt)
+FetchContent_Declare(
+    wasmtime
+    GIT_REPOSITORY https://github.com/bytecodealliance/wasmtime.git
+    SOURCE_SUBDIR crates/c-api
+    OVERRIDE_FIND_PACKAGE
+    SYSTEM
+    GIT_TAG v34.0.1
+)
+FetchContent_MakeAvailable(wasmtime)
+target_link_libraries(hram PUBLIC wasmtime)
+target_include_directories(hram PUBLIC wasmtime)
 
 # c / cxx standards
 
