@@ -19,7 +19,7 @@ add_executable (hram
 	# WIN32
 	MACOSX_BUNDLE
 
-	"src/main.c"
+	"src/main.cpp"
 	
  )
 

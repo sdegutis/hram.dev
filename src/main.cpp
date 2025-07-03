@@ -219,7 +219,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	wasmtime_store_t* store = wasmtime_store_new(engine, NULL, NULL);
 
 	wasmtime_module_t* mod;
-	err = wasmtime_module_new(engine, wasm.data, wasm.size, &mod);
+	err = wasmtime_module_new(engine, (uint8_t*)wasm.data, wasm.size, &mod);
 	wasm_byte_vec_delete(&wasm);
 	if (err) {
 		wasm_name_t error;
