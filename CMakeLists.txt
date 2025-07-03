@@ -12,9 +12,6 @@ include(FetchContent)
 # vars
 
 configure_file(vars.h.in genvars/vars.h)
-configure_file(lua/boot.lua boot.lua COPYONLY)
-configure_file(lua/editor.lua editor.lua COPYONLY)
-configure_file(lua/prompt.lua prompt.lua COPYONLY)
 
 # exe
 
@@ -22,46 +19,12 @@ add_executable (hram
 	# WIN32
 	MACOSX_BUNDLE
 
-	"lua55/lbaselib.c"
-	"lua55/lcode.c"
-	"lua55/lcorolib.c"
-	"lua55/lctype.c"
-	"lua55/ldblib.c"
-	"lua55/ldebug.c"
-	"lua55/ldo.c"
-	"lua55/ldump.c"
-	"lua55/lfunc.c"
-	"lua55/lgc.c"
-	"lua55/linit.c"
-	"lua55/liolib.c"
-	"lua55/llex.c"
-	"lua55/lmathlib.c"
-	"lua55/lmem.c"
-	"lua55/loadlib.c"
-	"lua55/lobject.c"
-	"lua55/lopcodes.c"
-	"lua55/loslib.c"
-	"lua55/lparser.c"
-	"lua55/lstate.c"
-	"lua55/lstring.c"
-	"lua55/lstrlib.c"
-	"lua55/ltable.c"
-	"lua55/ltablib.c"
-	"lua55/ltm.c"
-	"lua55/lundump.c"
-	"lua55/lutf8lib.c"
-	"lua55/lvm.c"
-	"lua55/lzio.c"
-	"lua55/lapi.c"
-	"lua55/lauxlib.c"
-
 	"src/main.c"
 	
  )
 
 # version vars
 
-target_include_directories(hram PUBLIC "${PROJECT_SOURCE_DIR}/lua55")
 target_include_directories(hram PUBLIC "${PROJECT_BINARY_DIR}/genvars")
 
 # sdl
@@ -94,14 +57,12 @@ target_include_directories(hram PUBLIC wasmtime)
 
 set_property(TARGET hram PROPERTY C_STANDARD 23)
 set_property(TARGET hram PROPERTY CXX_STANDARD 26)
+# /NODEFAULTLIB:library
 
 # install
 
 install(TARGETS hram DESTINATION .)
 install(FILES $<TARGET_FILE:SDL3::SDL3> DESTINATION .)
-install(FILES "${PROJECT_BINARY_DIR}/boot.lua" DESTINATION .)
-install(FILES "${PROJECT_BINARY_DIR}/editor.lua" DESTINATION .)
-install(FILES "${PROJECT_BINARY_DIR}/prompt.lua" DESTINATION .)
 
 # cpack
 
