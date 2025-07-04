@@ -8,6 +8,7 @@ endif()
 project(hram VERSION 0.1 LANGUAGES C CXX)
 
 include(FetchContent)
+include(ExternalProject)
 
 # vars
 
@@ -18,6 +19,39 @@ configure_file(vars.h.in genvars/vars.h)
 add_executable (hram
 	# WIN32
 	MACOSX_BUNDLE
+
+    "lua-5.4.8/lauxlib.c"
+    "lua-5.4.8/lbaselib.c"
+    "lua-5.4.8/lcode.c"
+    "lua-5.4.8/lcorolib.c"
+    "lua-5.4.8/lctype.c"
+    "lua-5.4.8/ldblib.c"
+    "lua-5.4.8/ldebug.c"
+    "lua-5.4.8/ldo.c"
+    "lua-5.4.8/ldump.c"
+    "lua-5.4.8/lfunc.c"
+    "lua-5.4.8/lgc.c"
+    "lua-5.4.8/linit.c"
+    "lua-5.4.8/liolib.c"
+    "lua-5.4.8/llex.c"
+    "lua-5.4.8/lmathlib.c"
+    "lua-5.4.8/lmem.c"
+    "lua-5.4.8/loadlib.c"
+    "lua-5.4.8/lobject.c"
+    "lua-5.4.8/lopcodes.c"
+    "lua-5.4.8/loslib.c"
+    "lua-5.4.8/lparser.c"
+    "lua-5.4.8/lstate.c"
+    "lua-5.4.8/lstring.c"
+    "lua-5.4.8/lstrlib.c"
+    "lua-5.4.8/ltable.c"
+    "lua-5.4.8/ltablib.c"
+    "lua-5.4.8/ltm.c"
+    "lua-5.4.8/lundump.c"
+    "lua-5.4.8/lutf8lib.c"
+    "lua-5.4.8/lvm.c"
+    "lua-5.4.8/lzio.c"
+    "lua-5.4.8/lapi.c"
 
 	"src/main.cpp"
 	
@@ -38,20 +72,6 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(sdl3)
 target_link_libraries(hram PRIVATE SDL3::SDL3-static)
 target_include_directories(hram PUBLIC SDL3::Headers)
-
-# wasmtime
-
-FetchContent_Declare(
-    wasmtime
-    GIT_REPOSITORY https://github.com/bytecodealliance/wasmtime.git
-    SOURCE_SUBDIR crates/c-api
-    OVERRIDE_FIND_PACKAGE
-    SYSTEM
-    GIT_TAG v34.0.1
-)
-FetchContent_MakeAvailable(wasmtime)
-target_link_libraries(hram PUBLIC wasmtime)
-target_include_directories(hram PUBLIC wasmtime)
 
 # c / cxx standards
 
