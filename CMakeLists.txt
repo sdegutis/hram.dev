@@ -53,9 +53,11 @@ add_executable (hram
     "lua-5.4.8/lzio.c"
     "lua-5.4.8/lapi.c"
 
-	"src/main.cpp"
+	"src/main.c"
 	
- )
+)
+
+target_include_directories(hram PUBLIC lua-5.4.8)
 
 # version vars
 
