@@ -4,7 +4,7 @@
 // to pick one. highp is a good default. It means "high precision"
 precision highp float;
 
-uniform vec2 u_resolution;
+uniform vec3 iResolution;
 
 // our texture
 uniform sampler2D u_image;
@@ -21,6 +21,7 @@ float scan = 0.05; // simulate darkness between scanlines
 void main() {
 
     fragColor = texture(u_image,fragCoord);
+
     /*
 
     vec2 uv = fragCoord;
