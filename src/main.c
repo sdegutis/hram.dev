@@ -187,7 +187,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	L = luaL_newstate();
 	luaL_openlibs(L);
 
-	lua_pushstring(L, SDL_GetPrefPath("", "progma0xb4"));
+	lua_pushstring(L, SDL_GetPrefPath("", "acutos"));
 	lua_setglobal(L, "userdir");
 
 	luaL_dostring(L, "package.path = userdir .. '?.lua;' .. package.path");
