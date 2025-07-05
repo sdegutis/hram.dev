@@ -9,7 +9,6 @@
 #include <lualib.h>
 #include <lauxlib.h>
 
-
 SDL_Window* window;
 SDL_Renderer* renderer;
 SDL_Texture* screen;

@@ -19,10 +19,7 @@ configure_file(lua/prompt.lua prompt.lua COPYONLY)
 
 # exe
 
-add_executable (hram
-	# WIN32
-	MACOSX_BUNDLE
-
+add_library(liblua
 	"lua55/lapi.c"
 	"lua55/lauxlib.c"
 	"lua55/lbaselib.c"
@@ -55,10 +52,16 @@ add_executable (hram
 	"lua55/lutf8lib.c"
 	"lua55/lvm.c"
 	"lua55/lzio.c"
+)
+
+add_executable(hram
+	# WIN32
+	MACOSX_BUNDLE
 
 	"src/main.c"
-	
 )
+
+target_link_libraries(hram PRIVATE liblua)
 
 target_include_directories(hram PUBLIC "${PROJECT_SOURCE_DIR}/lua55")
 
