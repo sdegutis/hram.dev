@@ -19,6 +19,7 @@ GLuint prog;
 GLuint vao;
 GLint resolutionLocation;
 GLint iResolutionLocation;
+GLint iTimeLoc;
 GLint iChannelResolutionLocation;
 GLuint posBuf;
 
@@ -115,6 +116,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 
 	resolutionLocation = glGetUniformLocation(prog, "u_resolution");
 	iResolutionLocation = glGetUniformLocation(prog, "iResolution");
+	iTimeLoc = glGetUniformLocation(prog, "iTime");
 	iChannelResolutionLocation = glGetUniformLocation(prog, "iChannelResolution");
 	GLint imageLocation = glGetUniformLocation(prog, "iChannel0");
 
@@ -183,6 +185,9 @@ SDL_AppResult SDL_AppIterate(void* appstate)
 	uint64_t now = SDL_GetTicks();
 	uint64_t diff = now - last;
 
+	glUniform1f(iTimeLoc, (double)now);
+	printf("%f\n", (double)now);
+
 	if (diff >= 33) {
 		last = now;
 
@@ -211,7 +216,7 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* e)
 		//lua_settop(L, 0);
 
 	{
-		uint32_t data[1] = { 0xffffffff };
+		uint32_t data[1] = { SDL_rand_bits() | 0xff000000 };
 		int dx = floor((float)(e->motion.x - destrect.x) / (float)scale);
 		int dy = floor((float)(e->motion.y - destrect.y) / (float)scale);
 		printf("%d,%d\n", dx, dy);
