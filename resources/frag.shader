@@ -213,11 +213,18 @@ float rand(vec2 co) {
 
 void main() {
 
-    if (int(iTime) % 2000 < 1000) {
+    if (int(iTime) % 5000 < 2500) {
         fragColor = texture(iChannel0,fragCoord/iResolution.xy);
     }
     else {
     vec2 pos = warp(fragCoord.xy / iResolution.xy);
+    
+    vec2 pos2 = floor(pos * res) / res;
+	if (max(abs(pos2.x - 0.5), abs(pos2.y - 0.5)) > 0.5)
+		fragColor = vec4(vec3(0.1), 0.0);
+    else {
+
+    
     vec4 unmodifiedColor = fetch(pos, vec2(0));
     
 			sHardScan = -12.0;
@@ -230,6 +237,8 @@ void main() {
         toSrgb(fragColor.rgb),
         1.0
     );
+    
+    }
     }
 
 
