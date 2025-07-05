@@ -7,7 +7,7 @@ precision highp float;
 uniform vec3 iResolution;
 
 // our texture
-uniform sampler2D u_image;
+uniform sampler2D iChannel0;
 
 // the texCoords passed in from the vertex shader.
 in vec2 fragCoord;
@@ -20,7 +20,7 @@ float scan = 0.05; // simulate darkness between scanlines
 
 void main() {
 
-    fragColor = texture(u_image,fragCoord);
+    fragColor = texture(iChannel0,fragCoord);
 
     /*
 
@@ -37,7 +37,7 @@ void main() {
         discard;
     else {
         float apply = abs(sin(fragCoord.y*180.0)*0.5*scan);
-       fragColor = vec4(mix(texture(u_image,uv).rgb,vec3(0.0),apply),1.0);
+       fragColor = vec4(mix(texture(iChannel0,uv).rgb,vec3(0.0),apply),1.0);
     }
     //*/
 

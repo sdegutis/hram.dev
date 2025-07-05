@@ -112,7 +112,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 
 	resolutionLocation = glGetUniformLocation(prog, "u_resolution");
 	iResolutionLocation = glGetUniformLocation(prog, "iResolution");
-	GLint imageLocation = glGetUniformLocation(prog, "u_image");
+	GLint imageLocation = glGetUniformLocation(prog, "iChannel0");
 
 	glUniform3f(iResolutionLocation, 320, 180, 1);
 
