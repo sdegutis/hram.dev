@@ -16,10 +16,11 @@ configure_file(vars.h.in genvars/vars.h)
 configure_file(lua/boot.lua boot.lua COPYONLY)
 configure_file(lua/editor.lua editor.lua COPYONLY)
 configure_file(lua/prompt.lua prompt.lua COPYONLY)
+configure_file(lib/SDL3.dll SDL3.dll COPYONLY)
 
 # exe
 
-add_library(liblua
+add_library(lua SHARED
 	"lua55/lapi.c"
 	"lua55/lauxlib.c"
 	"lua55/lbaselib.c"
@@ -61,7 +62,7 @@ add_executable(hram
 	"src/main.c"
 )
 
-target_link_libraries(hram PRIVATE liblua)
+target_link_libraries(hram PRIVATE lua)
 
 target_include_directories(hram PUBLIC "${PROJECT_SOURCE_DIR}/lua55")
 
@@ -71,15 +72,16 @@ target_include_directories(hram PUBLIC "${PROJECT_BINARY_DIR}/genvars")
 
 # sdl
 
-set(SDL_STATIC ON)
+set(SDL_SHARED ON)
+set(SDL_STATIC OFF)
 FetchContent_Declare(
     sdl3
     GIT_REPOSITORY https://github.com/libsdl-org/SDL
     GIT_TAG release-3.2.16
 )
 FetchContent_MakeAvailable(sdl3)
-target_link_libraries(hram PRIVATE SDL3::SDL3-static)
-target_include_directories(hram PUBLIC SDL3::Headers)
+target_link_libraries(hram PRIVATE SDL3::SDL3-shared)
+target_include_directories(hram PRIVATE SDL3::Headers)
 
 # c / cxx standards
 
@@ -90,10 +92,12 @@ set_property(TARGET hram PROPERTY CXX_STANDARD 26)
 # install
 
 install(TARGETS hram DESTINATION .)
-install(FILES $<TARGET_FILE:SDL3::SDL3> DESTINATION .)
+#install(FILES $<TARGET_FILE:SDL3::SDL3> DESTINATION .)
 install(FILES "${PROJECT_BINARY_DIR}/boot.lua" DESTINATION .)
 install(FILES "${PROJECT_BINARY_DIR}/editor.lua" DESTINATION .)
 install(FILES "${PROJECT_BINARY_DIR}/prompt.lua" DESTINATION .)
+#install(FILES "${PROJECT_BINARY_DIR}/_deps/sdl3-build/SDL3.dll" DESTINATION .)
+install(FILES $<TARGET_RUNTIME_DLLS:hram> TYPE BIN)
 
 # cpack
 
