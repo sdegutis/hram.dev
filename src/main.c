@@ -114,6 +114,11 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 
 	glClearColor(.1f, .1f, .1f, 1.f);
 
+	uint8_t* data = malloc(320 * 180 * 4);
+	if (!data) return SDL_APP_FAILURE;
+
+	memset(data, 0, 320 * 180 * 4);
+
 	GLuint texture1;
 	glGenTextures(1, &texture1);
 	glActiveTexture(GL_TEXTURE0 + 0);
@@ -122,6 +127,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 320, 180, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
 
 
 	glGenVertexArrays(1, &vao);
@@ -190,12 +196,22 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* e)
 	switch (e->type) {
 
 	case SDL_EVENT_MOUSE_MOTION:
-		lua_getglobal(L, "mousemove");
-		lua_pushinteger(L, floor((float)(e->motion.x - destrect.x) / (float)scale));
-		lua_pushinteger(L, floor((float)(e->motion.y - destrect.y) / (float)scale));
-		lua_pcall(L, 2, 0, 0);
-		lua_settop(L, 0);
-		break;
+		//lua_getglobal(L, "mousemove");
+		//lua_pushinteger(L, floor((float)(e->motion.x - destrect.x) / (float)scale));
+		//lua_pushinteger(L, floor((float)(e->motion.y - destrect.y) / (float)scale));
+		//lua_pcall(L, 2, 0, 0);
+		//lua_settop(L, 0);
+
+	{
+		uint32_t data[1] = { 0xffffffff };
+		int dx = floor((float)(e->motion.x - destrect.x) / (float)scale);
+		int dy = floor((float)(e->motion.y - destrect.y) / (float)scale);
+		printf("%d,%d\n", dx, dy);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, dx, dy, 1, 1, GL_BGRA, GL_UNSIGNED_BYTE, data);
+		redraw();
+	}
+
+	break;
 
 	case SDL_EVENT_KEY_DOWN:
 	{
