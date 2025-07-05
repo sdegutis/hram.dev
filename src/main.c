@@ -55,6 +55,8 @@ static void resized()
 	glViewport(0, 0, w, h);
 	glUniform2f(resolutionLocation, w, h);
 
+	glUniform3f(iResolutionLocation, 320 * scale, 180 * scale, 1);
+
 	glBindBuffer(GL_ARRAY_BUFFER, posBuf);
 
 	float x1 = destrect.x;
@@ -113,8 +115,6 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	resolutionLocation = glGetUniformLocation(prog, "u_resolution");
 	iResolutionLocation = glGetUniformLocation(prog, "iResolution");
 	GLint imageLocation = glGetUniformLocation(prog, "iChannel0");
-
-	glUniform3f(iResolutionLocation, 320, 180, 1);
 
 	glClearColor(.1f, .1f, .1f, 1.f);
 

@@ -1,13 +1,11 @@
 #version 300 es
 
-// It will receive data from a buffer
 in vec2 a_position;
 in vec2 a_texCoord;
 
-// Used to pass in the resolution of the canvas
+uniform vec3 iResolution;
 uniform vec2 u_resolution;
 
-// Used to pass the texture coordinates to the fragment shader
 out vec2 fragCoord;
 
 // all shaders have a main function
@@ -26,5 +24,5 @@ void main() {
 
   // pass the texCoord to the fragment shader
   // The GPU will interpolate this value between points.
-  fragCoord = a_texCoord;
+  fragCoord = a_texCoord * iResolution.xy;
 }
