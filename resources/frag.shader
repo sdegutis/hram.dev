@@ -5,6 +5,7 @@
 precision highp float;
 
 uniform vec3 iResolution;
+uniform vec3 iChannelResolution;
 
 // our texture
 uniform sampler2D iChannel0;
@@ -16,7 +17,7 @@ in vec2 fragCoord;
 out vec4 fragColor;
 
 float warp = 0.35; // simulate curvature of CRT monitor
-float scan = 0.05; // simulate darkness between scanlines
+float scan = 0.55; // simulate darkness between scanlines
 
 void main() {
 

@@ -19,6 +19,7 @@ GLuint prog;
 GLuint vao;
 GLint resolutionLocation;
 GLint iResolutionLocation;
+GLint iChannelResolutionLocation;
 GLuint posBuf;
 
 SDL_FRect srcrect = { .x = 0, .y = 0, .w = 320, .h = 180 };
@@ -114,7 +115,10 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 
 	resolutionLocation = glGetUniformLocation(prog, "u_resolution");
 	iResolutionLocation = glGetUniformLocation(prog, "iResolution");
+	iChannelResolutionLocation = glGetUniformLocation(prog, "iChannelResolution");
 	GLint imageLocation = glGetUniformLocation(prog, "iChannel0");
+
+	glUniform3f(iChannelResolutionLocation, 320, 180, 1);
 
 	glClearColor(.1f, .1f, .1f, 1.f);
 
