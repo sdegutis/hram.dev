@@ -13,6 +13,9 @@ include(ExternalProject)
 # vars
 
 configure_file(vars.h.in genvars/vars.h)
+configure_file(lua/boot.lua boot.lua COPYONLY)
+configure_file(lua/editor.lua editor.lua COPYONLY)
+configure_file(lua/prompt.lua prompt.lua COPYONLY)
 
 # exe
 
@@ -57,7 +60,7 @@ add_executable (hram
 	
 )
 
-target_include_directories(hram PUBLIC "lua55")
+target_include_directories(hram PUBLIC "${PROJECT_SOURCE_DIR}/lua55")
 
 # version vars
 
@@ -85,6 +88,9 @@ set_property(TARGET hram PROPERTY CXX_STANDARD 26)
 
 install(TARGETS hram DESTINATION .)
 install(FILES $<TARGET_FILE:SDL3::SDL3> DESTINATION .)
+install(FILES "${PROJECT_BINARY_DIR}/boot.lua" DESTINATION .)
+install(FILES "${PROJECT_BINARY_DIR}/editor.lua" DESTINATION .)
+install(FILES "${PROJECT_BINARY_DIR}/prompt.lua" DESTINATION .)
 
 # cpack
 
