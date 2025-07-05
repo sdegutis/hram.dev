@@ -4,7 +4,8 @@
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_gpu.h>
 #include <stdio.h>
-
+#include <stdlib.h>
+#include <math.h>
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
@@ -117,7 +118,7 @@ static int updatetexture(lua_State* L) {
 
 	uint32_t* pixels = malloc(len * 4);
 	if (!pixels) {
-		lua_pushboolean(L, false);
+		lua_pushboolean(L, 0);
 		return 1;
 	}
 
@@ -191,7 +192,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 
 	luaL_dostring(L, "package.path = userdir .. '?.lua;' .. package.path");
 
-	lua_register(L, "blit", blit);
+	lua_register(L, "blit", (lua_CFunction)blit);
 	lua_register(L, "opendir", opendir);
 	lua_register(L, "setfullscreen", setfullscreen);
 	lua_register(L, "newtexture", newtexture);
@@ -272,7 +273,7 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* e)
 	{
 		lua_getglobal(L, "keydown");
 		lua_pushinteger(L, e->key.scancode);
-		const char key = SDL_GetKeyFromScancode(e->key.scancode, e->key.mod, false);
+		const char key = SDL_GetKeyFromScancode(e->key.scancode, e->key.mod, 0);
 		if (key >= 32 && key <= 126) lua_pushlstring(L, &key, 1); else lua_pushnil(L);
 		lua_pcall(L, 2, 0, 0);
 		lua_settop(L, 0);
@@ -282,7 +283,7 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* e)
 	case SDL_EVENT_KEY_UP: {
 		lua_getglobal(L, "keyup");
 		lua_pushinteger(L, e->key.scancode);
-		const char key = SDL_GetKeyFromScancode(e->key.scancode, e->key.mod, false);
+		const char key = SDL_GetKeyFromScancode(e->key.scancode, e->key.mod, 0);
 		if (key >= 32 && key <= 126) lua_pushlstring(L, &key, 1); else lua_pushnil(L);
 		lua_pcall(L, 2, 0, 0);
 		lua_settop(L, 0);
