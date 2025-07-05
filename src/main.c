@@ -186,7 +186,11 @@ SDL_AppResult SDL_AppIterate(void* appstate)
 	uint64_t diff = now - last;
 
 	glUniform1f(iTimeLoc, (double)now);
-	printf("%f\n", (double)now);
+	uint32_t data[1] = { SDL_rand_bits() | 0xff000000 };
+	int dx = SDL_rand(320);
+	int dy = SDL_rand(180);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, dx, dy, 1, 1, GL_BGRA, GL_UNSIGNED_BYTE, data);
+	redraw();
 
 	if (diff >= 33) {
 		last = now;
