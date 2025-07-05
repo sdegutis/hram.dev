@@ -10,6 +10,15 @@ project(hram VERSION 0.1 LANGUAGES C CXX)
 include(FetchContent)
 include(ExternalProject)
 
+# battery-embed
+
+FetchContent_Declare(
+  battery-embed
+  GIT_REPOSITORY https://github.com/batterycenter/embed.git
+  GIT_TAG        v1.2.19
+)
+FetchContent_MakeAvailable(battery-embed)
+
 # vars
 
 configure_file(vars.h.in genvars/vars.h)
@@ -58,16 +67,19 @@ add_executable(hram
 	# WIN32
 	MACOSX_BUNDLE
 
+	"glad/src/gl.c"
+
 	"src/main.c"
-)
+	"src/shaders.cpp")
 
 target_link_libraries(hram PRIVATE liblua)
 
 target_include_directories(hram PUBLIC "${PROJECT_SOURCE_DIR}/lua55")
-
-# version vars
-
+target_include_directories(hram PUBLIC "${PROJECT_SOURCE_DIR}/glad/include")
 target_include_directories(hram PUBLIC "${PROJECT_BINARY_DIR}/genvars")
+
+b_embed(hram "resources/vert.shader")
+b_embed(hram "resources/frag.shader")
 
 # sdl
 

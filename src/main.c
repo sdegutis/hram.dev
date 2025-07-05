@@ -1,4 +1,6 @@
-﻿#define SDL_MAIN_USE_CALLBACKS
+﻿#include <glad/gl.h>
+
+#define SDL_MAIN_USE_CALLBACKS
 #include <SDL3/SDL_main.h>
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_render.h>
@@ -9,12 +11,27 @@
 #include <lualib.h>
 #include <lauxlib.h>
 
+#include "shaders.h"
+
 SDL_Window* window;
+SDL_GLContext glcontext;
+GLuint prog;
+GLuint vao;
+GLint resolutionLocation;
+GLuint posBuf;
+
 SDL_FRect srcrect = { .x = 0, .y = 0, .w = 320, .h = 180 };
 SDL_FRect destrect;
 int scale = 1;
 
 lua_State* L;
+
+static void redraw() {
+	glClear(GL_COLOR_BUFFER_BIT);
+	glBindVertexArray(vao);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	SDL_GL_SwapWindow(window);
+}
 
 static void resized()
 {
@@ -32,6 +49,21 @@ static void resized()
 
 	destrect.x = w / 2 - destrect.w / 2;
 	destrect.y = h / 2 - destrect.h / 2;
+
+	glBindVertexArray(vao);
+	glViewport(0, 0, w, h);
+	glUniform2f(resolutionLocation, w, h);
+
+	glBindBuffer(GL_ARRAY_BUFFER, posBuf);
+
+	float x1 = destrect.x;
+	float x2 = destrect.x + destrect.w;
+	float y1 = destrect.y;
+	float y2 = destrect.y + destrect.h;
+	float xys[12] = { x1,y1,x2,y1,x1,y2,x1,y2,x2,y1,x2,y2 };
+	glBufferData(GL_ARRAY_BUFFER, sizeof(xys), xys, GL_STATIC_DRAW);
+
+	redraw();
 }
 
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
@@ -39,7 +71,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	L = luaL_newstate();
 	luaL_openlibs(L);
 
-	//lua_pushstring(L, SDL_GetPrefPath("", "os91"));
+	//lua_pushstring(L, SDL_GetPrefPath("", "hram"));
 	//lua_setglobal(L, "userdir");
 
 	//luaL_dostring(L, "package.path = userdir .. '?.lua;' .. package.path");
@@ -62,12 +94,56 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	//lua_pushinteger(L, SDL_TEXTUREACCESS_STREAMING); lua_setfield(L, -2, "streaming");
 	//lua_setglobal(L, "texturetype");
 
-	SDL_SetAppMetadata("os91", "0.1", "com.90sdev.os91");
+	SDL_SetAppMetadata("hram", "0.1", "com.90sdev.hram");
 	SDL_InitSubSystem(SDL_INIT_VIDEO);
 	SDL_HideCursor();
-	window = SDL_CreateWindow("os91", 320 * 3 + (30 * 2), 180 * 3 + (30 * 2), SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+	window = SDL_CreateWindow("HRAM", 320 * 3 + (30 * 2), 180 * 3 + (30 * 2), SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
 	//renderer = SDL_CreateRenderer(window, NULL);
 	SDL_SetWindowMinimumSize(window, 320, 180);
+
+
+
+	glcontext = SDL_GL_CreateContext(window);
+	gladLoadGL(SDL_GL_GetProcAddress);
+
+	prog = createShaders();
+	glUseProgram(prog);
+
+	resolutionLocation = glGetUniformLocation(prog, "u_resolution");
+	GLint imageLocation = glGetUniformLocation(prog, "u_image");
+
+	glClearColor(.1f, .1f, .1f, 1.f);
+
+	GLuint texture1;
+	glGenTextures(1, &texture1);
+	glActiveTexture(GL_TEXTURE0 + 0);
+	glBindTexture(GL_TEXTURE_2D, texture1);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	glUniform1i(imageLocation, 0);
+
+	glGenBuffers(1, &posBuf);
+	GLint posAttrLoc = glGetAttribLocation(prog, "a_position");
+	glEnableVertexAttribArray(posAttrLoc);
+	glBindBuffer(GL_ARRAY_BUFFER, posBuf);
+	glVertexAttribPointer(posAttrLoc, 2, GL_FLOAT, false, 0, 0);
+
+	GLuint texNormBuf;
+	glGenBuffers(1, &texNormBuf);
+	glBindBuffer(GL_ARRAY_BUFFER, texNormBuf);
+	float texNormData[12] = { 0,0,1,0,0,1,0,1,1,0,1,1 };
+	glBufferData(GL_ARRAY_BUFFER, sizeof(texNormData), texNormData, GL_STATIC_DRAW);
+
+	GLint texNormAttrLoc = glGetAttribLocation(prog, "a_texCoord");
+	glEnableVertexAttribArray(texNormAttrLoc);
+	glVertexAttribPointer(texNormAttrLoc, 2, GL_FLOAT, false, 0, 0);
 
 	//screen = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 320, 180);
 	//SDL_SetTextureScaleMode(screen, SDL_SCALEMODE_NEAREST);
