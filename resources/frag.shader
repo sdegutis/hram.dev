@@ -217,7 +217,7 @@ void main() {
         fragColor = texture(iChannel0,fragCoord/iResolution.xy);
     }
     else {
-    vec2 pos = warp(fragCoord.xy / iResolution.xy);
+    vec2 pos = (fragCoord.xy / iResolution.xy);
     
     vec2 pos2 = floor(pos * res) / res;
 	if (max(abs(pos2.x - 0.5), abs(pos2.y - 0.5)) > 0.5)
