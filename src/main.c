@@ -101,7 +101,6 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 
 	SDL_SetAppMetadata("hram", "0.1", "com.90sdev.hram");
 	SDL_InitSubSystem(SDL_INIT_VIDEO);
-	SDL_HideCursor();
 	window = SDL_CreateWindow("HRAM", 320 * 3 + (30 * 2), 180 * 3 + (30 * 2), SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
 	//renderer = SDL_CreateRenderer(window, NULL);
 	SDL_SetWindowMinimumSize(window, 320, 180);
@@ -258,6 +257,8 @@ SDL_AppResult SDL_AppIterate(void* appstate)
 	return SDL_APP_CONTINUE;
 }
 
+bool cursorHidden = false;
+
 SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* e)
 {
 	switch (e->type) {
@@ -270,6 +271,25 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* e)
 		//lua_settop(L, 0);
 
 	{
+		//SDL_FRect
+
+		SDL_FPoint p;
+		p.x = e->motion.x;
+		p.y = e->motion.y;
+
+		bool inr = SDL_PointInRectFloat(&p, &destrect);
+
+		if (inr && !cursorHidden) {
+			cursorHidden = true;
+			SDL_HideCursor();
+		}
+		else if (!inr && cursorHidden) {
+			cursorHidden = false;
+			SDL_ShowCursor();
+		}
+
+
+
 		uint32_t data[1] = { SDL_rand_bits() | 0xff000000 };
 		int dx = floor((float)(e->motion.x - destrect.x) / (float)scale);
 		int dy = floor((float)(e->motion.y - destrect.y) / (float)scale);
