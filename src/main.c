@@ -234,7 +234,7 @@ SDL_AppResult SDL_AppIterate(void* appstate)
 	uint64_t now = SDL_GetTicks();
 	uint64_t diff = now - last;
 
-	glUniform1f(iTimeLoc, (double)now);
+	glUniform1f(iTimeLoc, (double)now / 1000.0);
 	uint32_t data[1] = { SDL_rand_bits() | 0xff000000 };
 	int dx = SDL_rand(320);
 	int dy = SDL_rand(180);
