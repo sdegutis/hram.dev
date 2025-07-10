@@ -18,9 +18,6 @@
 #include "VertexShader.h"
 #include <lua/lua.hpp>
 
-#include <asmjit/host.h>
-#include <asmtk/asmtk.h>
-
 
 #pragma comment(lib,"shlwapi.lib")
 #pragma comment(lib, "Dwmapi")
@@ -100,10 +97,6 @@ void openConsole() {
 }
 
 
-using namespace asmjit;
-using namespace asmtk;
-typedef int (*Func)(int, int);
-
 
 int luaopen_foo(lua_State* L) {
 	printf("called!\n");
@@ -114,99 +107,17 @@ int luaopen_foo(lua_State* L) {
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int nCmdShow) {
 
 	lua_State* L = luaL_newstate();
+	luaL_openlibs(L);
 
 	openConsole();
-	{
 
-		JitRuntime rt;
+	luaL_dostring(L, R"(
+print('hello world?')
+)");
 
-		// Holds code and relocation information during code generation.
-		CodeHolder code;
-
-		// Code holder must be initialized before it can be used. The simples way to initialize
-		// it is to use 'Environment' from JIT runtime, which matches the target architecture,
-		// operating system, ABI, and other important properties.
-		code.init(rt.environment(), rt.cpuFeatures());
-
-		// Emitters can emit code to CodeHolder - let's create 'x86::Assembler', which can emit
-		// either 32-bit (x86) or 64-bit (x86_64) code. The following line also attaches the
-		// assembler to CodeHolder, which calls 'code.attach(&a)' implicitly.
-		x86::Assembler a(&code);
-
-		// Use the x86::Assembler to emit some code to .text section in CodeHolder:
-		a.mov(x86::eax, 123);  // Emits 'mov eax, 1' - moves one to 'eax' register.
-		a.ret();             // Emits 'ret'        - returns from a function.
-
-		// 'x86::Assembler' is no longer needed from here and can be destroyed or explicitly
-		// detached via 'code.detach(&a)' - which detaches an attached emitter from code holder.
-
-		// Now add the generated code to JitRuntime via JitRuntime::add(). This function would
-		// copy the code from CodeHolder into memory with executable permission and relocate it.
-		Func fn;
-		Error err = rt.add(&fn, &code);
-
-		// It's always a good idea to handle errors, especially those returned from the Runtime.
-		if (err) {
-			printf("AsmJit failed: %s\n", DebugUtils::errorAsString(err));
-			return 1;
-		}
-
-		// CodeHolder is no longer needed from here and can be safely destroyed. The runtime now
-		// holds the relocated function, which we have generated, and controls its lifetime. The
-		// function will be freed with the runtime, so it's necessary to keep the runtime around.
-		//
-		// Use 'code.reset()' to explicitly free CodeHolder's content when necessary.
-
-		// Execute the generated function and print the resulting '1', which it moves to 'eax'.
-		int result = fn(4, 9);
-		printf("%d\n", result);
-
-		rt.release(fn);
-	}
-
-	lua_getglobal(L, "require");
-	lua_pushliteral(L, "foo");
-	lua_pcall(L, 1, 0, 0);
-
-
-	{
-		JitRuntime rt;
-
-		CodeHolder code;
-		code.init(rt.environment(), rt.cpuFeatures());
-
-		// Attach x86::Assembler to `code`.
-		host::Assembler a(&code);
-
-		// Create AsmParser that will emit to x86::Assembler.
-		AsmParser p(&a);
-
-		// Parse some assembly.
-		Error err = p.parse(
-			"mov rax, rcx\n"
-			"add rax, rdx\n"
-			"ret\n");
-
-		code.detach(&a);
-
-		// Error handling (use asmjit::ErrorHandler for more robust error handling).
-		if (err) {
-			printf("ERROR: %08x (%s)\n", err, DebugUtils::errorAsString(err));
-			return 1;
-		}
-
-		Func fn;
-		Error err2 = rt.add(&fn, &code);
-
-		code.reset();
-
-		int result = fn(28, 12);
-		printf("%u\n", result);
-
-	}
-
-
-
+	//lua_getglobal(L, "require");
+	//lua_pushliteral(L, "foo");
+	//lua_pcall(L, 1, 0, 0);
 
 
 
@@ -263,7 +174,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 
 
 	DXGI_SWAP_CHAIN_DESC swapchaindesc = {};
-	swapchaindesc.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM; // non-srgb for simplicity here. see other minimal gists for srgb setup
+	swapchaindesc.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 	swapchaindesc.SampleDesc.Count = 1;
 	swapchaindesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapchaindesc.BufferCount = 2;
@@ -275,9 +186,9 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 	D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, D3D11_CREATE_DEVICE_BGRA_SUPPORT, featurelevels, ARRAYSIZE(featurelevels), D3D11_SDK_VERSION, &swapchaindesc, &swapchain, &device, nullptr, &devicecontext);
 
 
-	swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&framebuffer); // get the swapchain's frame buffer
+	swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&framebuffer);
 
-	device->CreateRenderTargetView(framebuffer, nullptr, &framebufferRTV); // make a render target [view] from it
+	device->CreateRenderTargetView(framebuffer, nullptr, &framebufferRTV);
 
 
 	ID3D11VertexShader* vertexshader;
@@ -286,7 +197,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 	ID3D11PixelShader* pixelshader;
 	device->CreatePixelShader(MyPixelShader, sizeof(MyPixelShader), 0, &pixelshader);
 
-	D3D11_RASTERIZER_DESC rasterizerdesc = { D3D11_FILL_SOLID, D3D11_CULL_NONE }; // CULL_NONE to be agnostic of triangle winding order
+	D3D11_RASTERIZER_DESC rasterizerdesc = { D3D11_FILL_SOLID, D3D11_CULL_BACK };
 	ID3D11RasterizerState* rasterizerstate;
 	device->CreateRasterizerState(&rasterizerdesc, &rasterizerstate);
 
@@ -300,16 +211,11 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 
 
 	D3D11_SAMPLER_DESC samplerdesc = { D3D11_FILTER_MIN_MAG_MIP_POINT, D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_WRAP };
-	//samplerdesc.MinLOD = 0;
-	//samplerdesc.MaxLOD = D3D11_FLOAT32_MAX;
-	//samplerdesc.MipLODBias = 0.f;
-	//samplerdesc.MaxAnisotropy = 1;
-	//samplerdesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
 	ID3D11SamplerState* samplerstate;
 	device->CreateSamplerState(&samplerdesc, &samplerstate);
 
 	memset(texturedata, 0, 320 * 180 * 4);
-	//for (int i = 0; i < 320 * 180; i++) texturedata[i] = (int)(((float)rand() / (float)RAND_MAX) * 0xffffffff) | 0xff000000;
+
 	for (int i = 0; i < 320 * 180 * 4; i++) {
 		((uint8_t*)texturedata)[i] = rand() % 0xff;
 	}
@@ -319,21 +225,18 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 	D3D11_TEXTURE2D_DESC texturedesc = {};
 	texturedesc.Width = 320;
 	texturedesc.Height = 180;
-	//texturedesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
-	//texturedesc.MipLevels = 0;
 	texturedesc.MipLevels = 1;
 	texturedesc.ArraySize = 1;
 	texturedesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	texturedesc.SampleDesc.Count = 1;
 	texturedesc.Usage = D3D11_USAGE_DYNAMIC;
 	texturedesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	texturedesc.BindFlags = D3D11_BIND_SHADER_RESOURCE /*| D3D11_BIND_RENDER_TARGET*/;
+	texturedesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 
 	D3D11_SUBRESOURCE_DATA textureSRD = {};
 	textureSRD.pSysMem = texturedata;
 	textureSRD.SysMemPitch = 320 * 4;
 
-	//ID3D11Texture2D* texture;
 	HRESULT code = device->CreateTexture2D(&texturedesc, &textureSRD, &texture);
 	if (S_OK != code) { return 0; }
 
@@ -341,10 +244,6 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 	device->CreateShaderResourceView(texture, nullptr, &textureSRV);
 
 
-
-
-	//IDirect3DDevice9_SetSamplerState(data->device, index, D3DSAMP_MINFILTER, D3DTEXF_POINT);
-	//IDirect3DDevice9_SetSamplerState(data->device, index, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
 
 
 	ShowWindow(hwnd, nCmdShow);
@@ -469,8 +368,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 			return 0;
 		}
 
-		//printf("%d by %d", winw, winh);
-
 		D3D11_VIEWPORT viewport = { 0, 0, subw, subh, 0, 1 };
 		devicecontext->RSSetViewports(1, &viewport);
 
@@ -481,8 +378,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 
 		swapchain->ResizeBuffers(0, subw, subh, DXGI_FORMAT_UNKNOWN, 0);
 
-		swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&framebuffer); // get the swapchain's buffer
-		device->CreateRenderTargetView(framebuffer, nullptr, &framebufferRTV); // and make it a render target [view]
+		swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&framebuffer);
+		device->CreateRenderTargetView(framebuffer, nullptr, &framebufferRTV);
 
 
 		return 0;
