@@ -17,7 +17,6 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -53,37 +52,37 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Label="Shared" >
+  <ImportGroup Label="Shared">
   </ImportGroup>
-    <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    </ImportGroup>
-    <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    </ImportGroup>
-    <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    </ImportGroup>
-    <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    </ImportGroup>
-
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalIncludeDirectories>%(DefiningProjectDirectory)vendor</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
-       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -94,10 +93,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalIncludeDirectories>%(DefiningProjectDirectory)vendor</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
-       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -106,10 +108,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalIncludeDirectories>%(DefiningProjectDirectory)vendor</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
-       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -120,14 +125,291 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalIncludeDirectories>%(DefiningProjectDirectory)vendor</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
-       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-
-  <ItemGroup></ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="vendor\asmjit\arm\a64assembler.cpp" />
+    <ClCompile Include="vendor\asmjit\arm\a64builder.cpp" />
+    <ClCompile Include="vendor\asmjit\arm\a64compiler.cpp" />
+    <ClCompile Include="vendor\asmjit\arm\a64emithelper.cpp" />
+    <ClCompile Include="vendor\asmjit\arm\a64formatter.cpp" />
+    <ClCompile Include="vendor\asmjit\arm\a64func.cpp" />
+    <ClCompile Include="vendor\asmjit\arm\a64instapi.cpp" />
+    <ClCompile Include="vendor\asmjit\arm\a64instdb.cpp" />
+    <ClCompile Include="vendor\asmjit\arm\a64operand.cpp" />
+    <ClCompile Include="vendor\asmjit\arm\a64rapass.cpp" />
+    <ClCompile Include="vendor\asmjit\arm\armformatter.cpp" />
+    <ClCompile Include="vendor\asmjit\core\archtraits.cpp" />
+    <ClCompile Include="vendor\asmjit\core\assembler.cpp" />
+    <ClCompile Include="vendor\asmjit\core\builder.cpp" />
+    <ClCompile Include="vendor\asmjit\core\codeholder.cpp" />
+    <ClCompile Include="vendor\asmjit\core\codewriter.cpp" />
+    <ClCompile Include="vendor\asmjit\core\compiler.cpp" />
+    <ClCompile Include="vendor\asmjit\core\constpool.cpp" />
+    <ClCompile Include="vendor\asmjit\core\cpuinfo.cpp" />
+    <ClCompile Include="vendor\asmjit\core\emithelper.cpp" />
+    <ClCompile Include="vendor\asmjit\core\emitter.cpp" />
+    <ClCompile Include="vendor\asmjit\core\emitterutils.cpp" />
+    <ClCompile Include="vendor\asmjit\core\environment.cpp" />
+    <ClCompile Include="vendor\asmjit\core\errorhandler.cpp" />
+    <ClCompile Include="vendor\asmjit\core\formatter.cpp" />
+    <ClCompile Include="vendor\asmjit\core\func.cpp" />
+    <ClCompile Include="vendor\asmjit\core\funcargscontext.cpp" />
+    <ClCompile Include="vendor\asmjit\core\globals.cpp" />
+    <ClCompile Include="vendor\asmjit\core\inst.cpp" />
+    <ClCompile Include="vendor\asmjit\core\instdb.cpp" />
+    <ClCompile Include="vendor\asmjit\core\jitallocator.cpp" />
+    <ClCompile Include="vendor\asmjit\core\jitruntime.cpp" />
+    <ClCompile Include="vendor\asmjit\core\logger.cpp" />
+    <ClCompile Include="vendor\asmjit\core\operand.cpp" />
+    <ClCompile Include="vendor\asmjit\core\osutils.cpp" />
+    <ClCompile Include="vendor\asmjit\core\ralocal.cpp" />
+    <ClCompile Include="vendor\asmjit\core\rapass.cpp" />
+    <ClCompile Include="vendor\asmjit\core\rastack.cpp" />
+    <ClCompile Include="vendor\asmjit\core\string.cpp" />
+    <ClCompile Include="vendor\asmjit\core\support.cpp" />
+    <ClCompile Include="vendor\asmjit\core\target.cpp" />
+    <ClCompile Include="vendor\asmjit\core\type.cpp" />
+    <ClCompile Include="vendor\asmjit\core\virtmem.cpp" />
+    <ClCompile Include="vendor\asmjit\core\zone.cpp" />
+    <ClCompile Include="vendor\asmjit\core\zonehash.cpp" />
+    <ClCompile Include="vendor\asmjit\core\zonelist.cpp" />
+    <ClCompile Include="vendor\asmjit\core\zonestack.cpp" />
+    <ClCompile Include="vendor\asmjit\core\zonetree.cpp" />
+    <ClCompile Include="vendor\asmjit\core\zonevector.cpp" />
+    <ClCompile Include="vendor\asmjit\x86\x86assembler.cpp" />
+    <ClCompile Include="vendor\asmjit\x86\x86builder.cpp" />
+    <ClCompile Include="vendor\asmjit\x86\x86compiler.cpp" />
+    <ClCompile Include="vendor\asmjit\x86\x86emithelper.cpp" />
+    <ClCompile Include="vendor\asmjit\x86\x86formatter.cpp" />
+    <ClCompile Include="vendor\asmjit\x86\x86func.cpp" />
+    <ClCompile Include="vendor\asmjit\x86\x86instapi.cpp" />
+    <ClCompile Include="vendor\asmjit\x86\x86instdb.cpp" />
+    <ClCompile Include="vendor\asmjit\x86\x86operand.cpp" />
+    <ClCompile Include="vendor\asmjit\x86\x86rapass.cpp" />
+    <ClCompile Include="vendor\asmtk\asmparser.cpp" />
+    <ClCompile Include="vendor\asmtk\asmtokenizer.cpp" />
+    <ClCompile Include="vendor\lua\lapi.c" />
+    <ClCompile Include="vendor\lua\lauxlib.c" />
+    <ClCompile Include="vendor\lua\lbaselib.c" />
+    <ClCompile Include="vendor\lua\lcode.c" />
+    <ClCompile Include="vendor\lua\lcorolib.c" />
+    <ClCompile Include="vendor\lua\lctype.c" />
+    <ClCompile Include="vendor\lua\ldblib.c" />
+    <ClCompile Include="vendor\lua\ldebug.c" />
+    <ClCompile Include="vendor\lua\ldo.c" />
+    <ClCompile Include="vendor\lua\ldump.c" />
+    <ClCompile Include="vendor\lua\lfunc.c" />
+    <ClCompile Include="vendor\lua\lgc.c" />
+    <ClCompile Include="vendor\lua\linit.c" />
+    <ClCompile Include="vendor\lua\liolib.c" />
+    <ClCompile Include="vendor\lua\llex.c" />
+    <ClCompile Include="vendor\lua\lmathlib.c" />
+    <ClCompile Include="vendor\lua\lmem.c" />
+    <ClCompile Include="vendor\lua\loadlib.c" />
+    <ClCompile Include="vendor\lua\lobject.c" />
+    <ClCompile Include="vendor\lua\lopcodes.c" />
+    <ClCompile Include="vendor\lua\loslib.c" />
+    <ClCompile Include="vendor\lua\lparser.c" />
+    <ClCompile Include="vendor\lua\lstate.c" />
+    <ClCompile Include="vendor\lua\lstring.c" />
+    <ClCompile Include="vendor\lua\lstrlib.c" />
+    <ClCompile Include="vendor\lua\ltable.c" />
+    <ClCompile Include="vendor\lua\ltablib.c" />
+    <ClCompile Include="vendor\lua\ltm.c" />
+    <ClCompile Include="vendor\lua\lundump.c" />
+    <ClCompile Include="vendor\lua\lutf8lib.c" />
+    <ClCompile Include="vendor\lua\lvm.c" />
+    <ClCompile Include="vendor\lua\lzio.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="vendor\asmjit\a64.h" />
+    <ClInclude Include="vendor\asmjit\arm.h" />
+    <ClInclude Include="vendor\asmjit\arm\a64archtraits_p.h" />
+    <ClInclude Include="vendor\asmjit\arm\a64assembler.h" />
+    <ClInclude Include="vendor\asmjit\arm\a64builder.h" />
+    <ClInclude Include="vendor\asmjit\arm\a64compiler.h" />
+    <ClInclude Include="vendor\asmjit\arm\a64emithelper_p.h" />
+    <ClInclude Include="vendor\asmjit\arm\a64emitter.h" />
+    <ClInclude Include="vendor\asmjit\arm\a64formatter_p.h" />
+    <ClInclude Include="vendor\asmjit\arm\a64func_p.h" />
+    <ClInclude Include="vendor\asmjit\arm\a64globals.h" />
+    <ClInclude Include="vendor\asmjit\arm\a64instapi_p.h" />
+    <ClInclude Include="vendor\asmjit\arm\a64instdb.h" />
+    <ClInclude Include="vendor\asmjit\arm\a64instdb_p.h" />
+    <ClInclude Include="vendor\asmjit\arm\a64operand.h" />
+    <ClInclude Include="vendor\asmjit\arm\a64rapass_p.h" />
+    <ClInclude Include="vendor\asmjit\arm\armformatter_p.h" />
+    <ClInclude Include="vendor\asmjit\arm\armglobals.h" />
+    <ClInclude Include="vendor\asmjit\arm\armutils.h" />
+    <ClInclude Include="vendor\asmjit\asmjit-scope-begin.h" />
+    <ClInclude Include="vendor\asmjit\asmjit-scope-end.h" />
+    <ClInclude Include="vendor\asmjit\asmjit.h" />
+    <ClInclude Include="vendor\asmjit\core.h" />
+    <ClInclude Include="vendor\asmjit\core\api-build_p.h" />
+    <ClInclude Include="vendor\asmjit\core\api-config.h" />
+    <ClInclude Include="vendor\asmjit\core\archcommons.h" />
+    <ClInclude Include="vendor\asmjit\core\archtraits.h" />
+    <ClInclude Include="vendor\asmjit\core\assembler.h" />
+    <ClInclude Include="vendor\asmjit\core\builder.h" />
+    <ClInclude Include="vendor\asmjit\core\builder_p.h" />
+    <ClInclude Include="vendor\asmjit\core\codebuffer.h" />
+    <ClInclude Include="vendor\asmjit\core\codeholder.h" />
+    <ClInclude Include="vendor\asmjit\core\codewriter_p.h" />
+    <ClInclude Include="vendor\asmjit\core\compiler.h" />
+    <ClInclude Include="vendor\asmjit\core\compilerdefs.h" />
+    <ClInclude Include="vendor\asmjit\core\constpool.h" />
+    <ClInclude Include="vendor\asmjit\core\cpuinfo.h" />
+    <ClInclude Include="vendor\asmjit\core\emithelper_p.h" />
+    <ClInclude Include="vendor\asmjit\core\emitter.h" />
+    <ClInclude Include="vendor\asmjit\core\emitterutils_p.h" />
+    <ClInclude Include="vendor\asmjit\core\environment.h" />
+    <ClInclude Include="vendor\asmjit\core\errorhandler.h" />
+    <ClInclude Include="vendor\asmjit\core\fixup.h" />
+    <ClInclude Include="vendor\asmjit\core\formatter.h" />
+    <ClInclude Include="vendor\asmjit\core\formatter_p.h" />
+    <ClInclude Include="vendor\asmjit\core\func.h" />
+    <ClInclude Include="vendor\asmjit\core\funcargscontext_p.h" />
+    <ClInclude Include="vendor\asmjit\core\globals.h" />
+    <ClInclude Include="vendor\asmjit\core\inst.h" />
+    <ClInclude Include="vendor\asmjit\core\instdb_p.h" />
+    <ClInclude Include="vendor\asmjit\core\jitallocator.h" />
+    <ClInclude Include="vendor\asmjit\core\jitruntime.h" />
+    <ClInclude Include="vendor\asmjit\core\logger.h" />
+    <ClInclude Include="vendor\asmjit\core\misc_p.h" />
+    <ClInclude Include="vendor\asmjit\core\operand.h" />
+    <ClInclude Include="vendor\asmjit\core\osutils.h" />
+    <ClInclude Include="vendor\asmjit\core\osutils_p.h" />
+    <ClInclude Include="vendor\asmjit\core\raassignment_p.h" />
+    <ClInclude Include="vendor\asmjit\core\rabuilders_p.h" />
+    <ClInclude Include="vendor\asmjit\core\radefs_p.h" />
+    <ClInclude Include="vendor\asmjit\core\ralocal_p.h" />
+    <ClInclude Include="vendor\asmjit\core\rapass_p.h" />
+    <ClInclude Include="vendor\asmjit\core\rastack_p.h" />
+    <ClInclude Include="vendor\asmjit\core\string.h" />
+    <ClInclude Include="vendor\asmjit\core\support.h" />
+    <ClInclude Include="vendor\asmjit\core\support_p.h" />
+    <ClInclude Include="vendor\asmjit\core\target.h" />
+    <ClInclude Include="vendor\asmjit\core\type.h" />
+    <ClInclude Include="vendor\asmjit\core\virtmem.h" />
+    <ClInclude Include="vendor\asmjit\core\zone.h" />
+    <ClInclude Include="vendor\asmjit\core\zonehash.h" />
+    <ClInclude Include="vendor\asmjit\core\zonelist.h" />
+    <ClInclude Include="vendor\asmjit\core\zonestack.h" />
+    <ClInclude Include="vendor\asmjit\core\zonestring.h" />
+    <ClInclude Include="vendor\asmjit\core\zonetree.h" />
+    <ClInclude Include="vendor\asmjit\core\zonevector.h" />
+    <ClInclude Include="vendor\asmjit\host.h" />
+    <ClInclude Include="vendor\asmjit\x86.h" />
+    <ClInclude Include="vendor\asmjit\x86\x86archtraits_p.h" />
+    <ClInclude Include="vendor\asmjit\x86\x86assembler.h" />
+    <ClInclude Include="vendor\asmjit\x86\x86builder.h" />
+    <ClInclude Include="vendor\asmjit\x86\x86compiler.h" />
+    <ClInclude Include="vendor\asmjit\x86\x86emithelper_p.h" />
+    <ClInclude Include="vendor\asmjit\x86\x86emitter.h" />
+    <ClInclude Include="vendor\asmjit\x86\x86formatter_p.h" />
+    <ClInclude Include="vendor\asmjit\x86\x86func_p.h" />
+    <ClInclude Include="vendor\asmjit\x86\x86globals.h" />
+    <ClInclude Include="vendor\asmjit\x86\x86instapi_p.h" />
+    <ClInclude Include="vendor\asmjit\x86\x86instdb.h" />
+    <ClInclude Include="vendor\asmjit\x86\x86instdb_p.h" />
+    <ClInclude Include="vendor\asmjit\x86\x86opcode_p.h" />
+    <ClInclude Include="vendor\asmjit\x86\x86operand.h" />
+    <ClInclude Include="vendor\asmjit\x86\x86rapass_p.h" />
+    <ClInclude Include="vendor\asmtk\asmparser.h" />
+    <ClInclude Include="vendor\asmtk\asmtk.h" />
+    <ClInclude Include="vendor\asmtk\asmtokenizer.h" />
+    <ClInclude Include="vendor\asmtk\elfdefs.h" />
+    <ClInclude Include="vendor\asmtk\globals.h" />
+    <ClInclude Include="vendor\asmtk\parserutils.h" />
+    <ClInclude Include="vendor\asmtk\strtod.h" />
+    <ClInclude Include="vendor\lua\lapi.h" />
+    <ClInclude Include="vendor\lua\lauxlib.h" />
+    <ClInclude Include="vendor\lua\lcode.h" />
+    <ClInclude Include="vendor\lua\lctype.h" />
+    <ClInclude Include="vendor\lua\ldebug.h" />
+    <ClInclude Include="vendor\lua\ldo.h" />
+    <ClInclude Include="vendor\lua\lfunc.h" />
+    <ClInclude Include="vendor\lua\lgc.h" />
+    <ClInclude Include="vendor\lua\ljumptab.h" />
+    <ClInclude Include="vendor\lua\llex.h" />
+    <ClInclude Include="vendor\lua\llimits.h" />
+    <ClInclude Include="vendor\lua\lmem.h" />
+    <ClInclude Include="vendor\lua\lobject.h" />
+    <ClInclude Include="vendor\lua\lopcodes.h" />
+    <ClInclude Include="vendor\lua\lopnames.h" />
+    <ClInclude Include="vendor\lua\lparser.h" />
+    <ClInclude Include="vendor\lua\lprefix.h" />
+    <ClInclude Include="vendor\lua\lstate.h" />
+    <ClInclude Include="vendor\lua\lstring.h" />
+    <ClInclude Include="vendor\lua\ltable.h" />
+    <ClInclude Include="vendor\lua\ltm.h" />
+    <ClInclude Include="vendor\lua\lua.h" />
+    <ClInclude Include="vendor\lua\lua.hpp" />
+    <ClInclude Include="vendor\lua\luaconf.h" />
+    <ClInclude Include="vendor\lua\lualib.h" />
+    <ClInclude Include="vendor\lua\lundump.h" />
+    <ClInclude Include="vendor\lua\lvm.h" />
+    <ClInclude Include="vendor\lua\lzio.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="PixelShader.hlsl">
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MyPixelShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(DefiningProjectDirectory)PixelShader.h</HeaderFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </ObjectFileOutput>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MyPixelShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(DefiningProjectDirectory)PixelShader.h</HeaderFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </ObjectFileOutput>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MyPixelShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(DefiningProjectDirectory)PixelShader.h</HeaderFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ObjectFileOutput>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MyPixelShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(DefiningProjectDirectory)PixelShader.h</HeaderFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="VertexShader.hlsl">
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MyVertexShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(DefiningProjectDirectory)VertexShader.h</HeaderFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </ObjectFileOutput>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MyVertexShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(DefiningProjectDirectory)VertexShader.h</HeaderFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </ObjectFileOutput>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MyVertexShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(DefiningProjectDirectory)VertexShader.h</HeaderFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ObjectFileOutput>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MyVertexShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(DefiningProjectDirectory)VertexShader.h</HeaderFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
