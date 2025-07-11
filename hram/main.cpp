@@ -67,7 +67,7 @@ void checkSubWindow() {
 	suby = winh / 2 - subh / 2;
 }
 
-uint32_t texturedata[320 * 180];
+uint32_t texturedata[320 * 180] = {};
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -106,19 +106,10 @@ int luaopen_foo(lua_State* L) {
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int nCmdShow) {
 
+	checkSubWindow();
+
 	lua_State* L = luaL_newstate();
 	luaL_openlibs(L);
-
-	openConsole();
-
-	luaL_dostring(L, R"(
-print('hello world?')
-)");
-
-	//lua_getglobal(L, "require");
-	//lua_pushliteral(L, "foo");
-	//lua_pcall(L, 1, 0, 0);
-
 
 
 	WNDCLASS wc = { };
@@ -144,6 +135,9 @@ print('hello world?')
 	winbox.bottom = winbox.top + winh;
 	AdjustWindowRectEx(&winbox, WS_OVERLAPPEDWINDOW, false, 0);
 
+	diffw = (winbox.right - winbox.left) - winw;
+	diffh = (winbox.bottom - winbox.top) - winh;
+
 	HWND hwnd = CreateWindowExW(
 		0, L"HRAM Window Class", L"HRAM", WS_OVERLAPPEDWINDOW,
 		winbox.left,
@@ -153,15 +147,11 @@ print('hello world?')
 		NULL, NULL, hInstance, NULL);
 	if (hwnd == NULL) { return 0; }
 
-	diffw = (winbox.right - winbox.left) - winw;
-	diffh = (winbox.bottom - winbox.top) - winh;
-
 
 	const BOOL isDarkMode = true;
 	HRESULT result = DwmSetWindowAttribute(hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE, &isDarkMode, sizeof(isDarkMode));
 
 
-	checkSubWindow();
 	subwin = CreateWindowExW(
 		0, L"HRAM SubWindow Class", L"", WS_CHILD | WS_VISIBLE,
 		subx, suby, subw, subh,
@@ -214,11 +204,10 @@ print('hello world?')
 	ID3D11SamplerState* samplerstate;
 	device->CreateSamplerState(&samplerdesc, &samplerstate);
 
-	memset(texturedata, 0, 320 * 180 * 4);
 
-	for (int i = 0; i < 320 * 180 * 4; i++) {
-		((uint8_t*)texturedata)[i] = rand() % 0xff;
-	}
+	//for (int i = 0; i < 320 * 180 * 4; i++) {
+	//	((uint8_t*)texturedata)[i] = rand() % 0xff;
+	//}
 
 
 
