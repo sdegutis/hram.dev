@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="util.cpp" />
     <ClCompile Include="vendor\asmjit\arm\a64assembler.cpp" />
     <ClCompile Include="vendor\asmjit\arm\a64builder.cpp" />
     <ClCompile Include="vendor\asmjit\arm\a64compiler.cpp" />
@@ -231,6 +232,7 @@
     <ClCompile Include="vendor\lua\lzio.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="util.h" />
     <ClInclude Include="vendor\asmjit\a64.h" />
     <ClInclude Include="vendor\asmjit\arm.h" />
     <ClInclude Include="vendor\asmjit\arm\a64archtraits_p.h" />
