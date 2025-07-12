@@ -184,20 +184,8 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 		}
 	}
 
-	//s.copy();
-
-	D3D11_BOX box;
-	box.left = 2;
-	box.right = 4;
-	box.top = 1;
-	box.bottom = 4;
-	box.front = 0;
-	box.back = 1;
-
-	devicecontext->CopySubresourceRegion(screen1.texture, 0, 0, 0, 0, s.texture, 0, &box);
-	devicecontext->CopySubresourceRegion(screen1.texture, 0, 10, 10, 0, s.texture, 0, NULL);
-
-
+	s.copyTo(screen1, 10, 10);
+	s.copyTo(screen1, 0, 0, 1, 1, 2, 2);
 
 
 
@@ -281,28 +269,28 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 	}
 
 	case WM_CHAR: {
-		printf("char: %d\n", wParam);
+		printf("char: %llu\n", wParam);
 		break;
 	}
 
 	case WM_KEYUP: {
-		printf("key up %d\n", wParam);
+		printf("key up %llu\n", wParam);
 		break;
 	}
 
 	case WM_SYSKEYDOWN: {
-		printf("sys key down %d\n", wParam);
+		printf("sys key down %llu\n", wParam);
 		return 0;
 	}
 
 	case WM_SYSKEYUP: {
-		printf("sys key up %d\n", wParam);
+		printf("sys key up %llu\n", wParam);
 		return 0;
 	}
 
 	case WM_KEYDOWN: {
 
-		printf("key down %d\n", wParam);
+		printf("key down %llu\n", wParam);
 
 		if (wParam == VK_F11) {
 			DWORD dwStyle = GetWindowLong(hwnd, GWL_STYLE);

@@ -31,7 +31,8 @@ void Image::create(ID3D11Device* device, ID3D11DeviceContext* devicecontext)
 	if (S_OK != code) { throw std::exception(); }
 }
 
-void Image::pset(int x, int y, uint32_t c) {
+void Image::pset(int x, int y, uint32_t c)
+{
 	D3D11_BOX box;
 	box.top = y;
 	box.bottom = y + 1;
@@ -40,4 +41,21 @@ void Image::pset(int x, int y, uint32_t c) {
 	box.front = 0;
 	box.back = 1;
 	devicecontext->UpdateSubresource(texture, 0, &box, &c, 4, 4);
+}
+
+void Image::copyTo(Image& dst, int dx, int dy)
+{
+	devicecontext->CopySubresourceRegion(dst.texture, 0, dx, dy, 0, texture, 0, NULL);
+}
+
+void Image::copyTo(Image& dst, int dx, int dy, int sx, int sy, int sw, int sh)
+{
+	D3D11_BOX box;
+	box.left = sx;
+	box.right = sx + sw;
+	box.top = sy;
+	box.bottom = sy + sh;
+	box.front = 0;
+	box.back = 1;
+	devicecontext->CopySubresourceRegion(dst.texture, 0, dx, dy, 0, texture, 0, &box);
 }
