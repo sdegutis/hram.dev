@@ -58,6 +58,10 @@ public:
 		texturedata = (uint32_t*)malloc(resw * resh * 4);
 		memset(texturedata, 0, resw * resh * 4);
 
+		//for (int i = 0; i < resw * resh * 4; i++) {
+		//	((uint8_t*)texturedata)[i] = rand() % 0xff;
+		//}
+
 		D3D11_TEXTURE2D_DESC texturedesc = {};
 		texturedesc.Width = resw;
 		texturedesc.Height = resh;
@@ -95,7 +99,7 @@ public:
 };
 
 Screen screen1{ 320,180 };
-Screen screen2{ 320,160 };
+Screen screen2{ 320,240 };
 
 Screen* screen = &screen1;
 
@@ -249,9 +253,6 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 	device->CreateSamplerState(&samplerdesc, &samplerstate);
 
 
-	//for (int i = 0; i < 320 * 180 * 4; i++) {
-	//	((uint8_t*)texturedata)[i] = rand() % 0xff;
-	//}
 
 
 
