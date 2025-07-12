@@ -13,7 +13,7 @@ void Image::create(ID3D11Device* device, ID3D11DeviceContext* devicecontext)
 	texturedesc.Height = resh;
 	texturedesc.MipLevels = 1;
 	texturedesc.ArraySize = 1;
-	texturedesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	texturedesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 	texturedesc.SampleDesc.Count = 1;
 	texturedesc.Usage = D3D11_USAGE_DEFAULT;
 	texturedesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;

@@ -76,6 +76,7 @@ LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 int diffw;
 int diffh;
 
+Image s(4, 4);
 
 
 #include "util.h"
@@ -175,17 +176,44 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 	screen2.create(device, devicecontext);
 
 
-	Image s(4, 4);
+
+
+
+	//D3D11_BLEND_DESC bd = {};
+	////bd.AlphaToCoverageEnable = true;
+	//bd.RenderTarget->RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	//bd.RenderTarget->BlendEnable = TRUE;
+
+	//bd.RenderTarget->BlendOp = D3D11_BLEND_OP_ADD;
+	//bd.RenderTarget->SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	//bd.RenderTarget->DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+
+	////bd.RenderTarget->BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	////bd.RenderTarget->SrcBlendAlpha = D3D11_BLEND_ONE;
+	////bd.RenderTarget->DestBlendAlpha = D3D11_BLEND_ONE;
+
+	//ID3D11BlendState* bstate;
+	//device->CreateBlendState(&bd, &bstate);
+	//devicecontext->OMSetBlendState(bstate, NULL, 0xffffffff);
+
+
+
+
+
 	s.create(device, devicecontext);
 
 	for (int y = 0; y < 4; y++) {
 		for (int x = 0; x < 4; x++) {
-			s.pset(x, y, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff));
+			//RGBA
+
+			s.pset(x, y, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff) | 0x7f);
+
+			//screen1.pset(3 + x, 10 + y, 0x33'ff'99'00);
 		}
 	}
 
-	s.copyTo(screen1, 10, 10);
-	s.copyTo(screen1, 0, 0, 1, 1, 2, 2);
+	//s.copyTo(screen1, 10, 10);
+	//s.copyTo(screen1, 0, 0, 1, 1, 2, 2);
 
 
 
@@ -222,6 +250,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 
 			devicecontext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
+
 			devicecontext->VSSetShader(vertexshader, nullptr, 0);
 
 			devicecontext->RSSetState(rasterizerstate);
@@ -231,6 +260,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 			devicecontext->PSSetSamplers(0, 1, &samplerstate);
 
 			devicecontext->OMSetRenderTargets(1, &framebufferRTV, nullptr);
+			//devicecontext->OMSetBlendState(bstate, NULL, 0xffffffff);
 
 			devicecontext->Draw(4, 0);
 
@@ -416,7 +446,9 @@ LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			mousey = yPos;
 
 			printf("move %d %d\n", mousex, mousey);
-			screen->pset(mousex, mousey, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff));
+			//screen->pset(mousex, mousey, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff));
+
+			s.copyTo(screen1, mousex, mousey);
 
 			return 0;
 		}
