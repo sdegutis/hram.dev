@@ -28,18 +28,85 @@
 HCURSOR hCursor;
 HWND subwin;
 
-int resw = 320;
-int resh = 180;
+
+class Screen;
+
+extern Screen* screen;
+
+class Screen
+{
+	uint32_t* texturedata;
+	ID3D11Texture2D* texture;
+	ID3D11DeviceContext* devicecontext;
+
+public:
+
+	int resw;
+	int resh;
+
+	ID3D11ShaderResourceView* textureSRV;
+
+	Screen(int resw, int resh)
+		: resw(resw)
+		, resh(resh)
+	{
+	}
+
+	void create(ID3D11Device* device, ID3D11DeviceContext* devicecontext)
+	{
+		this->devicecontext = devicecontext;
+		texturedata = (uint32_t*)malloc(resw * resh * 4);
+		memset(texturedata, 0, resw * resh * 4);
+
+		D3D11_TEXTURE2D_DESC texturedesc = {};
+		texturedesc.Width = resw;
+		texturedesc.Height = resh;
+		texturedesc.MipLevels = 1;
+		texturedesc.ArraySize = 1;
+		texturedesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		texturedesc.SampleDesc.Count = 1;
+		texturedesc.Usage = D3D11_USAGE_DYNAMIC;
+		texturedesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		texturedesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+
+		D3D11_SUBRESOURCE_DATA textureSRD = {};
+		textureSRD.pSysMem = texturedata;
+		textureSRD.SysMemPitch = resw * 4;
+
+		HRESULT code = device->CreateTexture2D(&texturedesc, &textureSRD, &texture);
+		if (S_OK != code) { throw std::exception(); }
+
+		code = device->CreateShaderResourceView(texture, nullptr, &textureSRV);
+		if (S_OK != code) { throw std::exception(); }
+	}
+
+	void pset(int x, int y, uint32_t c) {
+		int i = y * resw + x;
+		texturedata[i] = 0xffffffff;
+
+		D3D11_MAPPED_SUBRESOURCE subres;
+		devicecontext->Map(texture, 0, D3D11_MAP_WRITE_DISCARD, 0, &subres);
+		printf("%d,%d\n", subres.DepthPitch, subres.RowPitch);
+		memcpy(subres.pData, texturedata, resw * resh * 4);
+		devicecontext->Unmap(texture, 0);
+
+	}
+
+};
+
+Screen screen1{ 320,180 };
+Screen screen2{ 320,160 };
+
+Screen* screen = &screen1;
+
 
 int scale = 3;
-int winw = resw * scale;
-int winh = resh * scale;
+int winw = screen->resw * scale;
+int winh = screen->resh * scale;
 
 ID3D11Device* device;
 ID3D11DeviceContext* devicecontext;
 IDXGISwapChain* swapchain;
-
-ID3D11Texture2D* texture;
 
 ID3D11Texture2D* framebuffer;
 ID3D11RenderTargetView* framebufferRTV;
@@ -50,16 +117,16 @@ int subw = 0;
 int subh = 0;
 
 void checkSubWindow() {
-	subw = resw;
-	subh = resh;
+	subw = screen->resw;
+	subh = screen->resh;
 	scale = 1;
 
 	while (
-		subw + resw <= winw &&
-		subh + resh <= winh)
+		subw + screen->resw <= winw &&
+		subh + screen->resh <= winh)
 	{
-		subw += resw;
-		subh += resh;
+		subw += screen->resw;
+		subh += screen->resh;
 		scale++;
 	}
 
@@ -67,7 +134,6 @@ void checkSubWindow() {
 	suby = winh / 2 - subh / 2;
 }
 
-uint32_t texturedata[320 * 180] = {};
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -78,13 +144,11 @@ int diffh;
 
 
 
-int luaopen_foo(lua_State* L) {
-	printf("called!\n");
-	return 0;
-}
-
+#include "util.h"
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int nCmdShow) {
+
+	openConsole();
 
 	checkSubWindow();
 
@@ -153,11 +217,10 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 	swapchaindesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 
 	D3D_FEATURE_LEVEL featurelevels[] = { D3D_FEATURE_LEVEL_11_0 };
-	D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, D3D11_CREATE_DEVICE_BGRA_SUPPORT, featurelevels, ARRAYSIZE(featurelevels), D3D11_SDK_VERSION, &swapchaindesc, &swapchain, &device, nullptr, &devicecontext);
+	D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, D3D11_CREATE_DEVICE_BGRA_SUPPORT | D3D11_CREATE_DEVICE_DEBUG, featurelevels, ARRAYSIZE(featurelevels), D3D11_SDK_VERSION, &swapchaindesc, &swapchain, &device, nullptr, &devicecontext);
 
 
 	swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&framebuffer);
-
 	device->CreateRenderTargetView(framebuffer, nullptr, &framebufferRTV);
 
 
@@ -174,7 +237,8 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 	D3D11_VIEWPORT viewport = { 0, 0, subw, subh, 0, 1 };
 	devicecontext->RSSetViewports(1, &viewport);
 
-
+	screen1.create(device, devicecontext);
+	screen2.create(device, devicecontext);
 
 
 
@@ -191,26 +255,6 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 
 
 
-	D3D11_TEXTURE2D_DESC texturedesc = {};
-	texturedesc.Width = 320;
-	texturedesc.Height = 180;
-	texturedesc.MipLevels = 1;
-	texturedesc.ArraySize = 1;
-	texturedesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	texturedesc.SampleDesc.Count = 1;
-	texturedesc.Usage = D3D11_USAGE_DYNAMIC;
-	texturedesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	texturedesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-
-	D3D11_SUBRESOURCE_DATA textureSRD = {};
-	textureSRD.pSysMem = texturedata;
-	textureSRD.SysMemPitch = 320 * 4;
-
-	HRESULT code = device->CreateTexture2D(&texturedesc, &textureSRD, &texture);
-	if (S_OK != code) { return 0; }
-
-	ID3D11ShaderResourceView* textureSRV;
-	device->CreateShaderResourceView(texture, nullptr, &textureSRV);
 
 
 
@@ -241,7 +285,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 			devicecontext->RSSetState(rasterizerstate);
 
 			devicecontext->PSSetShader(pixelshader, nullptr, 0);
-			devicecontext->PSSetShaderResources(0, 1, &textureSRV);
+			devicecontext->PSSetShaderResources(0, 1, &screen->textureSRV);
 			devicecontext->PSSetSamplers(0, 1, &samplerstate);
 
 			devicecontext->OMSetRenderTargets(1, &framebufferRTV, nullptr);
@@ -258,6 +302,21 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 WINDOWPLACEMENT g_wpPrev = { sizeof(g_wpPrev) };
 
 int first = 1;
+
+void resetBuffers() {
+	D3D11_VIEWPORT viewport = { 0, 0, subw, subh, 0, 1 };
+	devicecontext->RSSetViewports(1, &viewport);
+
+	devicecontext->Flush();
+
+	framebufferRTV->Release();
+	framebuffer->Release();
+
+	swapchain->ResizeBuffers(0, subw, subh, DXGI_FORMAT_UNKNOWN, 0);
+
+	swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&framebuffer);
+	device->CreateRenderTargetView(framebuffer, nullptr, &framebufferRTV);
+}
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg) {
@@ -321,8 +380,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 
 	case WM_GETMINMAXINFO: {
 		LPMINMAXINFO lpMMI = (LPMINMAXINFO)lParam;
-		lpMMI->ptMinTrackSize.x = resw + diffw;
-		lpMMI->ptMinTrackSize.y = resh + diffh;
+		printf("checking min size\n");
+		lpMMI->ptMinTrackSize.x = screen->resw + diffw;
+		lpMMI->ptMinTrackSize.y = screen->resh + diffh;
 		return 0;
 	}
 
@@ -337,19 +397,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 			return 0;
 		}
 
-		D3D11_VIEWPORT viewport = { 0, 0, subw, subh, 0, 1 };
-		devicecontext->RSSetViewports(1, &viewport);
-
-		devicecontext->Flush();
-
-		framebufferRTV->Release();
-		framebuffer->Release();
-
-		swapchain->ResizeBuffers(0, subw, subh, DXGI_FORMAT_UNKNOWN, 0);
-
-		swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&framebuffer);
-		device->CreateRenderTargetView(framebuffer, nullptr, &framebufferRTV);
-
+		resetBuffers();
 
 		return 0;
 	}
@@ -378,6 +426,15 @@ LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	case WM_LBUTTONDOWN: {
 		printf("left button down\n");
+
+		if (screen == &screen1)
+			screen = &screen2;
+		else screen = &screen1;
+
+		checkSubWindow();
+		SetWindowPos(subwin, NULL, subx, suby, subw, subh, SWP_FRAMECHANGED);
+		resetBuffers();
+
 		return 0;
 	}
 
@@ -416,15 +473,8 @@ LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			mousex = xPos;
 			mousey = yPos;
 
-			printf("move %d %d\n", xPos, yPos);
-
-			int i = yPos * 320 + xPos;
-			texturedata[i] = 0xffffffff;
-
-			D3D11_MAPPED_SUBRESOURCE subres;
-			devicecontext->Map(texture, 0, D3D11_MAP_WRITE_DISCARD, 0, &subres);
-			memcpy(subres.pData, texturedata, 320 * 180 * 4);
-			devicecontext->Unmap(texture, 0);
+			printf("move %d %d\n", mousex, mousey);
+			screen->pset(mousex, mousey, 0xffffffff);
 
 			return 0;
 		}
