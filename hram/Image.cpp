@@ -43,6 +43,24 @@ void Image::pset(int x, int y, uint32_t c)
 	devicecontext->UpdateSubresource(texture, 0, &box, &c, 4, 4);
 }
 
+void Image::fillrect(int x, int y, int w, int h, int c)
+{
+	auto buf = (uint32_t*)malloc(w * h * 4);
+	if (buf == 0) throw std::exception("oom");
+	for (int i = 0; i < w * h; i++) buf[i] = c;
+
+	D3D11_BOX box;
+	box.top = y;
+	box.bottom = y + w;
+	box.left = x;
+	box.right = x + h;
+	box.front = 0;
+	box.back = 1;
+	devicecontext->UpdateSubresource(texture, 0, &box, buf, w * 4, w * h * 4);
+
+	free(buf);
+}
+
 void Image::copyTo(Image& dst, int dx, int dy)
 {
 	devicecontext->CopySubresourceRegion(dst.texture, 0, dx, dy, 0, texture, 0, NULL);

@@ -202,18 +202,21 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 
 	s.create(device, devicecontext);
 
-	for (int y = 0; y < 4; y++) {
-		for (int x = 0; x < 4; x++) {
-			//RGBA
+	//for (int y = 0; y < 4; y++) {
+	//	for (int x = 0; x < 4; x++) {
+	//		//RGBA
 
-			s.pset(x, y, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff) | 0x7f);
+	//		s.pset(x, y, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff) | 0x7f);
 
-			//screen1.pset(3 + x, 10 + y, 0x33'ff'99'00);
-		}
-	}
+	//		//screen1.pset(3 + x, 10 + y, 0x33'ff'99'00);
+	//	}
+	//}
 
-	//s.copyTo(screen1, 10, 10);
-	//s.copyTo(screen1, 0, 0, 1, 1, 2, 2);
+	s.fillrect(0, 0, 4, 4, 0xff9900);
+	s.fillrect(1, 1, 2, 2, 0xff99ff);
+
+	s.copyTo(screen1, 10, 10);
+	s.copyTo(screen1, 0, 0, 1, 1, 2, 2);
 
 
 

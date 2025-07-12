@@ -34,6 +34,7 @@ public:
 
 	void create(ID3D11Device* device, ID3D11DeviceContext* devicecontext);
 	void pset(int x, int y, uint32_t c);
+	void fillrect(int x, int y, int w, int h, int c);
 
 	void copyTo(Image& dst, int dx, int dy);
 	void copyTo(Image& dst, int dx, int dy, int sx, int sy, int sw, int sh);
