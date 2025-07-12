@@ -159,9 +159,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="cpp.hint" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="a64.h" />
     <ClInclude Include="arm.h" />
     <ClInclude Include="arm\a64archtraits_p.h" />

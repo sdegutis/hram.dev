@@ -13,18 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Vendor">
-      <UniqueIdentifier>{8930febf-eb31-4b55-b9ed-ea98c532a154}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Vendor\Lua 5.5">
-      <UniqueIdentifier>{54e56f4a-f6e2-436e-b9e7-874da28b89ec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Vendor\asmjit">
-      <UniqueIdentifier>{d7a07916-084c-428d-81b7-6831a01566cc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Vendor\asmtk">
-      <UniqueIdentifier>{c9c8a334-41d9-4a3d-86d6-f680a80cabff}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="cpp.hint" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="x86\x86archtraits_p.h">
       <Filter>Source Files</Filter>
     </ClInclude>

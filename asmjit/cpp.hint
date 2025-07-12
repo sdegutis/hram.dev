@@ -1,2 +1,0 @@
-#define ASMJIT_API __declspec(dllexport)
-#define ASMJIT_API __declspec(dllimport)

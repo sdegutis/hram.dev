@@ -81,12 +81,14 @@ Image s(4, 4);
 
 #include "util.h"
 
-#include <asmjit/asmjit.h>
+#include <asmjit/host.h>
 #include <stdio.h>
 
 using namespace asmjit;
 
 typedef int (*Func)(void);
+
+//#include <lpeg/>
 
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int nCmdShow) {
@@ -147,6 +149,15 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 
 	lua_State* L = luaL_newstate();
 	luaL_openlibs(L);
+
+	luaL_dostring(L, R"(
+
+print(package.cpath)
+print(1)
+local yes, foo = pcall(require, 'lpeg')
+print(2)
+print('worked?', yes, foo)
+)");
 
 
 	WNDCLASS wc = { };
