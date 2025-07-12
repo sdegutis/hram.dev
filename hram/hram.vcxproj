@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Image.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="vendor\asmjit\arm\a64assembler.cpp" />
@@ -232,6 +233,7 @@
     <ClCompile Include="vendor\lua\lzio.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Image.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="vendor\asmjit\a64.h" />
     <ClInclude Include="vendor\asmjit\arm.h" />

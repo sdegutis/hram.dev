@@ -1,6 +1,3 @@
-#define UNICODE
-#define _UNICODE
-
 #define WIN32_LEAN_AND_MEAN
 
 #include <windows.h>
@@ -18,6 +15,7 @@
 #include "VertexShader.h"
 #include <lua/lua.hpp>
 
+#include "Image.h"
 
 #pragma comment(lib,"shlwapi.lib")
 #pragma comment(lib, "Dwmapi")
@@ -29,97 +27,11 @@ HCURSOR hCursor;
 HWND subwin;
 
 
-class Screen;
 
-extern Screen* screen;
 
-class Screen
-{
-	uint32_t* texturedata;
-	ID3D11DeviceContext* devicecontext;
-
-public:
-
-	int resw;
-	int resh;
-
-	ID3D11Texture2D* texture;
-	ID3D11ShaderResourceView* textureSRV;
-
-	Screen(int resw, int resh)
-		: resw(resw)
-		, resh(resh)
-	{
-	}
-
-	~Screen() {
-		free(texturedata);
-		texture->Release();
-		textureSRV->Release();
-	}
-
-	void create(ID3D11Device* device, ID3D11DeviceContext* devicecontext)
-	{
-		this->devicecontext = devicecontext;
-		texturedata = (uint32_t*)malloc(resw * resh * 4);
-		memset(texturedata, 0, resw * resh * 4);
-
-		//for (int i = 0; i < resw * resh * 4; i++) {
-		//	((uint8_t*)texturedata)[i] = rand() % 0xff;
-		//}
-
-		D3D11_TEXTURE2D_DESC texturedesc = {};
-		texturedesc.Width = resw;
-		texturedesc.Height = resh;
-		texturedesc.MipLevels = 1;
-		texturedesc.ArraySize = 1;
-		texturedesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		texturedesc.SampleDesc.Count = 1;
-		texturedesc.Usage = D3D11_USAGE_DEFAULT;
-		texturedesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		texturedesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-
-		D3D11_SUBRESOURCE_DATA textureSRD = {};
-		textureSRD.pSysMem = texturedata;
-		textureSRD.SysMemPitch = resw * 4;
-		textureSRD.SysMemSlicePitch = resw * 4;
-
-		HRESULT code = device->CreateTexture2D(&texturedesc, &textureSRD, &texture);
-		if (S_OK != code) { throw std::exception(); }
-
-		code = device->CreateShaderResourceView(texture, nullptr, &textureSRV);
-		if (S_OK != code) { throw std::exception(); }
-	}
-
-	void pset(int x, int y, uint32_t c) {
-		//pset_noblit(x, y, c);
-
-		D3D11_BOX box;
-		box.top = y;
-		box.bottom = y + 1;
-		box.left = x;
-		box.right = x + 1;
-		box.front = 0;
-		box.back = 1;
-		devicecontext->UpdateSubresource(texture, 0, &box, &c, 4, 4);
-
-		//D3D11_MAPPED_SUBRESOURCE subres;
-		//devicecontext->Map(texture, 0, D3D11_MAP_WRITE_DISCARD, 0, &subres);
-		//memcpy(subres.pData, texturedata, resw * resh * 4);
-		//devicecontext->Unmap(texture, 0);
-	}
-
-	//void pset_noblit(int x, int y, uint32_t c) {
-	//	int i = y * resw + x;
-	//	texturedata[i] = c;
-	//}
-
-};
-
-Screen screen1{ 320,180 };
-Screen screen2{ 320,240 };
-
-Screen* screen = &screen1;
+Image screen1{ 320,180 };
+Image screen2{ 320,240 };
+Image* screen = &screen1;
 
 
 int scale = 3;
@@ -263,17 +175,27 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 	screen2.create(device, devicecontext);
 
 
-	Screen* s = new Screen(4, 4);
-	s->create(device, devicecontext);
+	Image s(4, 4);
+	s.create(device, devicecontext);
 
 	for (int y = 0; y < 4; y++) {
 		for (int x = 0; x < 4; x++) {
-			s->pset(x, y, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff));
+			s.pset(x, y, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff));
 		}
 	}
 
-	devicecontext->CopySubresourceRegion(screen1.texture, 0, 0, 0, 0, s->texture, 0, NULL);
-	devicecontext->CopySubresourceRegion(screen1.texture, 0, 10, 10, 0, s->texture, 0, NULL);
+	//s.copy();
+
+	D3D11_BOX box;
+	box.left = 2;
+	box.right = 4;
+	box.top = 1;
+	box.bottom = 4;
+	box.front = 0;
+	box.back = 1;
+
+	devicecontext->CopySubresourceRegion(screen1.texture, 0, 0, 0, 0, s.texture, 0, &box);
+	devicecontext->CopySubresourceRegion(screen1.texture, 0, 10, 10, 0, s.texture, 0, NULL);
 
 
 
