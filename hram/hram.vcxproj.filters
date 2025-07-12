@@ -309,6 +309,9 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vendor\asmtk\asmparser.h">
@@ -695,13 +698,16 @@
     <ClInclude Include="vendor\lua\lzio.h">
       <Filter>Vendor\Lua 5.5</Filter>
     </ClInclude>
+    <ClInclude Include="util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PixelShader.hlsl">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files</Filter>
     </FxCompile>
     <FxCompile Include="VertexShader.hlsl">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
