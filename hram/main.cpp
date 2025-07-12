@@ -36,7 +36,6 @@ extern Screen* screen;
 class Screen
 {
 	uint32_t* texturedata;
-	ID3D11Texture2D* texture;
 	ID3D11DeviceContext* devicecontext;
 
 public:
@@ -44,12 +43,19 @@ public:
 	int resw;
 	int resh;
 
+	ID3D11Texture2D* texture;
 	ID3D11ShaderResourceView* textureSRV;
 
 	Screen(int resw, int resh)
 		: resw(resw)
 		, resh(resh)
 	{
+	}
+
+	~Screen() {
+		free(texturedata);
+		texture->Release();
+		textureSRV->Release();
 	}
 
 	void create(ID3D11Device* device, ID3D11DeviceContext* devicecontext)
@@ -69,13 +75,14 @@ public:
 		texturedesc.ArraySize = 1;
 		texturedesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		texturedesc.SampleDesc.Count = 1;
-		texturedesc.Usage = D3D11_USAGE_DYNAMIC;
+		texturedesc.Usage = D3D11_USAGE_DEFAULT;
 		texturedesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		texturedesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 
 		D3D11_SUBRESOURCE_DATA textureSRD = {};
 		textureSRD.pSysMem = texturedata;
 		textureSRD.SysMemPitch = resw * 4;
+		textureSRD.SysMemSlicePitch = resw * 4;
 
 		HRESULT code = device->CreateTexture2D(&texturedesc, &textureSRD, &texture);
 		if (S_OK != code) { throw std::exception(); }
@@ -85,16 +92,27 @@ public:
 	}
 
 	void pset(int x, int y, uint32_t c) {
-		int i = y * resw + x;
-		texturedata[i] = 0xffffffff;
+		//pset_noblit(x, y, c);
 
-		D3D11_MAPPED_SUBRESOURCE subres;
-		devicecontext->Map(texture, 0, D3D11_MAP_WRITE_DISCARD, 0, &subres);
-		printf("%d,%d\n", subres.DepthPitch, subres.RowPitch);
-		memcpy(subres.pData, texturedata, resw * resh * 4);
-		devicecontext->Unmap(texture, 0);
+		D3D11_BOX box;
+		box.top = y;
+		box.bottom = y + 1;
+		box.left = x;
+		box.right = x + 1;
+		box.front = 0;
+		box.back = 1;
+		devicecontext->UpdateSubresource(texture, 0, &box, &c, 4, 4);
 
+		//D3D11_MAPPED_SUBRESOURCE subres;
+		//devicecontext->Map(texture, 0, D3D11_MAP_WRITE_DISCARD, 0, &subres);
+		//memcpy(subres.pData, texturedata, resw * resh * 4);
+		//devicecontext->Unmap(texture, 0);
 	}
+
+	//void pset_noblit(int x, int y, uint32_t c) {
+	//	int i = y * resw + x;
+	//	texturedata[i] = c;
+	//}
 
 };
 
@@ -243,6 +261,19 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 
 	screen1.create(device, devicecontext);
 	screen2.create(device, devicecontext);
+
+
+	Screen* s = new Screen(4, 4);
+	s->create(device, devicecontext);
+
+	for (int y = 0; y < 4; y++) {
+		for (int x = 0; x < 4; x++) {
+			s->pset(x, y, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff));
+		}
+	}
+
+	devicecontext->CopySubresourceRegion(screen1.texture, 0, 0, 0, 0, s->texture, 0, NULL);
+	devicecontext->CopySubresourceRegion(screen1.texture, 0, 10, 10, 0, s->texture, 0, NULL);
 
 
 
@@ -475,7 +506,7 @@ LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			mousey = yPos;
 
 			printf("move %d %d\n", mousex, mousey);
-			screen->pset(mousex, mousey, 0xffffffff);
+			screen->pset(mousex, mousey, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff));
 
 			return 0;
 		}
