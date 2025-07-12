@@ -78,7 +78,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>%(DefiningProjectDirectory)vendor</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);%(DefiningProjectDirectory)vendor</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -95,7 +95,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>%(DefiningProjectDirectory)vendor</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);%(DefiningProjectDirectory)vendor</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -110,7 +110,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>%(DefiningProjectDirectory)vendor</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);%(DefiningProjectDirectory)vendor</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -127,7 +127,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>%(DefiningProjectDirectory)vendor</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);%(DefiningProjectDirectory)vendor</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -199,38 +199,6 @@
     <ClCompile Include="vendor\asmjit\x86\x86rapass.cpp" />
     <ClCompile Include="vendor\asmtk\asmparser.cpp" />
     <ClCompile Include="vendor\asmtk\asmtokenizer.cpp" />
-    <ClCompile Include="vendor\lua\lapi.c" />
-    <ClCompile Include="vendor\lua\lauxlib.c" />
-    <ClCompile Include="vendor\lua\lbaselib.c" />
-    <ClCompile Include="vendor\lua\lcode.c" />
-    <ClCompile Include="vendor\lua\lcorolib.c" />
-    <ClCompile Include="vendor\lua\lctype.c" />
-    <ClCompile Include="vendor\lua\ldblib.c" />
-    <ClCompile Include="vendor\lua\ldebug.c" />
-    <ClCompile Include="vendor\lua\ldo.c" />
-    <ClCompile Include="vendor\lua\ldump.c" />
-    <ClCompile Include="vendor\lua\lfunc.c" />
-    <ClCompile Include="vendor\lua\lgc.c" />
-    <ClCompile Include="vendor\lua\linit.c" />
-    <ClCompile Include="vendor\lua\liolib.c" />
-    <ClCompile Include="vendor\lua\llex.c" />
-    <ClCompile Include="vendor\lua\lmathlib.c" />
-    <ClCompile Include="vendor\lua\lmem.c" />
-    <ClCompile Include="vendor\lua\loadlib.c" />
-    <ClCompile Include="vendor\lua\lobject.c" />
-    <ClCompile Include="vendor\lua\lopcodes.c" />
-    <ClCompile Include="vendor\lua\loslib.c" />
-    <ClCompile Include="vendor\lua\lparser.c" />
-    <ClCompile Include="vendor\lua\lstate.c" />
-    <ClCompile Include="vendor\lua\lstring.c" />
-    <ClCompile Include="vendor\lua\lstrlib.c" />
-    <ClCompile Include="vendor\lua\ltable.c" />
-    <ClCompile Include="vendor\lua\ltablib.c" />
-    <ClCompile Include="vendor\lua\ltm.c" />
-    <ClCompile Include="vendor\lua\lundump.c" />
-    <ClCompile Include="vendor\lua\lutf8lib.c" />
-    <ClCompile Include="vendor\lua\lvm.c" />
-    <ClCompile Include="vendor\lua\lzio.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Image.h" />
@@ -335,34 +303,6 @@
     <ClInclude Include="vendor\asmtk\globals.h" />
     <ClInclude Include="vendor\asmtk\parserutils.h" />
     <ClInclude Include="vendor\asmtk\strtod.h" />
-    <ClInclude Include="vendor\lua\lapi.h" />
-    <ClInclude Include="vendor\lua\lauxlib.h" />
-    <ClInclude Include="vendor\lua\lcode.h" />
-    <ClInclude Include="vendor\lua\lctype.h" />
-    <ClInclude Include="vendor\lua\ldebug.h" />
-    <ClInclude Include="vendor\lua\ldo.h" />
-    <ClInclude Include="vendor\lua\lfunc.h" />
-    <ClInclude Include="vendor\lua\lgc.h" />
-    <ClInclude Include="vendor\lua\ljumptab.h" />
-    <ClInclude Include="vendor\lua\llex.h" />
-    <ClInclude Include="vendor\lua\llimits.h" />
-    <ClInclude Include="vendor\lua\lmem.h" />
-    <ClInclude Include="vendor\lua\lobject.h" />
-    <ClInclude Include="vendor\lua\lopcodes.h" />
-    <ClInclude Include="vendor\lua\lopnames.h" />
-    <ClInclude Include="vendor\lua\lparser.h" />
-    <ClInclude Include="vendor\lua\lprefix.h" />
-    <ClInclude Include="vendor\lua\lstate.h" />
-    <ClInclude Include="vendor\lua\lstring.h" />
-    <ClInclude Include="vendor\lua\ltable.h" />
-    <ClInclude Include="vendor\lua\ltm.h" />
-    <ClInclude Include="vendor\lua\lua.h" />
-    <ClInclude Include="vendor\lua\lua.hpp" />
-    <ClInclude Include="vendor\lua\luaconf.h" />
-    <ClInclude Include="vendor\lua\lualib.h" />
-    <ClInclude Include="vendor\lua\lundump.h" />
-    <ClInclude Include="vendor\lua\lvm.h" />
-    <ClInclude Include="vendor\lua\lzio.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PixelShader.hlsl">
@@ -413,6 +353,11 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\lua\lua.vcxproj">
+      <Project>{0a4792f3-74af-4204-91b7-116cefb69aef}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
