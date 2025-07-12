@@ -194,6 +194,9 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\asmjit\asmjit.vcxproj">
+      <Project>{3c6b010e-0d5d-4bae-bba6-233b4d716f03}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\lua\lua.vcxproj">
       <Project>{0a4792f3-74af-4204-91b7-116cefb69aef}</Project>
     </ProjectReference>

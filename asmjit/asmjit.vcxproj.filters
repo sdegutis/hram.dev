@@ -1,0 +1,480 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="x86\x86archtraits_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="x86\x86assembler.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="x86\x86builder.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="x86\x86compiler.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="x86\x86emithelper_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="x86\x86emitter.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="x86\x86formatter_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="x86\x86func_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="x86\x86globals.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="x86\x86instapi_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="x86\x86instdb.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="x86\x86instdb_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="x86\x86opcode_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="x86\x86operand.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="x86\x86rapass_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="a64.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="arm.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit-scope-begin.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit-scope-end.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="host.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="x86.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="arm\a64archtraits_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="arm\a64assembler.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="arm\a64builder.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="arm\a64compiler.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="arm\a64emithelper_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="arm\a64emitter.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="arm\a64formatter_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="arm\a64func_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="arm\a64globals.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="arm\a64instapi_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="arm\a64instdb.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="arm\a64instdb_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="arm\a64operand.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="arm\a64rapass_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="arm\armformatter_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="arm\armglobals.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="arm\armutils.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\api-build_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\api-config.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\archcommons.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\archtraits.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\assembler.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\builder.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\builder_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\codebuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\codeholder.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\codewriter_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\compiler.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\compilerdefs.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\constpool.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\cpuinfo.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\emithelper_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\emitter.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\emitterutils_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\environment.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\errorhandler.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\fixup.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\formatter.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\formatter_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\func.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\funcargscontext_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\globals.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\inst.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\instdb_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\jitallocator.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\jitruntime.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\logger.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\misc_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\operand.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\osutils.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\osutils_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\raassignment_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\rabuilders_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\radefs_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\ralocal_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\rapass_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\rastack_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\string.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\support.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\support_p.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\target.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\type.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\virtmem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\zone.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\zonehash.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\zonelist.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\zonestack.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\zonestring.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\zonetree.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\zonevector.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="x86\x86assembler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="x86\x86builder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="x86\x86compiler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="x86\x86emithelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="x86\x86formatter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="x86\x86func.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="x86\x86instapi.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="x86\x86instdb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="x86\x86operand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="x86\x86rapass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="arm\a64assembler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="arm\a64builder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="arm\a64compiler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="arm\a64emithelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="arm\a64formatter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="arm\a64func.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="arm\a64instapi.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="arm\a64instdb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="arm\a64operand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="arm\a64rapass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="arm\armformatter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\archtraits.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\assembler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\builder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\codeholder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\codewriter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\compiler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\constpool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\cpuinfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\emithelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\emitter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\emitterutils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\environment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\errorhandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\formatter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\func.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\funcargscontext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\globals.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\inst.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\instdb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\jitallocator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\jitruntime.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\operand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\osutils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\ralocal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\rapass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\rastack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\string.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\support.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\target.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\type.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\virtmem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\zone.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\zonehash.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\zonelist.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\zonestack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\zonetree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\zonevector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
