@@ -41,4 +41,12 @@
       <Filter>Resource Files</Filter>
     </FxCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="bar.lua">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="foo.lua">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

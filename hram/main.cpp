@@ -165,11 +165,14 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 
 	luaL_dostring(L, R"(
 
-print(package.cpath)
+print(package.path)
 print(1)
 local yes, foo = pcall(require, 'lpeg')
 print(2)
 print('worked?', yes, foo)
+
+require 'foo'
+
 )");
 
 

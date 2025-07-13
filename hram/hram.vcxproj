@@ -208,6 +208,14 @@
       <Project>{0a4792f3-74af-4204-91b7-116cefb69aef}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="bar.lua">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="foo.lua">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
