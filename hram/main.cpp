@@ -30,7 +30,7 @@ HWND subwin;
 
 
 Image screen1{ 320,180 };
-Image screen2{ 320,240 };
+Image screen2{ 320 * 2,180 * 2 };
 Image* screen = &screen1;
 
 
@@ -85,12 +85,10 @@ Image s(4, 4);
 #include <stdio.h>
 #include <asmtk/asmtk.h>
 
-#include <box2d/box2d.h>
-
 using namespace asmjit;
 using namespace asmtk;
 
-typedef int (*Func)(int);
+typedef int (*Func)(uint8_t*);
 
 //#include <lpeg/>
 
@@ -98,34 +96,6 @@ typedef int (*Func)(int);
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int nCmdShow) {
 
 	openConsole();
-
-	b2WorldDef worldDef = b2DefaultWorldDef();
-	worldDef.gravity = { 0.0f, -10.0f };
-	b2WorldId worldId = b2CreateWorld(&worldDef);
-	b2BodyDef groundBodyDef = b2DefaultBodyDef();
-	groundBodyDef.position = { 0.0f, -10.0f };
-	b2BodyId groundId = b2CreateBody(worldId, &groundBodyDef);
-	b2Polygon groundBox = b2MakeBox(50.0f, 10.0f);
-	b2ShapeDef groundShapeDef = b2DefaultShapeDef();
-	b2CreatePolygonShape(groundId, &groundShapeDef, &groundBox);
-	b2BodyDef bodyDef = b2DefaultBodyDef();
-	bodyDef.type = b2_dynamicBody;
-	bodyDef.position = { 0.0f, 4.0f };
-	b2BodyId bodyId = b2CreateBody(worldId, &bodyDef);
-	b2Polygon dynamicBox = b2MakeBox(1.0f, 1.0f);
-	b2ShapeDef shapeDef = b2DefaultShapeDef();
-	shapeDef.density = 1.0f;
-	shapeDef.material.friction = 0.3f;
-	b2CreatePolygonShape(bodyId, &shapeDef, &dynamicBox);
-	float timeStep = 1.0f / 60.0f;
-	int subStepCount = 4;
-	for (int i = 0; i < 90; ++i)
-	{
-		b2World_Step(worldId, timeStep, subStepCount);
-		b2Vec2 position = b2Body_GetPosition(bodyId);
-		b2Rot rotation = b2Body_GetRotation(bodyId);
-		printf("%4.2f %4.2f %4.2f\n", position.x, position.y, b2Rot_GetAngle(rotation));
-	}
 
 
 	JitRuntime rt;
@@ -146,10 +116,10 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 	AsmParser p(&a);
 
 	// Parse some assembly.
-	Error err = p.parse(
-		"mov rax, rcx\n"
-		"inc rax\n"
-		"ret\n");
+	Error err = p.parse(R"(
+		movzx eax, byte [rcx+1]
+		ret
+	)");
 
 	// Error handling (use asmjit::ErrorHandler for more robust error handling).
 	if (err) {
@@ -178,9 +148,14 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 	//
 	// Use 'code.reset()' to explicitly free CodeHolder's content when necessary.
 
+	auto foo = (uint8_t*)malloc(3);
+	foo[0] = 11;
+	foo[1] = 22;
+	foo[2] = 33;
+
 	// Execute the generated function and print the resulting '1', which it moves to 'eax'.
-	int resul = fn(123);
-	printf("asm = %d\n", resul);
+	int resul = fn(foo);
+	printf("asm = %llu\n", resul);
 
 	// All classes use RAII, all resources will be released before `main()` returns, the
 	// generated function can be, however, released explicitly if you intend to reuse or
@@ -567,7 +542,7 @@ LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			printf("move %d %d\n", mousex, mousey);
 			//screen->pset(mousex, mousey, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff));
 
-			s.copyTo(screen1, mousex, mousey);
+			s.copyTo(*screen, mousex, mousey);
 
 			return 0;
 		}
