@@ -1,0 +1,2 @@
+#define ASMTK_API __declspec(dllexport)
+#define ASMTK_API __declspec(dllimport)

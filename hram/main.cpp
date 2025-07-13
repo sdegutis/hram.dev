@@ -83,10 +83,12 @@ Image s(4, 4);
 
 #include <asmjit/host.h>
 #include <stdio.h>
+#include <asmtk/asmtk.h>
 
 using namespace asmjit;
+using namespace asmtk;
 
-typedef int (*Func)(void);
+typedef int (*Func)(int);
 
 //#include <lpeg/>
 
@@ -110,9 +112,20 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 	// assembler to CodeHolder, which calls 'code.attach(&a)' implicitly.
 	x86::Assembler a(&code);
 
-	// Use the x86::Assembler to emit some code to .text section in CodeHolder:
-	a.mov(x86::eax, 123);  // Emits 'mov eax, 1' - moves one to 'eax' register.
-	a.ret();             // Emits 'ret'        - returns from a function.
+	AsmParser p(&a);
+
+	// Parse some assembly.
+	Error err = p.parse(
+		"mov rax, rcx\n"
+		"inc rax\n"
+		"ret\n");
+
+	// Error handling (use asmjit::ErrorHandler for more robust error handling).
+	if (err) {
+		printf("ERROR: %08x (%s)\n", err, DebugUtils::errorAsString(err));
+		return 1;
+	}
+
 
 	// 'x86::Assembler' is no longer needed from here and can be destroyed or explicitly
 	// detached via 'code.detach(&a)' - which detaches an attached emitter from code holder.
@@ -120,7 +133,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 	// Now add the generated code to JitRuntime via JitRuntime::add(). This function would
 	// copy the code from CodeHolder into memory with executable permission and relocate it.
 	Func fn;
-	Error err = rt.add(&fn, &code);
+	err = rt.add(&fn, &code);
 
 	// It's always a good idea to handle errors, especially those returned from the Runtime.
 	if (err) {
@@ -135,8 +148,8 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 	// Use 'code.reset()' to explicitly free CodeHolder's content when necessary.
 
 	// Execute the generated function and print the resulting '1', which it moves to 'eax'.
-	int resul = fn();
-	printf("%d\n", resul);
+	int resul = fn(123);
+	printf("asm = %d\n", resul);
 
 	// All classes use RAII, all resources will be released before `main()` returns, the
 	// generated function can be, however, released explicitly if you intend to reuse or

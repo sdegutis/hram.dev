@@ -198,6 +198,9 @@
       <Project>{3c6b010e-0d5d-4bae-bba6-233b4d716f03}</Project>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
     </ProjectReference>
+    <ProjectReference Include="..\asmtk\asmtk.vcxproj">
+      <Project>{f4e0474f-2ac3-4e51-9a2c-7e48c7d33725}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\lpeg\lpeg.vcxproj">
       <Project>{f66e67aa-1f42-4aa9-89f7-82e75dcc4019}</Project>
     </ProjectReference>
