@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{8922573a-76e2-455e-b15d-554fec87a5cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -43,10 +46,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="bar.lua">
-      <Filter>Resource Files</Filter>
+      <Filter>Core</Filter>
     </None>
     <None Include="foo.lua">
-      <Filter>Resource Files</Filter>
+      <Filter>Core</Filter>
     </None>
   </ItemGroup>
 </Project>
