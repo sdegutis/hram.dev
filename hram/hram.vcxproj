@@ -201,6 +201,9 @@
     <ProjectReference Include="..\asmtk\asmtk.vcxproj">
       <Project>{f4e0474f-2ac3-4e51-9a2c-7e48c7d33725}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\box2d\box2d.vcxproj">
+      <Project>{c08ac217-fd41-40ef-8146-2878173b40d1}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\lpeg\lpeg.vcxproj">
       <Project>{f66e67aa-1f42-4aa9-89f7-82e75dcc4019}</Project>
     </ProjectReference>

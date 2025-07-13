@@ -1,0 +1,215 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="contact.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="contact_solver.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ctz.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="id_pool.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="island.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="joint.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sensor.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="shape.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="solver.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="solver_set.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="table.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="world.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="aabb.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="arena_allocator.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="array.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="atomic.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bitset.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="body.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="broad_phase.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="constants.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="constraint_graph.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="box2d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="collision.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="id.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="math_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="contact_solver.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="distance.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="distance_joint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dynamic_tree.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="geometry.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hull.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="id_pool.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="island.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="joint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="manifold.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="math_functions.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="motor_joint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mouse_joint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mover.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="prismatic_joint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="revolute_joint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sensor.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="shape.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="solver.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="solver_set.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="table.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="timer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="types.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="weld_joint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wheel_joint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="world.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="aabb.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="arena_allocator.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="array.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bitset.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="body.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="broad_phase.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="constraint_graph.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="contact.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="box2d.natvis">
+      <Filter>Source Files</Filter>
+    </Natvis>
+  </ItemGroup>
+</Project>
