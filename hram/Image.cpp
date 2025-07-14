@@ -51,9 +51,9 @@ void Image::fillrect(int x, int y, int w, int h, int c)
 
 	D3D11_BOX box;
 	box.top = y;
-	box.bottom = y + w;
+	box.bottom = y + h;
 	box.left = x;
-	box.right = x + h;
+	box.right = x + w;
 	box.front = 0;
 	box.back = 1;
 	devicecontext->UpdateSubresource(texture, 0, &box, buf, w * 4, w * h * 4);
