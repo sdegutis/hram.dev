@@ -79,23 +79,10 @@ int diffh;
 #include <thread>
 
 
-static void launchLuaApp(const char* name) {
-	lua_State* L = luaL_newstate();
-
-	luaL_openlibs(L);
-	lua_getglobal(L, "require");
-	lua_pushstring(L, name);
-	lua_pcall(L, 1, 0, 0);
-}
-
-
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int nCmdShow) {
 
 	checkSubWindow();
-
-	const char* name = "foo";
-	std::jthread app1([&name]() {launchLuaApp(name); });
 
 
 	WNDCLASS wc = { };
