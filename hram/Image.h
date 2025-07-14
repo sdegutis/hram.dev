@@ -27,9 +27,9 @@ public:
 	}
 
 	~Image() {
-		free(texturedata);
-		texture->Release();
-		textureSRV->Release();
+		if (texturedata) free(texturedata);
+		if (texture) texture->Release();
+		if (textureSRV) textureSRV->Release();
 	}
 
 	void create(ID3D11Device* device, ID3D11DeviceContext* devicecontext);

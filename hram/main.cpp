@@ -76,13 +76,26 @@ LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 int diffw;
 int diffh;
 
-Image s(4, 4);
+#include <thread>
+
+
+static void launchLuaApp(const char* name) {
+	lua_State* L = luaL_newstate();
+
+	luaL_openlibs(L);
+	lua_getglobal(L, "require");
+	lua_pushstring(L, name);
+	lua_pcall(L, 1, 0, 0);
+}
 
 
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int nCmdShow) {
 
 	checkSubWindow();
+
+	const char* name = "foo";
+	std::jthread app1([&name]() {launchLuaApp(name); });
 
 
 	WNDCLASS wc = { };
@@ -169,15 +182,6 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 	screen1.create(device, devicecontext);
 	screen2.create(device, devicecontext);
 
-
-
-	s.create(device, devicecontext);
-
-	s.fillrect(0, 0, 4, 4, 0xff9900);
-	s.fillrect(1, 1, 2, 2, 0xff99ff);
-
-	s.copyTo(screen1, 10, 10);
-	s.copyTo(screen1, 0, 0, 1, 1, 2, 2);
 
 
 
@@ -411,7 +415,7 @@ LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			printf("move %d %d\n", mousex, mousey);
 			//screen->pset(mousex, mousey, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff));
 
-			s.copyTo(*screen, mousex, mousey);
+			//s.copyTo(*screen, mousex, mousey);
 
 			return 0;
 		}
