@@ -84,21 +84,6 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 
 	checkSubWindow();
 
-	lua_State* L = luaL_newstate();
-	luaL_openlibs(L);
-
-	luaL_dostring(L, R"(
-
-print(package.path)
-print(1)
-local yes, foo = pcall(require, 'lpeg')
-print(2)
-print('worked?', yes, foo)
-
-require 'foo'
-
-)");
-
 
 	WNDCLASS wc = { };
 	wc.lpfnWndProc = WindowProc;
@@ -186,40 +171,7 @@ require 'foo'
 
 
 
-
-
-	//D3D11_BLEND_DESC bd = {};
-	////bd.AlphaToCoverageEnable = true;
-	//bd.RenderTarget->RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-	//bd.RenderTarget->BlendEnable = TRUE;
-
-	//bd.RenderTarget->BlendOp = D3D11_BLEND_OP_ADD;
-	//bd.RenderTarget->SrcBlend = D3D11_BLEND_SRC_ALPHA;
-	//bd.RenderTarget->DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-
-	////bd.RenderTarget->BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	////bd.RenderTarget->SrcBlendAlpha = D3D11_BLEND_ONE;
-	////bd.RenderTarget->DestBlendAlpha = D3D11_BLEND_ONE;
-
-	//ID3D11BlendState* bstate;
-	//device->CreateBlendState(&bd, &bstate);
-	//devicecontext->OMSetBlendState(bstate, NULL, 0xffffffff);
-
-
-
-
-
 	s.create(device, devicecontext);
-
-	//for (int y = 0; y < 4; y++) {
-	//	for (int x = 0; x < 4; x++) {
-	//		//RGBA
-
-	//		s.pset(x, y, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff) | 0x7f);
-
-	//		//screen1.pset(3 + x, 10 + y, 0x33'ff'99'00);
-	//	}
-	//}
 
 	s.fillrect(0, 0, 4, 4, 0xff9900);
 	s.fillrect(1, 1, 2, 2, 0xff99ff);
@@ -272,7 +224,6 @@ require 'foo'
 			devicecontext->PSSetSamplers(0, 1, &samplerstate);
 
 			devicecontext->OMSetRenderTargets(1, &framebufferRTV, nullptr);
-			//devicecontext->OMSetBlendState(bstate, NULL, 0xffffffff);
 
 			devicecontext->Draw(4, 0);
 
