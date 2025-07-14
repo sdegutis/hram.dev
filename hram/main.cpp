@@ -17,7 +17,7 @@
 
 #include "Image.h"
 
-#pragma comment(lib,"shlwapi.lib")
+#pragma comment(lib, "shlwapi")
 #pragma comment(lib, "Dwmapi")
 #pragma comment(lib, "user32")
 #pragma comment(lib, "d3d11")
@@ -243,7 +243,7 @@ require 'foo'
 	swapchaindesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 
 	D3D_FEATURE_LEVEL featurelevels[] = { D3D_FEATURE_LEVEL_11_0 };
-	D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, D3D11_CREATE_DEVICE_BGRA_SUPPORT | D3D11_CREATE_DEVICE_DEBUG, featurelevels, ARRAYSIZE(featurelevels), D3D11_SDK_VERSION, &swapchaindesc, &swapchain, &device, nullptr, &devicecontext);
+	D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, D3D11_CREATE_DEVICE_BGRA_SUPPORT | D3D11_CREATE_DEVICE_SINGLETHREADED, featurelevels, ARRAYSIZE(featurelevels), D3D11_SDK_VERSION, &swapchaindesc, &swapchain, &device, nullptr, &devicecontext);
 
 
 	swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&framebuffer);
