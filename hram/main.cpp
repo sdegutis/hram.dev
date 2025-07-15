@@ -82,85 +82,10 @@ int diffh;
 
 #include "util.h"
 
-#include <asmjit/host.h>
-#include <stdio.h>
-#include <asmtk/asmtk.h>
-
-using namespace asmjit;
-using namespace asmtk;
-
-typedef int (*Func)(uint8_t*);
-
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int nCmdShow) {
 
 	openConsole();
 
-	lua_State* L = luaL_newstate();
-	printf("%p\n", L);
-
-	JitRuntime rt;
-
-	// Holds code and relocation information during code generation.
-	CodeHolder code;
-
-	// Code holder must be initialized before it can be used. The simples way to initialize
-	// it is to use 'Environment' from JIT runtime, which matches the target architecture,
-	// operating system, ABI, and other important properties.
-	code.init(rt.environment(), rt.cpuFeatures());
-
-	// Emitters can emit code to CodeHolder - let's create 'x86::Assembler', which can emit
-	// either 32-bit (x86) or 64-bit (x86_64) code. The following line also attaches the
-	// assembler to CodeHolder, which calls 'code.attach(&a)' implicitly.
-	x86::Assembler a(&code);
-
-	AsmParser p(&a);
-
-	// Parse some assembly.
-	Error err = p.parse(R"(
-	        movzx eax, byte [rcx+1]
-	        ret
-	)");
-
-	// Error handling (use asmjit::ErrorHandler for more robust error handling).
-	if (err) {
-		printf("ERROR: %08x (%s)\n", err, DebugUtils::errorAsString(err));
-		return 1;
-	}
-
-
-	// 'x86::Assembler' is no longer needed from here and can be destroyed or explicitly
-	// detached via 'code.detach(&a)' - which detaches an attached emitter from code holder.
-
-	// Now add the generated code to JitRuntime via JitRuntime::add(). This function would
-	// copy the code from CodeHolder into memory with executable permission and relocate it.
-	Func fn;
-	err = rt.add(&fn, &code);
-
-	// It's always a good idea to handle errors, especially those returned from the Runtime.
-	if (err) {
-		printf("AsmJit failed: %s\n", DebugUtils::errorAsString(err));
-		return 1;
-	}
-
-	// CodeHolder is no longer needed from here and can be safely destroyed. The runtime now
-	// holds the relocated function, which we have generated, and controls its lifetime. The
-	// function will be freed with the runtime, so it's necessary to keep the runtime around.
-	//
-	// Use 'code.reset()' to explicitly free CodeHolder's content when necessary.
-
-	auto foo = (uint8_t*)malloc(3);
-	foo[0] = 11;
-	foo[1] = 22;
-	foo[2] = 33;
-
-	// Execute the generated function and print the resulting '1', which it moves to 'eax'.
-	int resul = fn(foo);
-	printf("asm = %llu\n", resul);
-
-	// All classes use RAII, all resources will be released before `main()` returns, the
-	// generated function can be, however, released explicitly if you intend to reuse or
-	// keep the runtime alive, which you should in a production-ready code.
-	rt.release(fn);
 
 	checkSubWindow();
 
@@ -265,13 +190,6 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 
 	s.copyTo(screen1, 10, 10);
 	s.copyTo(screen1, 0, 0, 1, 1, 2, 2);
-
-
-
-	D3D11_FEATURE_DATA_THREADING ttt;
-	device->CheckFeatureSupport(D3D11_FEATURE_THREADING, &ttt, sizeof(ttt));
-	printf("threading? %d\n", ttt.DriverConcurrentCreates);
-	printf("threading? %d\n", ttt.DriverCommandLists);
 
 
 
@@ -397,7 +315,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 
 	case WM_GETMINMAXINFO: {
 		LPMINMAXINFO lpMMI = (LPMINMAXINFO)lParam;
-		printf("checking min size\n");
 		lpMMI->ptMinTrackSize.x = screen->resw + diffw;
 		lpMMI->ptMinTrackSize.y = screen->resh + diffh;
 		return 0;
