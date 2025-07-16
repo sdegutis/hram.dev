@@ -296,17 +296,6 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 
 
 
-	for (int y = 0; y < screen1.resh; y++) {
-		for (int x = 0; x < screen1.resw; x++) {
-			screen1.pset(x, y, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff));
-		}
-	}
-
-	for (int y = 0; y < screen2.resh; y++) {
-		for (int x = 0; x < screen2.resw; x++) {
-			screen2.pset(x, y, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff));
-		}
-	}
 
 	//s.create(device, devicecontext);
 
