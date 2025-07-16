@@ -72,7 +72,7 @@ public:
 		texturedesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 		texturedesc.SampleDesc.Count = 1;
 		texturedesc.Usage = D3D11_USAGE_DEFAULT;
-		texturedesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		//texturedesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		texturedesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 
 		D3D11_SUBRESOURCE_DATA textureSRD = {};
