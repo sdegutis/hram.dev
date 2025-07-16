@@ -60,7 +60,7 @@ inline void Window::setup(HINSTANCE hInstance, int nCmdShow) {
 	subwin = CreateWindowExW(
 		0, L"HRAM SubWindow Class", L"", WS_CHILD | WS_VISIBLE,
 		subx, suby, subw, subh,
-		hwnd, 0, 0, NULL);
+		hwnd, NULL, hInstance, NULL);
 	if (subwin == NULL) { throw std::exception("can't create canvas view"); }
 
 	DXGI_SWAP_CHAIN_DESC swapchaindesc = {};
@@ -284,8 +284,10 @@ LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONDOWN: {
 		printf("left button down\n");
 
-		if (win->screen == &win->screen1) win->useScreen(&win->screen2);
-		else win->useScreen(&win->screen1);
+		if (win->screen == &win->screen1)
+			win->useScreen(&win->screen2);
+		else
+			win->useScreen(&win->screen1);
 
 		return 0;
 	}
