@@ -12,6 +12,6 @@ struct Screen
 
 	Screen(int w, int h) : w(w), h(h) {}
 
-	void setup();
+	void setup(ID3D11Device* device);
 
 };
