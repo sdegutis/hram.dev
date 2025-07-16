@@ -6,7 +6,7 @@
 
 class Window {
 
-	WINDOWPLACEMENT g_wpPrev = { sizeof(g_wpPrev) };
+	WINDOWPLACEMENT lastwinpos = { sizeof(lastwinpos) };
 
 	HWND hwnd = nullptr;
 	HWND subwin = nullptr;
