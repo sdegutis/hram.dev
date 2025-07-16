@@ -1,6 +1,10 @@
 #include "Screen.h"
 
+#include <stdint.h>
+#include <exception>
+
 #include "image.h"
+#include "util.h"
 
 void Screen::setup(ID3D11Device* device) {
 	auto data = (uint32_t*)malloc(w * h * 4);

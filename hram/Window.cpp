@@ -1,5 +1,13 @@
 #include "Window.h"
 
+#include <windowsx.h>
+#include <dwmapi.h>
+#include <exception>
+
+#include <stdio.h>
+
+#include "util.h"
+
 #include "PixelShader.h"
 #include "VertexShader.h"
 

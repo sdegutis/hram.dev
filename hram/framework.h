@@ -1,27 +1,5 @@
 #pragma once
 
-#define WIN32_LEAN_AND_MEAN
-
-#include <windows.h>
-#include <windowsx.h>
-#include <dwmapi.h>
-#include <d3d11.h>
-#include <shlwapi.h>
-#include <shlobj_core.h>
-#include <stdint.h>
-#include <atlstr.h>
-#include <exception>
-
-#include <string>
-#include <vector>
-#include <thread>
-#include <atomic>
-#include <queue>
-
-#include <lua/lua.hpp>
-
-#include "util.h"
-
 #pragma comment(lib, "shlwapi")
 #pragma comment(lib, "Dwmapi")
 #pragma comment(lib, "user32")
