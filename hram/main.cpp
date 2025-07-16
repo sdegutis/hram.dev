@@ -3,7 +3,7 @@
 #include <windows.h>
 #include <windowsx.h>
 #include <dwmapi.h>
-#include <d3d11.h>
+//#include <d3d11.h>
 #include <shlwapi.h>
 #include <shlobj_core.h>
 #include <stdint.h>
@@ -18,7 +18,7 @@
 #pragma comment(lib, "shlwapi")
 #pragma comment(lib, "Dwmapi")
 #pragma comment(lib, "user32")
-#pragma comment(lib, "d3d11")
+//#pragma comment(lib, "d3d11")
 
 
 HCURSOR hCursor;
@@ -26,23 +26,14 @@ HWND subwin;
 
 
 
-#include <stdint.h>
-#include <d3d11.h>
-#include <exception>
 
 class Image
 {
-
-	uint32_t* texturedata = nullptr;
-	ID3D11DeviceContext* devicecontext = nullptr;
-	ID3D11Texture2D* texture = nullptr;
 
 public:
 
 	int resw;
 	int resh;
-
-	ID3D11ShaderResourceView* textureSRV = nullptr;
 
 	Image(int resw, int resh)
 		: resw(resw)
@@ -51,90 +42,7 @@ public:
 	}
 
 	~Image() {
-		if (texturedata) free(texturedata);
-		if (texture) texture->Release();
-		if (textureSRV) textureSRV->Release();
 	}
-
-	void create(ID3D11Device* device, ID3D11DeviceContext* devicecontext)
-	{
-		this->devicecontext = devicecontext;
-		texturedata = (uint32_t*)malloc(resw * resh * 4);
-		if (texturedata == NULL) throw std::exception("out of memory");
-
-		memset(texturedata, 0, resw * resh * 4);
-
-		D3D11_TEXTURE2D_DESC texturedesc = {};
-		texturedesc.Width = resw;
-		texturedesc.Height = resh;
-		texturedesc.MipLevels = 1;
-		texturedesc.ArraySize = 1;
-		texturedesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-		texturedesc.SampleDesc.Count = 1;
-		texturedesc.Usage = D3D11_USAGE_DEFAULT;
-		texturedesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		texturedesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-
-		D3D11_SUBRESOURCE_DATA textureSRD = {};
-		textureSRD.pSysMem = texturedata;
-		textureSRD.SysMemPitch = resw * 4;
-		textureSRD.SysMemSlicePitch = resw * 4;
-
-		HRESULT code = device->CreateTexture2D(&texturedesc, &textureSRD, &texture);
-		if (S_OK != code) { throw std::exception(); }
-
-		code = device->CreateShaderResourceView(texture, nullptr, &textureSRV);
-		if (S_OK != code) { throw std::exception(); }
-	}
-
-	void pset(int x, int y, uint32_t c)
-	{
-		D3D11_BOX box;
-		box.top = y;
-		box.bottom = y + 1;
-		box.left = x;
-		box.right = x + 1;
-		box.front = 0;
-		box.back = 1;
-		devicecontext->UpdateSubresource(texture, 0, &box, &c, 4, 4);
-	}
-
-	void fillrect(int x, int y, int w, int h, int c)
-	{
-		auto buf = (uint32_t*)malloc(w * h * 4);
-		if (buf == 0) throw std::exception("oom");
-		for (int i = 0; i < w * h; i++) buf[i] = c;
-
-		D3D11_BOX box;
-		box.top = y;
-		box.bottom = y + h;
-		box.left = x;
-		box.right = x + w;
-		box.front = 0;
-		box.back = 1;
-		devicecontext->UpdateSubresource(texture, 0, &box, buf, w * 4, w * h * 4);
-
-		free(buf);
-	}
-
-
-	void copyTo(Image& dst, int dx, int dy)
-	{
-		devicecontext->CopySubresourceRegion(dst.texture, 0, dx, dy, 0, texture, 0, NULL);
-	}
-
-	void copyTo(Image& dst, int dx, int dy, int sx, int sy, int sw, int sh)
-	{
-		D3D11_BOX box;
-		box.left = sx;
-		box.right = sx + sw;
-		box.top = sy;
-		box.bottom = sy + sh;
-		box.front = 0;
-		box.back = 1;
-		devicecontext->CopySubresourceRegion(dst.texture, 0, dx, dy, 0, texture, 0, &box);
-	}
-
 
 };
 
@@ -145,19 +53,14 @@ Image screen1{ 320,180 };
 Image screen2{ 320 * 2,180 * 2 };
 Image* screen = &screen1;
 
-Image s(4, 4);
+
 
 
 int scale = 3;
 int winw = screen->resw * scale;
 int winh = screen->resh * scale;
 
-ID3D11Device* device;
-ID3D11DeviceContext* devicecontext;
-IDXGISwapChain* swapchain;
 
-ID3D11Texture2D* framebuffer;
-ID3D11RenderTargetView* framebufferRTV;
 
 int subx = 0;
 int suby = 0;
@@ -253,57 +156,6 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 
 
 
-	DXGI_SWAP_CHAIN_DESC swapchaindesc = {};
-	swapchaindesc.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-	swapchaindesc.SampleDesc.Count = 1;
-	swapchaindesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	swapchaindesc.BufferCount = 2;
-	swapchaindesc.OutputWindow = subwin;
-	swapchaindesc.Windowed = TRUE;
-	swapchaindesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-
-	D3D_FEATURE_LEVEL featurelevels[] = { D3D_FEATURE_LEVEL_11_0 };
-	D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, D3D11_CREATE_DEVICE_BGRA_SUPPORT | D3D11_CREATE_DEVICE_SINGLETHREADED, featurelevels, ARRAYSIZE(featurelevels), D3D11_SDK_VERSION, &swapchaindesc, &swapchain, &device, nullptr, &devicecontext);
-
-
-	swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&framebuffer);
-	device->CreateRenderTargetView(framebuffer, nullptr, &framebufferRTV);
-
-
-	ID3D11VertexShader* vertexshader;
-	device->CreateVertexShader(MyVertexShader, sizeof(MyVertexShader), 0, &vertexshader);
-
-	ID3D11PixelShader* pixelshader;
-	device->CreatePixelShader(MyPixelShader, sizeof(MyPixelShader), 0, &pixelshader);
-
-	D3D11_RASTERIZER_DESC rasterizerdesc = { D3D11_FILL_SOLID, D3D11_CULL_BACK };
-	ID3D11RasterizerState* rasterizerstate;
-	device->CreateRasterizerState(&rasterizerdesc, &rasterizerstate);
-
-	D3D11_VIEWPORT viewport = { 0, 0, subw, subh, 0, 1 };
-	devicecontext->RSSetViewports(1, &viewport);
-
-	screen1.create(device, devicecontext);
-	screen2.create(device, devicecontext);
-
-
-
-
-	D3D11_SAMPLER_DESC samplerdesc = { D3D11_FILTER_MIN_MAG_MIP_POINT, D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_WRAP };
-	ID3D11SamplerState* samplerstate;
-	device->CreateSamplerState(&samplerdesc, &samplerstate);
-
-
-
-
-
-	//s.create(device, devicecontext);
-
-	//s.fillrect(0, 0, 4, 4, 0xff9900);
-	//s.fillrect(1, 1, 2, 2, 0xff99ff);
-
-	//s.copyTo(screen1, 10, 10);
-	//s.copyTo(screen1, 0, 0, 1, 1, 2, 2);
 
 
 
@@ -325,23 +177,6 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 		}
 		else {
 
-
-			devicecontext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-
-
-			devicecontext->VSSetShader(vertexshader, nullptr, 0);
-
-			devicecontext->RSSetState(rasterizerstate);
-
-			devicecontext->PSSetShader(pixelshader, nullptr, 0);
-			devicecontext->PSSetShaderResources(0, 1, &screen->textureSRV);
-			devicecontext->PSSetSamplers(0, 1, &samplerstate);
-
-			devicecontext->OMSetRenderTargets(1, &framebufferRTV, nullptr);
-
-			devicecontext->Draw(4, 0);
-
-			swapchain->Present(1, 0);
 		}
 	}
 
@@ -353,18 +188,6 @@ WINDOWPLACEMENT g_wpPrev = { sizeof(g_wpPrev) };
 int first = 1;
 
 void resetBuffers() {
-	D3D11_VIEWPORT viewport = { 0, 0, subw, subh, 0, 1 };
-	devicecontext->RSSetViewports(1, &viewport);
-
-	devicecontext->Flush();
-
-	framebufferRTV->Release();
-	framebuffer->Release();
-
-	swapchain->ResizeBuffers(0, subw, subh, DXGI_FORMAT_UNKNOWN, 0);
-
-	swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&framebuffer);
-	device->CreateRenderTargetView(framebuffer, nullptr, &framebufferRTV);
 }
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
