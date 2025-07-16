@@ -297,13 +297,13 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 
 
 
-	//s.create(device, devicecontext);
+	s.create(device, devicecontext);
 
-	//s.fillrect(0, 0, 4, 4, 0xff9900);
-	//s.fillrect(1, 1, 2, 2, 0xff99ff);
+	s.fillrect(0, 0, 4, 4, 0xff9900);
+	s.fillrect(1, 1, 2, 2, 0xff99ff);
 
-	//s.copyTo(screen1, 10, 10);
-	//s.copyTo(screen1, 0, 0, 1, 1, 2, 2);
+	s.copyTo(screen1, 10, 10);
+	s.copyTo(screen1, 0, 0, 1, 1, 2, 2);
 
 
 
@@ -524,7 +524,7 @@ LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			printf("move %d %d\n", mousex, mousey);
 			//screen->pset(mousex, mousey, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff));
 
-			//s.copyTo(*screen, mousex, mousey);
+			s.copyTo(*screen, mousex, mousey);
 
 			return 0;
 		}
