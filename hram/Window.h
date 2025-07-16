@@ -28,8 +28,6 @@ class Window {
 	ID3D11VertexShader* vertexshader = nullptr;
 	ID3D11PixelShader* pixelshader = nullptr;
 
-	void HR(HRESULT res);
-
 	int first = 1;
 
 	void resetBuffers();

@@ -10,6 +10,7 @@
 #include <shlobj_core.h>
 #include <stdint.h>
 #include <atlstr.h>
+#include <exception>
 
 #include <string>
 #include <vector>
@@ -18,6 +19,8 @@
 #include <queue>
 
 #include <lua/lua.hpp>
+
+#include "util.h"
 
 #pragma comment(lib, "shlwapi")
 #pragma comment(lib, "Dwmapi")

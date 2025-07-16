@@ -22,3 +22,9 @@ void openConsole() {
 	freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
 	freopen_s((FILE**)stdin, "CONIN$", "r", stdin);
 }
+
+void HR(HRESULT res) {
+	if (res == S_OK) return;
+
+	throw std::exception("can't create window");
+}

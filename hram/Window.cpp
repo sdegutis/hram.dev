@@ -90,15 +90,12 @@ inline void Window::setup(HINSTANCE hInstance, int nCmdShow) {
 	D3D11_VIEWPORT viewport = { 0, 0, (float)subw, (float)subh, 0, 1 };
 	devicecontext->RSSetViewports(1, &viewport);
 
+	screen1.setup();
+	screen2.setup();
+
 	ShowWindow(hwnd, nCmdShow);
 	SetForegroundWindow(hwnd);
 	SetFocus(hwnd);
-}
-
-inline void Window::HR(HRESULT res) {
-	if (res == S_OK) return;
-
-	throw std::exception("can't create window");
 }
 
 inline RECT Window::getInitialRect() {
@@ -141,7 +138,7 @@ inline void Window::draw() {
 	devicecontext->RSSetState(rasterizerstate);
 
 	devicecontext->PSSetShader(pixelshader, nullptr, 0);
-	devicecontext->PSSetShaderResources(0, 1, &screen->textureSRV);
+	devicecontext->PSSetShaderResources(0, 1, &screen->texturesrv);
 	devicecontext->PSSetSamplers(0, 1, &samplerstate);
 
 	devicecontext->OMSetRenderTargets(1, &framebufferRTV, nullptr);
