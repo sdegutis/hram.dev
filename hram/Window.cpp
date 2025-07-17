@@ -12,62 +12,57 @@
 #include "VertexShader.h"
 
 
-class Window {
+WINDOWPLACEMENT lastwinpos = { sizeof(lastwinpos) };
 
-	WINDOWPLACEMENT lastwinpos = { sizeof(lastwinpos) };
+HWND hwnd;
+HWND subwin;
 
-	HWND hwnd = nullptr;
-	HWND subwin = nullptr;
+int padw;
+int padh;
 
-	int padw = 0;
-	int padh = 0;
+int subx;
+int suby;
+int subw;
+int subh;
 
-	int subx = 0;
-	int suby = 0;
-	int subw = 0;
-	int subh = 0;
+IDXGISwapChain* swapchain;
+ID3D11Texture2D* framebuffer;
+ID3D11RenderTargetView* framebufferRTV;
+ID3D11RasterizerState* rasterizerstate;
+ID3D11SamplerState* samplerstate;
 
-	IDXGISwapChain* swapchain = nullptr;
-	ID3D11Texture2D* framebuffer = nullptr;
-	ID3D11RenderTargetView* framebufferRTV = nullptr;
-	ID3D11RasterizerState* rasterizerstate = nullptr;
-	ID3D11SamplerState* samplerstate = nullptr;
+ID3D11VertexShader* vertexshader;
+ID3D11PixelShader* pixelshader;
 
-	ID3D11VertexShader* vertexshader = nullptr;
-	ID3D11PixelShader* pixelshader = nullptr;
+int first = 1;
 
-	int first = 1;
-
-	void resetBuffers();
-	void moveSubWindow();
-
-public:
-
-	ID3D11Device* device = nullptr;
-	ID3D11DeviceContext* devicecontext = nullptr;
-
-	Screen screen1{ 320, 180 };
-	Screen screen2{ 320, 200 };
-	Screen* screen = &screen1;
-
-	int scale = 3;
-	int winw = screen->w * scale;
-	int winh = screen->h * scale;
-
-	RECT getInitialRect();
-	void setup(HINSTANCE hInstance, int nCmdShow);
-	void draw();
-
-	void getMinSize(LONG* w, LONG* h);
-	void resized(int w, int h);
-
-	void toggleFullscreen();
-	void useScreen(Screen* s);
-
-};
+void resetBuffers();
+void moveSubWindow();
 
 
-Window* win;
+
+ID3D11Device* device;
+ID3D11DeviceContext* devicecontext;
+
+Screen screen1{ 320, 180 };
+Screen screen2{ 320, 200 };
+Screen* screen = &screen1;
+
+int scale = 3;
+int winw = screen->w * scale;
+int winh = screen->h * scale;
+
+RECT getInitialRect();
+void setup(HINSTANCE hInstance, int nCmdShow);
+void draw();
+
+void getMinSize(LONG* w, LONG* h);
+void resized(int w, int h);
+
+void toggleFullscreen();
+void useScreen(Screen* s);
+
+
 
 #include "image.h"
 ID3D11Texture2D* img;
@@ -77,15 +72,14 @@ LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int nCmdShow) {
 
-	win = new Window();
-	win->setup(hInstance, nCmdShow);
+	setup(hInstance, nCmdShow);
 
 	auto data = (uint8_t*)malloc(4 * 4 * 4);
 	for (int i = 0; i < 4 * 4 * 4; i++) data[i] = rand() % 0xff;
-	img = createImage(win->device, (uint32_t*)data, 4, 4);
+	img = createImage(device, (uint32_t*)data, 4, 4);
 	free(data);
 
-	win->devicecontext->CopySubresourceRegion(win->screen->texture, 0, 6, 10, 0, img, 0, NULL);
+	devicecontext->CopySubresourceRegion(screen->texture, 0, 6, 10, 0, img, 0, NULL);
 
 	MSG msg = { 0 };
 	while (msg.message != WM_QUIT) {
@@ -94,7 +88,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 			DispatchMessage(&msg);
 		}
 		else {
-			win->draw();
+			draw();
 		}
 	}
 
@@ -102,7 +96,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 
 }
 
-inline void Window::setup(HINSTANCE hInstance, int nCmdShow) {
+inline void setup(HINSTANCE hInstance, int nCmdShow) {
 	WNDCLASS wc = {};
 	wc.lpfnWndProc = WindowProc;
 	wc.hInstance = hInstance;
@@ -172,7 +166,7 @@ inline void Window::setup(HINSTANCE hInstance, int nCmdShow) {
 	SetFocus(hwnd);
 }
 
-inline RECT Window::getInitialRect() {
+inline RECT getInitialRect() {
 	RECT winbox;
 	winbox.left = GetSystemMetrics(SM_CXSCREEN) / 2 - winw / 2;
 	winbox.top = GetSystemMetrics(SM_CYSCREEN) / 2 - winh / 2;
@@ -186,7 +180,7 @@ inline RECT Window::getInitialRect() {
 	return winbox;
 }
 
-inline void Window::moveSubWindow() {
+inline void moveSubWindow() {
 	subw = screen->w;
 	subh = screen->h;
 	scale = 1;
@@ -204,7 +198,7 @@ inline void Window::moveSubWindow() {
 	suby = winh / 2 - subh / 2;
 }
 
-inline void Window::draw() {
+inline void draw() {
 	devicecontext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 	devicecontext->VSSetShader(vertexshader, nullptr, 0);
@@ -222,14 +216,14 @@ inline void Window::draw() {
 	swapchain->Present(1, 0);
 }
 
-inline void Window::getMinSize(LONG* w, LONG* h) {
+inline void getMinSize(LONG* w, LONG* h) {
 	*w = screen->w + padw;
 	*h = screen->h + padh;
 }
 
-inline void Window::resized(int w, int h) {
-	this->winw = w;
-	this->winh = h;
+inline void resized(int w, int h) {
+	winw = w;
+	winh = h;
 	moveSubWindow();
 	SetWindowPos(subwin, NULL, subx, suby, subw, subh, SWP_FRAMECHANGED | SWP_SHOWWINDOW);
 
@@ -241,7 +235,7 @@ inline void Window::resized(int w, int h) {
 	}
 }
 
-inline void Window::toggleFullscreen() {
+inline void toggleFullscreen() {
 	DWORD dwStyle = GetWindowLong(hwnd, GWL_STYLE);
 	if (dwStyle & WS_OVERLAPPEDWINDOW) {
 		MONITORINFO mi = { sizeof(mi) };
@@ -262,14 +256,14 @@ inline void Window::toggleFullscreen() {
 	}
 }
 
-inline void Window::useScreen(Screen* s) {
+inline void useScreen(Screen* s) {
 	screen = s;
 	moveSubWindow();
 	SetWindowPos(subwin, NULL, subx, suby, subw, subh, SWP_FRAMECHANGED);
 	resetBuffers();
 }
 
-inline void Window::resetBuffers() {
+inline void resetBuffers() {
 	D3D11_VIEWPORT viewport = { 0, 0, (float)subw, (float)subh, 0, 1 };
 	devicecontext->RSSetViewports(1, &viewport);
 
@@ -317,19 +311,19 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 	case WM_KEYDOWN: {
 		printf("key down %llu\n", wParam);
 		if (wParam == VK_F11) {
-			win->toggleFullscreen();
+			toggleFullscreen();
 		}
 		return 0;
 	}
 
 	case WM_GETMINMAXINFO: {
 		LPMINMAXINFO lpMMI = (LPMINMAXINFO)lParam;
-		win->getMinSize(&lpMMI->ptMinTrackSize.x, &lpMMI->ptMinTrackSize.y);
+		getMinSize(&lpMMI->ptMinTrackSize.x, &lpMMI->ptMinTrackSize.y);
 		return 0;
 	}
 
 	case WM_SIZE:
-		win->resized(LOWORD(lParam), HIWORD(lParam));
+		resized(LOWORD(lParam), HIWORD(lParam));
 		return 0;
 	}
 
@@ -358,10 +352,10 @@ LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONDOWN: {
 		printf("left button down\n");
 
-		if (win->screen == &win->screen1)
-			win->useScreen(&win->screen2);
+		if (screen == &screen1)
+			useScreen(&screen2);
 		else
-			win->useScreen(&win->screen1);
+			useScreen(&screen1);
 
 		return 0;
 	}
@@ -394,8 +388,8 @@ LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	case WM_MOUSEMOVE: {
 
-		auto xPos = GET_X_LPARAM(lParam) / win->scale;
-		auto yPos = GET_Y_LPARAM(lParam) / win->scale;
+		auto xPos = GET_X_LPARAM(lParam) / scale;
+		auto yPos = GET_Y_LPARAM(lParam) / scale;
 
 		if (xPos != mousex || yPos != mousey) {
 			mousex = xPos;
@@ -404,7 +398,7 @@ LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			printf("move %d %d\n", mousex, mousey);
 			//screen->pset(mousex, mousey, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff));
 
-			win->devicecontext->CopySubresourceRegion(win->screen->texture, 0, mousex, mousey, 0, img, 0, NULL);
+			devicecontext->CopySubresourceRegion(screen->texture, 0, mousex, mousey, 0, img, 0, NULL);
 
 			//s.copyTo(*screen, mousex, mousey);
 
