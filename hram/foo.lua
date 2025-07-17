@@ -7,10 +7,10 @@ require 'bar'
 local memory = require "memory"
 
 local m = memory.new(10)
-print("here", m:len())
-print("here", m:get(0))
-print("here", m:set(0, 24))
-print("here", m:get(0))
+print("here", #m)
+print("here", m[0])
+m[0] = 24
+print("here", m[0])
 
 
 function mousemove(x, y)

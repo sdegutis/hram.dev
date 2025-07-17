@@ -39,9 +39,9 @@ static const struct luaL_Reg memorylib_f[] = {
 };
 
 static const struct luaL_Reg memorylib_m[] = {
-	{"set", setmemory},
-	{"get", getmemory},
-	{"len", lenmemory},
+	{"__newindex", setmemory},
+	{"__index", getmemory},
+	{"__len", lenmemory},
 	{NULL, NULL}
 };
 
