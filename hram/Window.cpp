@@ -18,10 +18,6 @@
 #include "PixelShader.h"
 #include "VertexShader.h"
 
-#include <lua/lua.hpp>
-
-lua_State* mvm;
-
 WINDOWPLACEMENT lastwinpos = { sizeof(lastwinpos) };
 
 HWND hwnd;
@@ -67,13 +63,10 @@ void useScreen(Screen* s);
 
 
 
-#include "image.h"
-ID3D11Texture2D* img;
-
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int nCmdShow) {
+void setupWindow(HINSTANCE hInstance, int nCmdShow) {
 
 	WNDCLASS wc = {};
 	wc.lpfnWndProc = WindowProc;
@@ -152,23 +145,9 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 	ShowWindow(hwnd, nCmdShow);
 	SetForegroundWindow(hwnd);
 	SetFocus(hwnd);
+}
 
-
-
-	openConsole();
-
-	mvm = luaL_newstate();
-	luaL_openlibs(mvm);
-
-	luaL_dofile(mvm, "foo.lua");
-
-
-	auto data = new uint8_t[4 * 4 * 4];
-	for (int i = 0; i < 4 * 4 * 4; i++) data[i] = rand() % 0xff;
-	img = createImage(device, (uint32_t*)data, 4, 4);
-	delete[] data;
-
-	devicecontext->CopySubresourceRegion(screen->texture, 0, 6, 10, 0, img, 0, NULL);
+void runLoop() {
 
 	MSG msg = { 0 };
 	while (msg.message != WM_QUIT) {
@@ -181,7 +160,6 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 		}
 	}
 
-	return 0;
 
 }
 
@@ -391,7 +369,7 @@ LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			printf("move %d %d\n", mousex, mousey);
 			//screen->pset(mousex, mousey, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff));
 
-			devicecontext->CopySubresourceRegion(screen->texture, 0, mousex, mousey, 0, img, 0, NULL);
+			//devicecontext->CopySubresourceRegion(screen->texture, 0, mousex, mousey, 0, img, 0, NULL);
 
 			//s.copyTo(*screen, mousex, mousey);
 
