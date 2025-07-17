@@ -1,8 +1,11 @@
 #include "image.h"
 
 #include "util.h"
+#include "window.h"
 
-ID3D11Texture2D* createImage(ID3D11Device* device, void* data, int w, int h) {
+ID3D11Texture2D* createImage(ID3D11Device* device, void* data, int w, int h, int pw) {
+	if (pw == 0) pw = w;
+
 	ID3D11Texture2D* texture = nullptr;
 
 	D3D11_TEXTURE2D_DESC texturedesc = {};
@@ -17,12 +20,56 @@ ID3D11Texture2D* createImage(ID3D11Device* device, void* data, int w, int h) {
 
 	D3D11_SUBRESOURCE_DATA textureSRD = {};
 	textureSRD.pSysMem = data;
-	textureSRD.SysMemPitch = w * 4;
-	textureSRD.SysMemSlicePitch = w * 4;
+	textureSRD.SysMemPitch = pw * 4;
 
 	HR(device->CreateTexture2D(&texturedesc, &textureSRD, &texture));
 
 	return texture;
+}
+
+static int newimage(lua_State* L) {
+	auto d = luaL_checkudata(L, 1, "core.memory");
+	auto w = luaL_checkinteger(L, 2);
+	auto h = luaL_checkinteger(L, 3);
+	auto pw = lua_tointeger(L, 4);
+
+	auto img = createImage(device, d, w, h, pw);
+
+	lua_newuserdatauv(L, 0, 1);
+
+	luaL_getmetatable(L, "core.image");
+	lua_setmetatable(L, -2);
+
+	lua_pushlightuserdata(L, img);
+	lua_setiuservalue(L, -2, 1);
+
+	return 1;
+}
+
+static int delimage(lua_State* L) {
+	lua_getiuservalue(L, 1, 1);
+	auto img = static_cast<ID3D11Texture2D*>(lua_touserdata(L, -1));
+	img->Release();
+	return 0;
+}
+
+static const struct luaL_Reg imagelib_f[] = {
+	{"create", newimage},
+	{NULL, NULL}
+};
+
+static const struct luaL_Reg imagelib_m[] = {
+	{"__gc", delimage},
+	{NULL, NULL}
+};
+
+int luaopen_image(lua_State* L) {
+	luaL_newmetatable(L, "core.image");
+	lua_pushvalue(L, -1);
+	lua_setfield(L, -2, "__index");
+	luaL_setfuncs(L, imagelib_m, 0);
+	luaL_newlib(L, imagelib_f);
+	return 1;
 }
 
 //	void pset(int x, int y, uint32_t c)

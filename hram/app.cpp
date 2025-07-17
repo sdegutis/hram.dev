@@ -21,19 +21,17 @@ void app::boot()
 	mvm = luaL_newstate();
 	luaL_openlibs(mvm);
 
-
-
 	lua_getglobal(mvm, "package");
 	lua_pushstring(mvm, "preload");
 	lua_gettable(mvm, -2);
+
 	lua_pushcfunction(mvm, luaopen_memory);
 	lua_setfield(mvm, -2, "memory");
+
+	lua_pushcfunction(mvm, luaopen_image);
+	lua_setfield(mvm, -2, "image");
+
 	lua_settop(mvm, 0);
-
-	//luaL_newmetatable(mvm, "memory");
-	//luaL_setfuncs
-
-
 
 	luaL_dofile(mvm, "foo.lua");
 

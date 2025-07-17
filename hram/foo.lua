@@ -5,19 +5,15 @@ print('in foo!')
 require 'bar'
 
 local memory = require "memory"
+local image = require "image"
 
 
-local m = memory.alloc(10)
+local m = memory.alloc(4*4*4)
+for i = 0,#m-1 do m[i] = math.random(0xff)-1 end
 
-for i = 0,9 do print(m[i]) end
+local img = image.create(m, 4, 4)
 
-print("#m", #m)
-print("m[3]", m[3])
-m[3] = 24
-print("m[3]", m[3])
-
-for i = 0,9 do print(m[i]) end
-
+-- img:copy(nil, 2, 3)
 
 function mousemove(x, y)
 	print("mouse moved", x, y)
