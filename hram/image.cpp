@@ -4,7 +4,7 @@
 #include "window.h"
 
 ID3D11Texture2D* createImage(ID3D11Device* device, void* data, int w, int h, int pw) {
-	if (pw == 0) pw = w;
+	if (pw == 0) pw = w * 4;
 
 	ID3D11Texture2D* texture = nullptr;
 
@@ -20,7 +20,7 @@ ID3D11Texture2D* createImage(ID3D11Device* device, void* data, int w, int h, int
 
 	D3D11_SUBRESOURCE_DATA textureSRD = {};
 	textureSRD.pSysMem = data;
-	textureSRD.SysMemPitch = pw * 4;
+	textureSRD.SysMemPitch = pw;
 
 	HR(device->CreateTexture2D(&texturedesc, &textureSRD, &texture));
 
@@ -53,6 +53,17 @@ static int delimage(lua_State* L) {
 	return 0;
 }
 
+static int drawimage(lua_State* L) {
+	auto d = luaL_checkudata(L, 1, "core.image");
+
+	lua_getiuservalue(L, 1, 1);
+	auto src = static_cast<ID3D11Texture2D*>(lua_touserdata(L, -1));
+
+
+
+	return 0;
+}
+
 static const struct luaL_Reg imagelib_f[] = {
 	{"create", newimage},
 	{NULL, NULL}
@@ -60,6 +71,7 @@ static const struct luaL_Reg imagelib_f[] = {
 
 static const struct luaL_Reg imagelib_m[] = {
 	{"__gc", delimage},
+	{"draw", drawimage},
 	{NULL, NULL}
 };
 
