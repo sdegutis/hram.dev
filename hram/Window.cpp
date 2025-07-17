@@ -15,7 +15,7 @@
 WINDOWPLACEMENT lastwinpos = { sizeof(lastwinpos) };
 
 HWND hwnd;
-HWND subwin;
+HWND hsub;
 
 int padw;
 int padh;
@@ -125,18 +125,18 @@ inline void setup(HINSTANCE hInstance, int nCmdShow) {
 	HRESULT result = DwmSetWindowAttribute(hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE, &isDarkMode, sizeof(isDarkMode));
 
 	moveSubWindow();
-	subwin = CreateWindowExW(
+	hsub = CreateWindowExW(
 		0, L"HRAM SubWindow Class", L"", WS_CHILD | WS_VISIBLE,
 		subx, suby, subw, subh,
 		hwnd, NULL, hInstance, NULL);
-	if (subwin == NULL) { throw std::exception("can't create canvas view"); }
+	if (hsub == NULL) { throw std::exception("can't create canvas view"); }
 
 	DXGI_SWAP_CHAIN_DESC swapchaindesc = {};
 	swapchaindesc.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 	swapchaindesc.SampleDesc.Count = 1;
 	swapchaindesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapchaindesc.BufferCount = 2;
-	swapchaindesc.OutputWindow = subwin;
+	swapchaindesc.OutputWindow = hsub;
 	swapchaindesc.Windowed = TRUE;
 	swapchaindesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 
@@ -225,7 +225,7 @@ inline void resized(int w, int h) {
 	winw = w;
 	winh = h;
 	moveSubWindow();
-	SetWindowPos(subwin, NULL, subx, suby, subw, subh, SWP_FRAMECHANGED | SWP_SHOWWINDOW);
+	SetWindowPos(hsub, NULL, subx, suby, subw, subh, SWP_FRAMECHANGED | SWP_SHOWWINDOW);
 
 	if (first) {
 		first = 0;
@@ -259,7 +259,7 @@ inline void toggleFullscreen() {
 inline void useScreen(Screen* s) {
 	screen = s;
 	moveSubWindow();
-	SetWindowPos(subwin, NULL, subx, suby, subw, subh, SWP_FRAMECHANGED);
+	SetWindowPos(hsub, NULL, subx, suby, subw, subh, SWP_FRAMECHANGED);
 	resetBuffers();
 }
 
