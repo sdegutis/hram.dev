@@ -18,6 +18,10 @@
 #include "PixelShader.h"
 #include "VertexShader.h"
 
+#include <lua/lua.hpp>
+
+lua_State* mvm;
+
 WINDOWPLACEMENT lastwinpos = { sizeof(lastwinpos) };
 
 HWND hwnd;
@@ -148,6 +152,15 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 	ShowWindow(hwnd, nCmdShow);
 	SetForegroundWindow(hwnd);
 	SetFocus(hwnd);
+
+
+
+	openConsole();
+
+	mvm = luaL_newstate();
+	luaL_openlibs(mvm);
+
+	luaL_dofile(mvm, "foo.lua");
 
 
 	auto data = new uint8_t[4 * 4 * 4];
