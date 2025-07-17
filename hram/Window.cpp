@@ -153,10 +153,10 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 	SetForegroundWindow(hwnd);
 	SetFocus(hwnd);
 
-	auto data = (uint8_t*)malloc(4 * 4 * 4);
+	auto data = new uint8_t[4 * 4 * 4];
 	for (int i = 0; i < 4 * 4 * 4; i++) data[i] = rand() % 0xff;
 	img = createImage(device, (uint32_t*)data, 4, 4);
-	free(data);
+	delete[] data;
 
 	devicecontext->CopySubresourceRegion(screen->texture, 0, 6, 10, 0, img, 0, NULL);
 
