@@ -4,10 +4,11 @@
 
 #include "util.h"
 #include "window.h"
+#include "screen.h"
+#include "image.h"
 
 lua_State* mvm;
 
-#include "image.h"
 ID3D11Texture2D* img;
 
 void app::boot()
@@ -43,6 +44,8 @@ void app::mouseDown(int b) {
 	lua_getglobal(mvm, "mousedown");
 	lua_pushinteger(mvm, b);
 	lua_pcall(mvm, 1, 0, 0);
+
+	useScreen(1 - screeni);
 }
 
 void app::mouseUp(int b) {

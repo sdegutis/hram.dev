@@ -7,8 +7,9 @@
 
 #include <windowsx.h>
 #include <dwmapi.h>
+
 #include <exception>
-#include <stdio.h>
+#include <vector>
 
 #include "PixelShader.h"
 #include "VertexShader.h"
@@ -47,9 +48,21 @@ void moveSubWindow();
 ID3D11Device* device;
 ID3D11DeviceContext* devicecontext;
 
-Screen screen1{ 320, 180 };
-Screen screen2{ 320, 200 };
-Screen* screen = &screen1;
+std::vector<Screen> screens{
+	{ 320, 180 },
+	{ 320, 200 },
+};
+int screeni = 0;
+Screen* screen = &screens[screeni];
+
+void useScreen(int n) {
+	screeni = n;
+	screen = &screens[screeni];
+
+	moveSubWindow();
+	SetWindowPos(hsub, NULL, subx, suby, subw, subh, SWP_FRAMECHANGED);
+	resetBuffers();
+}
 
 int scale = 3;
 int winw = screen->w * scale;
@@ -137,8 +150,9 @@ void setupWindow(HINSTANCE hInstance, int nCmdShow) {
 	D3D11_VIEWPORT viewport = { 0, 0, (float)subw, (float)subh, 0, 1 };
 	devicecontext->RSSetViewports(1, &viewport);
 
-	screen1.setup(device);
-	screen2.setup(device);
+	for (auto s : screens) {
+		s.setup(device);
+	}
 
 	ShowWindow(hwnd, nCmdShow);
 	SetForegroundWindow(hwnd);
@@ -216,15 +230,6 @@ inline void toggleFullscreen() {
 		SetWindowPlacement(hwnd, &lastwinpos);
 		SetWindowPos(hwnd, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
 	}
-}
-
-inline void useScreen(int n) {
-
-
-	//screen = s;
-	//moveSubWindow();
-	//SetWindowPos(hsub, NULL, subx, suby, subw, subh, SWP_FRAMECHANGED);
-	//resetBuffers();
 }
 
 inline void resetBuffers() {
