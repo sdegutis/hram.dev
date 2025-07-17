@@ -145,15 +145,15 @@
   <ItemGroup>
     <ClCompile Include="image.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Screen.cpp" />
+    <ClCompile Include="screen.cpp" />
     <ClCompile Include="util.cpp" />
-    <ClCompile Include="Window.cpp" />
+    <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="image.h" />
-    <ClInclude Include="Screen.h" />
+    <ClInclude Include="screen.h" />
     <ClInclude Include="util.h" />
-    <ClInclude Include="Window.h" />
+    <ClInclude Include="window.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PixelShader.hlsl">
