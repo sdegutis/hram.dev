@@ -28,46 +28,49 @@ void app::boot()
 
 }
 
-void app::mouseMoved(int x, int y)
-{
-	//screen->pset(mousex, mousey, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff));
-
+void app::mouseMoved(int x, int y) {
 	lua_getglobal(mvm, "mousemove");
 	lua_pushinteger(mvm, x);
 	lua_pushinteger(mvm, y);
 	lua_pcall(mvm, 2, 0, 0);
 
+	//screen->pset(mousex, mousey, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff));
 	//devicecontext->CopySubresourceRegion(screen->texture, 0, x, y, 0, img, 0, NULL);
-
-	//s.copyTo(*screen, mousex, mousey);
+		//s.copyTo(*screen, mousex, mousey);
 }
 
-void app::mouseDown(int b)
-{
-	printf("mouse down %d\n", b);
+void app::mouseDown(int b) {
+	lua_getglobal(mvm, "mousedown");
+	lua_pushinteger(mvm, b);
+	lua_pcall(mvm, 1, 0, 0);
 }
 
-void app::mouseUp(int b)
-{
-	printf("mouse up %d\n", b);
+void app::mouseUp(int b) {
+	lua_getglobal(mvm, "mouseup");
+	lua_pushinteger(mvm, b);
+	lua_pcall(mvm, 1, 0, 0);
 }
 
-void app::mouseWheel(int d)
-{
-	printf("wheel %d\n", d);
+void app::mouseWheel(int d) {
+	lua_getglobal(mvm, "mousewheel");
+	lua_pushinteger(mvm, d);
+	lua_pcall(mvm, 1, 0, 0);
 }
 
-void app::keyDown(int vk)
-{
-	printf("keydown %d\n", vk);
+void app::keyDown(int vk) {
+	lua_getglobal(mvm, "keydown");
+	lua_pushinteger(mvm, vk);
+	lua_pcall(mvm, 1, 0, 0);
 }
 
-void app::keyUp(int vk)
-{
-	printf("keyup %d\n", vk);
+void app::keyUp(int vk) {
+	lua_getglobal(mvm, "keyup");
+	lua_pushinteger(mvm, vk);
+	lua_pcall(mvm, 1, 0, 0);
 }
 
-void app::keyChar(int ch)
-{
-	printf("char %c\n", ch);
+void app::keyChar(const char ch) {
+	lua_getglobal(mvm, "keychar");
+	lua_pushlstring(mvm, &ch, 1);
+	lua_pcall(mvm, 1, 0, 0);
 }

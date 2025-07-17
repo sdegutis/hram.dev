@@ -12,6 +12,6 @@ namespace app {
 
 	void keyDown(int vk);
 	void keyUp(int vk);
-	void keyChar(int ch);
+	void keyChar(const char ch);
 
 }
