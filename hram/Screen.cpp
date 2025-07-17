@@ -1,17 +1,17 @@
 #include "Screen.h"
 
 #include <stdint.h>
-#include <exception>
+#include <vector>
+#include <algorithm>
 
 #include "image.h"
 #include "util.h"
 
 void Screen::setup(ID3D11Device* device) {
-	auto data = new uint32_t[w * h * 4];
-	if (data == NULL) throw std::exception("out of memory");
-	memset(data, 0x00, w * h * 4);
-	texture = createImage(device, data, w, h);
-	delete[] data;
+	std::vector<uint8_t> data(w * h * 4);
+	std::fill(data.begin(), data.end(), 0x00);
+
+	texture = createImage(device, data.data(), w, h);
 
 	HR(device->CreateShaderResourceView(texture, nullptr, &texturesrv));
 }

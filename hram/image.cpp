@@ -2,7 +2,7 @@
 
 #include "util.h"
 
-ID3D11Texture2D* createImage(ID3D11Device* device, uint32_t* data, int w, int h) {
+ID3D11Texture2D* createImage(ID3D11Device* device, void* data, int w, int h) {
 	ID3D11Texture2D* texture = nullptr;
 
 	D3D11_TEXTURE2D_DESC texturedesc = {};
