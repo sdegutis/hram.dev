@@ -1,22 +1,21 @@
-#include "Window.h"
+#include "window.h"
 
 #pragma comment(lib, "shlwapi")
 #pragma comment(lib, "Dwmapi")
 #pragma comment(lib, "user32")
 #pragma comment(lib, "d3d11")
 
-#include "Screen.h"
-
 #include <windowsx.h>
 #include <dwmapi.h>
 #include <exception>
-
 #include <stdio.h>
-
-#include "util.h"
 
 #include "PixelShader.h"
 #include "VertexShader.h"
+
+#include "screen.h"
+#include "app.h"
+#include "util.h"
 
 WINDOWPLACEMENT lastwinpos = { sizeof(lastwinpos) };
 
@@ -358,24 +357,16 @@ LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 
 	case WM_MOUSEMOVE: {
-
 		auto xPos = GET_X_LPARAM(lParam) / scale;
 		auto yPos = GET_Y_LPARAM(lParam) / scale;
 
 		if (xPos != mousex || yPos != mousey) {
 			mousex = xPos;
 			mousey = yPos;
-
-			printf("move %d %d\n", mousex, mousey);
-			//screen->pset(mousex, mousey, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff));
-
-			//devicecontext->CopySubresourceRegion(screen->texture, 0, mousex, mousey, 0, img, 0, NULL);
-
-			//s.copyTo(*screen, mousex, mousey);
-
-			return 0;
+			app::mouseMoved(mousex, mousey);
 		}
 
+		return 0;
 	}
 
 	}

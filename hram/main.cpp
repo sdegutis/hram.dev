@@ -1,42 +1,13 @@
-
 #include <Windows.h>
 
 #include "window.h"
-
-#include "util.h"
-#include <lua/lua.hpp>
-
-lua_State* mvm;
-
-#include "image.h"
-ID3D11Texture2D* img;
+#include "app.h"
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int nCmdShow) {
-
 	setupWindow(hInstance, nCmdShow);
-
-
-
-	openConsole();
-
-	mvm = luaL_newstate();
-	luaL_openlibs(mvm);
-
-	luaL_dofile(mvm, "foo.lua");
-
-
-	auto data = new uint8_t[4 * 4 * 4];
-	for (int i = 0; i < 4 * 4 * 4; i++) data[i] = rand() % 0xff;
-	img = createImage(device, (uint32_t*)data, 4, 4);
-	delete[] data;
-
-	devicecontext->CopySubresourceRegion(screen->texture, 0, 6, 10, 0, img, 0, NULL);
-
-
+	app::boot();
 	runLoop();
-
 	return 0;
-
 }
 
 //	void pset(int x, int y, uint32_t c)

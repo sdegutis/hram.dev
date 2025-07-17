@@ -1,0 +1,40 @@
+#include "app.h"
+
+#include <lua/lua.hpp>
+
+#include "util.h"
+#include "window.h"
+
+lua_State* mvm;
+
+#include "image.h"
+ID3D11Texture2D* img;
+
+void app::boot()
+{
+	openConsole();
+
+	mvm = luaL_newstate();
+	luaL_openlibs(mvm);
+
+	luaL_dofile(mvm, "foo.lua");
+
+
+	auto data = new uint8_t[4 * 4 * 4];
+	for (int i = 0; i < 4 * 4 * 4; i++) data[i] = rand() % 0xff;
+	img = createImage(device, (uint32_t*)data, 4, 4);
+	delete[] data;
+
+	devicecontext->CopySubresourceRegion(screen->texture, 0, 6, 10, 0, img, 0, NULL);
+
+}
+
+void app::mouseMoved(int x, int y)
+{
+	printf("move %d %d\n", x, y);
+	//screen->pset(mousex, mousey, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff));
+
+	devicecontext->CopySubresourceRegion(screen->texture, 0, x, y, 0, img, 0, NULL);
+
+	//s.copyTo(*screen, mousex, mousey);
+}
