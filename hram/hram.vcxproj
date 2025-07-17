@@ -146,6 +146,7 @@
     <ClCompile Include="app.cpp" />
     <ClCompile Include="image.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="memory.cpp" />
     <ClCompile Include="screen.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="window.cpp" />
@@ -153,6 +154,7 @@
   <ItemGroup>
     <ClInclude Include="app.h" />
     <ClInclude Include="image.h" />
+    <ClInclude Include="memory.h" />
     <ClInclude Include="screen.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="window.h" />

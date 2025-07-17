@@ -4,6 +4,7 @@ print('in foo!')
 
 require 'bar'
 
+local memory = require "memory"
 
 local m = memory.new(10)
 print("here", memory.len(m))
