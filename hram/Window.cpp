@@ -1,5 +1,12 @@
 #include "Window.h"
 
+#pragma comment(lib, "shlwapi")
+#pragma comment(lib, "Dwmapi")
+#pragma comment(lib, "user32")
+#pragma comment(lib, "d3d11")
+
+#include "Screen.h"
+
 #include <windowsx.h>
 #include <dwmapi.h>
 #include <exception>
@@ -10,7 +17,6 @@
 
 #include "PixelShader.h"
 #include "VertexShader.h"
-
 
 WINDOWPLACEMENT lastwinpos = { sizeof(lastwinpos) };
 
@@ -52,8 +58,6 @@ int scale = 3;
 int winw = screen->w * scale;
 int winh = screen->h * scale;
 
-RECT getInitialRect();
-void setup(HINSTANCE hInstance, int nCmdShow);
 void draw();
 
 void getMinSize(LONG* w, LONG* h);
@@ -72,31 +76,6 @@ LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int nCmdShow) {
 
-	setup(hInstance, nCmdShow);
-
-	auto data = (uint8_t*)malloc(4 * 4 * 4);
-	for (int i = 0; i < 4 * 4 * 4; i++) data[i] = rand() % 0xff;
-	img = createImage(device, (uint32_t*)data, 4, 4);
-	free(data);
-
-	devicecontext->CopySubresourceRegion(screen->texture, 0, 6, 10, 0, img, 0, NULL);
-
-	MSG msg = { 0 };
-	while (msg.message != WM_QUIT) {
-		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-		else {
-			draw();
-		}
-	}
-
-	return 0;
-
-}
-
-inline void setup(HINSTANCE hInstance, int nCmdShow) {
 	WNDCLASS wc = {};
 	wc.lpfnWndProc = WindowProc;
 	wc.hInstance = hInstance;
@@ -111,7 +90,16 @@ inline void setup(HINSTANCE hInstance, int nCmdShow) {
 	wc2.lpszClassName = L"HRAM SubWindow Class";
 	RegisterClass(&wc2);
 
-	RECT winbox = getInitialRect();
+	RECT winbox;
+	winbox.left = GetSystemMetrics(SM_CXSCREEN) / 2 - winw / 2;
+	winbox.top = GetSystemMetrics(SM_CYSCREEN) / 2 - winh / 2;
+	winbox.right = winbox.left + winw;
+	winbox.bottom = winbox.top + winh;
+	AdjustWindowRectEx(&winbox, WS_OVERLAPPEDWINDOW, false, 0);
+
+	padw = (winbox.right - winbox.left) - winw;
+	padh = (winbox.bottom - winbox.top) - winh;
+
 	hwnd = CreateWindowExW(
 		0, L"HRAM Window Class", L"HRAM", WS_OVERLAPPEDWINDOW,
 		winbox.left,
@@ -164,20 +152,27 @@ inline void setup(HINSTANCE hInstance, int nCmdShow) {
 	ShowWindow(hwnd, nCmdShow);
 	SetForegroundWindow(hwnd);
 	SetFocus(hwnd);
-}
 
-inline RECT getInitialRect() {
-	RECT winbox;
-	winbox.left = GetSystemMetrics(SM_CXSCREEN) / 2 - winw / 2;
-	winbox.top = GetSystemMetrics(SM_CYSCREEN) / 2 - winh / 2;
-	winbox.right = winbox.left + winw;
-	winbox.bottom = winbox.top + winh;
-	AdjustWindowRectEx(&winbox, WS_OVERLAPPEDWINDOW, false, 0);
+	auto data = (uint8_t*)malloc(4 * 4 * 4);
+	for (int i = 0; i < 4 * 4 * 4; i++) data[i] = rand() % 0xff;
+	img = createImage(device, (uint32_t*)data, 4, 4);
+	free(data);
 
-	padw = (winbox.right - winbox.left) - winw;
-	padh = (winbox.bottom - winbox.top) - winh;
+	devicecontext->CopySubresourceRegion(screen->texture, 0, 6, 10, 0, img, 0, NULL);
 
-	return winbox;
+	MSG msg = { 0 };
+	while (msg.message != WM_QUIT) {
+		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		else {
+			draw();
+		}
+	}
+
+	return 0;
+
 }
 
 inline void moveSubWindow() {

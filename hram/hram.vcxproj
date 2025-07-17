@@ -150,7 +150,6 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h" />
     <ClInclude Include="image.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="util.h" />
