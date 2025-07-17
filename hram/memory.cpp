@@ -33,8 +33,12 @@ static int lenmemory(lua_State* L) {
 	return 1;
 }
 
-static const struct luaL_Reg memorylib[] = {
+static const struct luaL_Reg memorylib_f[] = {
 	{"new", newmemory},
+	{NULL, NULL}
+};
+
+static const struct luaL_Reg memorylib_m[] = {
 	{"set", setmemory},
 	{"get", getmemory},
 	{"len", lenmemory},
@@ -43,6 +47,9 @@ static const struct luaL_Reg memorylib[] = {
 
 int luaopen_memory(lua_State* L) {
 	luaL_newmetatable(L, "core.memory");
-	luaL_newlib(L, memorylib);
+	lua_pushvalue(L, -1);
+	lua_setfield(L, -2, "__index");
+	luaL_setfuncs(L, memorylib_m, 0);
+	luaL_newlib(L, memorylib_f);
 	return 1;
 }
