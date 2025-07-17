@@ -58,7 +58,6 @@ int winh = screen->h * scale;
 void draw();
 
 void toggleFullscreen();
-void useScreen(Screen* s);
 
 
 
@@ -219,11 +218,13 @@ inline void toggleFullscreen() {
 	}
 }
 
-inline void useScreen(Screen* s) {
-	screen = s;
-	moveSubWindow();
-	SetWindowPos(hsub, NULL, subx, suby, subw, subh, SWP_FRAMECHANGED);
-	resetBuffers();
+inline void useScreen(int n) {
+
+
+	//screen = s;
+	//moveSubWindow();
+	//SetWindowPos(hsub, NULL, subx, suby, subw, subh, SWP_FRAMECHANGED);
+	//resetBuffers();
 }
 
 inline void resetBuffers() {
@@ -246,38 +247,11 @@ inline void resetBuffers() {
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg) {
 
-	case WM_DESTROY: {
-		PostQuitMessage(0);
-		return 0;
-	}
-
-	case WM_CHAR: {
-		printf("char: %llu\n", wParam);
-		break;
-	}
-
-	case WM_KEYUP: {
-		printf("key up %llu\n", wParam);
-		break;
-	}
-
-	case WM_SYSKEYDOWN: {
-		printf("sys key down %llu\n", wParam);
-		return 0;
-	}
-
-	case WM_SYSKEYUP: {
-		printf("sys key up %llu\n", wParam);
-		return 0;
-	}
-
-	case WM_KEYDOWN: {
-		printf("key down %llu\n", wParam);
-		if (wParam == VK_F11) {
-			toggleFullscreen();
-		}
-		return 0;
-	}
+	case WM_CHAR:       app::keyChar(wParam); return 0;
+	case WM_SYSKEYDOWN: app::keyDown(wParam); return 0;
+	case WM_KEYUP:      app::keyUp(wParam);   return 0;
+	case WM_KEYDOWN:    app::keyDown(wParam); return 0;
+	case WM_SYSKEYUP:   app::keyUp(wParam);   return 0;
 
 	case WM_GETMINMAXINFO: {
 		LPMINMAXINFO lpMMI = (LPMINMAXINFO)lParam;
@@ -286,7 +260,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 		return 0;
 	}
 
-	case WM_SIZE:
+	case WM_SIZE: {
 		winw = LOWORD(lParam);
 		winh = HIWORD(lParam);
 
@@ -297,11 +271,15 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 		return 0;
 	}
 
+	case WM_DESTROY: {
+		PostQuitMessage(0);
+		return 0;
+	}
+
+	}
+
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
-
-int mousex;
-int mousey;
 
 LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg) {
@@ -314,58 +292,21 @@ LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 
-	case WM_LBUTTONUP: {
-		printf("left button up\n");
-		return 0;
-	}
-
-	case WM_LBUTTONDOWN: {
-		printf("left button down\n");
-
-		if (screen == &screen1)
-			useScreen(&screen2);
-		else
-			useScreen(&screen1);
-
-		return 0;
-	}
-
-	case WM_RBUTTONUP: {
-		printf("right button up\n");
-		return 0;
-	}
-
-	case WM_RBUTTONDOWN: {
-		printf("right button down\n");
-		return 0;
-	}
-
-	case WM_MBUTTONUP: {
-		printf("middle button up\n");
-		return 0;
-	}
-
-	case WM_MBUTTONDOWN: {
-		printf("middle button down\n");
-		return 0;
-	}
-
-	case WM_MOUSEWHEEL: {
-		auto zDelta = GET_WHEEL_DELTA_WPARAM(wParam);
-		printf("wheel %d\n", zDelta);
-		return 0;
-	}
+	case WM_LBUTTONUP:   app::mouseUp(0);   return 0;
+	case WM_LBUTTONDOWN: app::mouseDown(0); return 0;
+	case WM_RBUTTONUP:   app::mouseUp(2);   return 0;
+	case WM_RBUTTONDOWN: app::mouseDown(2); return 0;
+	case WM_MBUTTONUP:   app::mouseUp(1);   return 0;
+	case WM_MBUTTONDOWN: app::mouseDown(1); return 0;
+	case WM_MOUSEWHEEL:  app::mouseWheel(GET_WHEEL_DELTA_WPARAM(wParam)); return 0;
 
 	case WM_MOUSEMOVE: {
-		auto xPos = GET_X_LPARAM(lParam) / scale;
-		auto yPos = GET_Y_LPARAM(lParam) / scale;
-
-		if (xPos != mousex || yPos != mousey) {
-			mousex = xPos;
-			mousey = yPos;
-			app::mouseMoved(mousex, mousey);
-		}
-
+		static int mousex;
+		static int mousey;
+		auto x = GET_X_LPARAM(lParam) / scale;
+		auto y = GET_Y_LPARAM(lParam) / scale;
+		if (x != mousex || y != mousey)
+			app::mouseMoved(mousex = x, mousey = y);
 		return 0;
 	}
 

@@ -10,8 +10,6 @@ lua_State* mvm;
 #include "image.h"
 ID3D11Texture2D* img;
 
-int mousemoveref;
-
 void app::boot()
 {
 	openConsole();
@@ -20,9 +18,6 @@ void app::boot()
 	luaL_openlibs(mvm);
 
 	luaL_dofile(mvm, "foo.lua");
-
-	lua_getglobal(mvm, "mousemove");
-	mousemoveref = luaL_ref(mvm, LUA_REGISTRYINDEX);
 
 	auto data = new uint8_t[4 * 4 * 4];
 	for (int i = 0; i < 4 * 4 * 4; i++) data[i] = rand() % 0xff;
@@ -35,10 +30,9 @@ void app::boot()
 
 void app::mouseMoved(int x, int y)
 {
-	printf("move %d %d\n", x, y);
 	//screen->pset(mousex, mousey, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff));
 
-	lua_rawgeti(mvm, LUA_REGISTRYINDEX, mousemoveref);
+	lua_getglobal(mvm, "mousemove");
 	lua_pushinteger(mvm, x);
 	lua_pushinteger(mvm, y);
 	lua_pcall(mvm, 2, 0, 0);
@@ -46,4 +40,34 @@ void app::mouseMoved(int x, int y)
 	//devicecontext->CopySubresourceRegion(screen->texture, 0, x, y, 0, img, 0, NULL);
 
 	//s.copyTo(*screen, mousex, mousey);
+}
+
+void app::mouseDown(int b)
+{
+	printf("mouse down %d\n", b);
+}
+
+void app::mouseUp(int b)
+{
+	printf("mouse up %d\n", b);
+}
+
+void app::mouseWheel(int d)
+{
+	printf("wheel %d\n", d);
+}
+
+void app::keyDown(int vk)
+{
+	printf("keydown %d\n", vk);
+}
+
+void app::keyUp(int vk)
+{
+	printf("keyup %d\n", vk);
+}
+
+void app::keyChar(int ch)
+{
+	printf("char %c\n", ch);
 }

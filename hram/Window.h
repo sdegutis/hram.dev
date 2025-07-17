@@ -10,3 +10,5 @@ void runLoop();
 extern ID3D11Device* device;
 extern ID3D11DeviceContext* devicecontext;
 extern Screen* screen;
+
+void useScreen(int n);
