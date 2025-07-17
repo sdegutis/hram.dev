@@ -10,6 +10,8 @@ lua_State* mvm;
 #include "image.h"
 ID3D11Texture2D* img;
 
+int mousemoveref;
+
 void app::boot()
 {
 	openConsole();
@@ -19,6 +21,8 @@ void app::boot()
 
 	luaL_dofile(mvm, "foo.lua");
 
+	lua_getglobal(mvm, "mousemove");
+	mousemoveref = luaL_ref(mvm, LUA_REGISTRYINDEX);
 
 	auto data = new uint8_t[4 * 4 * 4];
 	for (int i = 0; i < 4 * 4 * 4; i++) data[i] = rand() % 0xff;
@@ -31,10 +35,10 @@ void app::boot()
 
 void app::mouseMoved(int x, int y)
 {
-	//printf("move %d %d\n", x, y);
+	printf("move %d %d\n", x, y);
 	//screen->pset(mousex, mousey, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff));
 
-	lua_getglobal(mvm, "mousemove");
+	lua_rawgeti(mvm, LUA_REGISTRYINDEX, mousemoveref);
 	lua_pushinteger(mvm, x);
 	lua_pushinteger(mvm, y);
 	lua_pcall(mvm, 2, 0, 0);
