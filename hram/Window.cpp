@@ -11,6 +11,62 @@
 #include "PixelShader.h"
 #include "VertexShader.h"
 
+
+class Window {
+
+	WINDOWPLACEMENT lastwinpos = { sizeof(lastwinpos) };
+
+	HWND hwnd = nullptr;
+	HWND subwin = nullptr;
+
+	int padw = 0;
+	int padh = 0;
+
+	int subx = 0;
+	int suby = 0;
+	int subw = 0;
+	int subh = 0;
+
+	IDXGISwapChain* swapchain = nullptr;
+	ID3D11Texture2D* framebuffer = nullptr;
+	ID3D11RenderTargetView* framebufferRTV = nullptr;
+	ID3D11RasterizerState* rasterizerstate = nullptr;
+	ID3D11SamplerState* samplerstate = nullptr;
+
+	ID3D11VertexShader* vertexshader = nullptr;
+	ID3D11PixelShader* pixelshader = nullptr;
+
+	int first = 1;
+
+	void resetBuffers();
+	void moveSubWindow();
+
+public:
+
+	ID3D11Device* device = nullptr;
+	ID3D11DeviceContext* devicecontext = nullptr;
+
+	Screen screen1{ 320, 180 };
+	Screen screen2{ 320, 200 };
+	Screen* screen = &screen1;
+
+	int scale = 3;
+	int winw = screen->w * scale;
+	int winh = screen->h * scale;
+
+	RECT getInitialRect();
+	void setup(HINSTANCE hInstance, int nCmdShow);
+	void draw();
+
+	void getMinSize(LONG* w, LONG* h);
+	void resized(int w, int h);
+
+	void toggleFullscreen();
+	void useScreen(Screen* s);
+
+};
+
+
 Window* win;
 
 #include "image.h"
@@ -118,14 +174,14 @@ inline void Window::setup(HINSTANCE hInstance, int nCmdShow) {
 
 inline RECT Window::getInitialRect() {
 	RECT winbox;
-	winbox.left = GetSystemMetrics(SM_CXSCREEN) / 2 - w / 2;
-	winbox.top = GetSystemMetrics(SM_CYSCREEN) / 2 - h / 2;
-	winbox.right = winbox.left + w;
-	winbox.bottom = winbox.top + h;
+	winbox.left = GetSystemMetrics(SM_CXSCREEN) / 2 - winw / 2;
+	winbox.top = GetSystemMetrics(SM_CYSCREEN) / 2 - winh / 2;
+	winbox.right = winbox.left + winw;
+	winbox.bottom = winbox.top + winh;
 	AdjustWindowRectEx(&winbox, WS_OVERLAPPEDWINDOW, false, 0);
 
-	padw = (winbox.right - winbox.left) - w;
-	padh = (winbox.bottom - winbox.top) - h;
+	padw = (winbox.right - winbox.left) - winw;
+	padh = (winbox.bottom - winbox.top) - winh;
 
 	return winbox;
 }
@@ -136,16 +192,16 @@ inline void Window::moveSubWindow() {
 	scale = 1;
 
 	while (
-		subw + screen->w <= w &&
-		subh + screen->h <= h)
+		subw + screen->w <= winw &&
+		subh + screen->h <= winh)
 	{
 		subw += screen->w;
 		subh += screen->h;
 		scale++;
 	}
 
-	subx = w / 2 - subw / 2;
-	suby = h / 2 - subh / 2;
+	subx = winw / 2 - subw / 2;
+	suby = winh / 2 - subh / 2;
 }
 
 inline void Window::draw() {
@@ -172,8 +228,8 @@ inline void Window::getMinSize(LONG* w, LONG* h) {
 }
 
 inline void Window::resized(int w, int h) {
-	this->w = w;
-	this->h = h;
+	this->winw = w;
+	this->winh = h;
 	moveSubWindow();
 	SetWindowPos(subwin, NULL, subx, suby, subw, subh, SWP_FRAMECHANGED | SWP_SHOWWINDOW);
 
