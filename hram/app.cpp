@@ -31,10 +31,15 @@ void app::boot()
 
 void app::mouseMoved(int x, int y)
 {
-	printf("move %d %d\n", x, y);
+	//printf("move %d %d\n", x, y);
 	//screen->pset(mousex, mousey, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff));
 
-	devicecontext->CopySubresourceRegion(screen->texture, 0, x, y, 0, img, 0, NULL);
+	lua_getglobal(mvm, "mousemove");
+	lua_pushinteger(mvm, x);
+	lua_pushinteger(mvm, y);
+	lua_pcall(mvm, 2, 0, 0);
+
+	//devicecontext->CopySubresourceRegion(screen->texture, 0, x, y, 0, img, 0, NULL);
 
 	//s.copyTo(*screen, mousex, mousey);
 }
