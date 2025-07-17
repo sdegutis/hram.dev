@@ -35,6 +35,8 @@ void app::mouseMoved(int x, int y) {
 	lua_pushinteger(mvm, y);
 	lua_pcall(mvm, 2, 0, 0);
 
+	devicecontext->CopySubresourceRegion(screen->texture, 0, x, y, 0, img, 0, NULL);
+
 	//screen->pset(mousex, mousey, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff));
 	//devicecontext->CopySubresourceRegion(screen->texture, 0, x, y, 0, img, 0, NULL);
 		//s.copyTo(*screen, mousex, mousey);

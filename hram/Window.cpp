@@ -154,7 +154,7 @@ void setupWindow(HINSTANCE hInstance, int nCmdShow) {
 	D3D11_VIEWPORT viewport = { 0, 0, (float)subw, (float)subh, 0, 1 };
 	devicecontext->RSSetViewports(1, &viewport);
 
-	for (auto s : screens) {
+	for (auto& s : screens) {
 		s.setup(device);
 	}
 
@@ -256,11 +256,11 @@ inline void resetBuffers() {
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg) {
 
-	case WM_CHAR:       app::keyChar(wParam); return 0;
-	case WM_SYSKEYDOWN: app::keyDown(wParam); return 0;
-	case WM_KEYUP:      app::keyUp(wParam);   return 0;
-	case WM_KEYDOWN:    app::keyDown(wParam); return 0;
-	case WM_SYSKEYUP:   app::keyUp(wParam);   return 0;
+	case WM_CHAR:       app::keyChar((const char)wParam); return 0;
+	case WM_SYSKEYDOWN: app::keyDown((int)wParam);        return 0;
+	case WM_KEYUP:      app::keyUp((int)wParam);          return 0;
+	case WM_KEYDOWN:    app::keyDown((int)wParam);        return 0;
+	case WM_SYSKEYUP:   app::keyUp((int)wParam);          return 0;
 
 	case WM_GETMINMAXINFO: {
 		LPMINMAXINFO lpMMI = (LPMINMAXINFO)lParam;
