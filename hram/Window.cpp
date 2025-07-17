@@ -48,6 +48,8 @@ void moveSubWindow();
 ID3D11Device* device;
 ID3D11DeviceContext* devicecontext;
 
+
+
 std::vector<Screen> screens{
 	{ 320, 180 },
 	{ 320, 200 },
@@ -63,6 +65,8 @@ void useScreen(int n) {
 	SetWindowPos(hsub, NULL, subx, suby, subw, subh, SWP_FRAMECHANGED);
 	resetBuffers();
 }
+
+
 
 int scale = 3;
 int winw = screen->w * scale;
