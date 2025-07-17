@@ -84,12 +84,6 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 	wc.hbrBackground = CreateSolidBrush(RGB(0x11, 0x11, 0x11));
 	RegisterClass(&wc);
 
-	WNDCLASS wc2 = {};
-	wc2.lpfnWndProc = WindowProc2;
-	wc2.hInstance = hInstance;
-	wc2.lpszClassName = L"HRAM SubWindow Class";
-	RegisterClass(&wc2);
-
 	RECT winbox;
 	winbox.left = GetSystemMetrics(SM_CXSCREEN) / 2 - winw / 2;
 	winbox.top = GetSystemMetrics(SM_CYSCREEN) / 2 - winh / 2;
@@ -111,6 +105,12 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 
 	const BOOL isDarkMode = true;
 	HRESULT result = DwmSetWindowAttribute(hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE, &isDarkMode, sizeof(isDarkMode));
+
+	WNDCLASS wc2 = {};
+	wc2.lpfnWndProc = WindowProc2;
+	wc2.hInstance = hInstance;
+	wc2.lpszClassName = L"HRAM SubWindow Class";
+	RegisterClass(&wc2);
 
 	moveSubWindow();
 	hsub = CreateWindowExW(
