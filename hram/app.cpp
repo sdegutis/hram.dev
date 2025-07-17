@@ -11,12 +11,64 @@ lua_State* mvm;
 
 ID3D11Texture2D* img;
 
+
+
+static int newmemory(lua_State* L) {
+	auto n = luaL_checkinteger(L, 1);
+	lua_newuserdatauv(L, n, 1);
+	lua_pushvalue(L, -1);
+	lua_pushinteger(L, n);
+	lua_setiuservalue(L, -2, 1);
+	return 1;
+}
+
+static int getmemory(lua_State* L) {
+	auto d = static_cast<uint8_t*>(lua_touserdata(L, 1));
+	auto n = luaL_checkinteger(L, 2);
+	lua_pushinteger(L, d[n]);
+	return 1;
+}
+
+static int setmemory(lua_State* L) {
+	auto d = static_cast<uint8_t*>(lua_touserdata(L, 1));
+	auto n = luaL_checkinteger(L, 2);
+	auto v = luaL_checkinteger(L, 3);
+	d[n] = v;
+	return 0;
+}
+
+static int lenmemory(lua_State* L) {
+	lua_getiuservalue(L, 1, 1);
+	return 1;
+}
+
+
+
 void app::boot()
 {
 	openConsole();
 
 	mvm = luaL_newstate();
 	luaL_openlibs(mvm);
+
+
+
+	static const struct luaL_Reg memorylib[] = {
+		{"new", newmemory},
+		{"set", setmemory},
+		{"get", getmemory},
+		{"len", lenmemory},
+		{NULL, NULL}
+	};
+
+	luaL_newlib(mvm, memorylib);
+	lua_setglobal(mvm, "memory");
+
+
+	//luaL_newmetatable(mvm, "memory");
+	//luaL_setfuncs
+
+
 
 	luaL_dofile(mvm, "foo.lua");
 
