@@ -40,8 +40,6 @@ ID3D11SamplerState* samplerstate;
 ID3D11VertexShader* vertexshader;
 ID3D11PixelShader* pixelshader;
 
-int first = 1;
-
 void resetBuffers();
 void moveSubWindow();
 
@@ -59,9 +57,6 @@ int winw = screen->w * scale;
 int winh = screen->h * scale;
 
 void draw();
-
-void getMinSize(LONG* w, LONG* h);
-void resized(int w, int h);
 
 void toggleFullscreen();
 void useScreen(Screen* s);
@@ -132,6 +127,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 	HR(D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, D3D11_CREATE_DEVICE_BGRA_SUPPORT | D3D11_CREATE_DEVICE_SINGLETHREADED, featurelevels, ARRAYSIZE(featurelevels), D3D11_SDK_VERSION, &swapchaindesc, &swapchain, &device, nullptr, &devicecontext));
 
 	HR(swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&framebuffer));
+	if (framebuffer == NULL) { throw std::exception("can't create canvas view"); }
 	HR(device->CreateRenderTargetView(framebuffer, nullptr, &framebufferRTV));
 
 	HR(device->CreateVertexShader(MyVertexShader, sizeof(MyVertexShader), 0, &vertexshader));
@@ -210,25 +206,6 @@ inline void draw() {
 	devicecontext->Draw(4, 0);
 
 	swapchain->Present(1, 0);
-}
-
-inline void getMinSize(LONG* w, LONG* h) {
-	*w = screen->w + padw;
-	*h = screen->h + padh;
-}
-
-inline void resized(int w, int h) {
-	winw = w;
-	winh = h;
-	moveSubWindow();
-	SetWindowPos(hsub, NULL, subx, suby, subw, subh, SWP_FRAMECHANGED | SWP_SHOWWINDOW);
-
-	if (first) {
-		first = 0;
-	}
-	else {
-		resetBuffers();
-	}
 }
 
 inline void toggleFullscreen() {
@@ -314,12 +291,19 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 
 	case WM_GETMINMAXINFO: {
 		LPMINMAXINFO lpMMI = (LPMINMAXINFO)lParam;
-		getMinSize(&lpMMI->ptMinTrackSize.x, &lpMMI->ptMinTrackSize.y);
+		lpMMI->ptMinTrackSize.x = screen->w + padw;
+		lpMMI->ptMinTrackSize.y = screen->h + padh;
 		return 0;
 	}
 
 	case WM_SIZE:
-		resized(LOWORD(lParam), HIWORD(lParam));
+		winw = LOWORD(lParam);
+		winh = HIWORD(lParam);
+
+		moveSubWindow();
+		SetWindowPos(hsub, NULL, subx, suby, subw, subh, SWP_FRAMECHANGED | SWP_SHOWWINDOW);
+		resetBuffers();
+
 		return 0;
 	}
 
