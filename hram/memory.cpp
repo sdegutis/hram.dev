@@ -1,10 +1,12 @@
 #include "memory.h"
 
 #include <cstdint>
+#include <memory>
 
 static int newmemory(lua_State* L) {
 	auto n = luaL_checkinteger(L, 1);
-	lua_newuserdatauv(L, n, 1);
+	auto d = static_cast<uint8_t*>(lua_newuserdatauv(L, n, 1));
+	memset(d, 0, n);
 	lua_pushinteger(L, n);
 	lua_setiuservalue(L, -2, 1);
 	luaL_getmetatable(L, "core.memory");
@@ -34,7 +36,7 @@ static int lenmemory(lua_State* L) {
 }
 
 static const struct luaL_Reg memorylib_f[] = {
-	{"new", newmemory},
+	{"alloc", newmemory},
 	{NULL, NULL}
 };
 

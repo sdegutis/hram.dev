@@ -6,11 +6,17 @@ require 'bar'
 
 local memory = require "memory"
 
-local m = memory.new(10)
-print("here", #m)
-print("here", m[0])
-m[0] = 24
-print("here", m[0])
+
+local m = memory.alloc(10)
+
+for i = 0,9 do print(m[i]) end
+
+print("#m", #m)
+print("m[3]", m[3])
+m[3] = 24
+print("m[3]", m[3])
+
+for i = 0,9 do print(m[i]) end
 
 
 function mousemove(x, y)
