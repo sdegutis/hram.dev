@@ -22,6 +22,7 @@ print(memory.get(m, 8))
 print()
 
 for i=0,10-1 do print(i, memory.get(m+i, 8)) end
+memory.fill(m, 0x3, 10)
 memory.set(m+3, 32, 32769)
 for i=0,10-1 do print(i, memory.get(m+i, 8)) end
 
