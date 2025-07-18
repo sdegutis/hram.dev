@@ -1,7 +1,10 @@
 #pragma once
 
+#include <lua/lua.hpp>
 
 namespace app {
+
+	lua_State* newvm();
 
 	void boot();
 

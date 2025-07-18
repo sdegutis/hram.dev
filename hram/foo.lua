@@ -4,6 +4,10 @@ print(pcall(function()
 
 print('in foo!')
 
+print(thread.spawn([[
+	print("in thread!", memory)
+]]))
+
 require 'bar'
 
 

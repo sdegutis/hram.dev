@@ -1,27 +1,58 @@
 #include "app.h"
 
-#include <lua/lua.hpp>
 
 #include "util.h"
 #include "window.h"
 #include "screen.h"
 #include "image.h"
 #include "memory.h"
+#include "thread.h"
 
-lua_State* mvm;
+static lua_State* mvm;
+
+
+//#pragma pack(push, 1)
+//
+//struct Bit {
+//	uint8_t bit : 1;
+//};
+//
+//struct State {
+//	uint8_t mousex;
+//	uint8_t mousey;
+//	Bit bits[256];
+//	uint8_t mousez;
+//};
+//
+//#pragma pack(pop)
+
+
+lua_State* app::newvm()
+{
+	auto L = luaL_newstate();
+
+	luaL_openlibs(L);
+
+	luaopen_memory(L);
+	lua_setglobal(L, "memory");
+
+	luaopen_image(L);
+	lua_setglobal(L, "image");
+
+	luaopen_thread(L);
+	lua_setglobal(L, "thread");
+
+	return L;
+}
 
 void app::boot()
 {
 	openConsole();
 
-	mvm = luaL_newstate();
-	luaL_openlibs(mvm);
+	//printf("s = %d\n", sizeof(Bit));
+	//printf("s = %d\n", sizeof(State));
 
-	luaopen_memory(mvm);
-	lua_setglobal(mvm, "memory");
-
-	luaopen_image(mvm);
-	lua_setglobal(mvm, "image");
+	mvm = newvm();
 
 	luaL_dofile(mvm, "foo.lua");
 }

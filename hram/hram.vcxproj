@@ -148,6 +148,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="memory.cpp" />
     <ClCompile Include="screen.cpp" />
+    <ClCompile Include="thread.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
@@ -156,6 +157,7 @@
     <ClInclude Include="image.h" />
     <ClInclude Include="memory.h" />
     <ClInclude Include="screen.h" />
+    <ClInclude Include="thread.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="window.h" />
   </ItemGroup>
