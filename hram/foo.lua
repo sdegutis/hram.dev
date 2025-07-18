@@ -12,11 +12,12 @@ local img = image.create(m, 3, 3)
 memory.free(m)
 
 
--- img:draw(nil, 2, 3)
+image.copy(nil, img, 2, 3)
 
 
 
 function mousemove(x, y)
+	image.copy(nil, img, x, y)
 	print("mouse moved", x, y)
 end
 

@@ -28,7 +28,7 @@ ID3D11Texture2D* createImage(ID3D11Device* device, void* data, int w, int h, int
 }
 
 static int newimage(lua_State* L) {
-	auto mem = reinterpret_cast<void*>(luaL_checkinteger(L, 1));
+	auto mem = reinterpret_cast<void*>(lua_tointeger(L, 1));
 	auto w = luaL_checkinteger(L, 2);
 	auto h = luaL_checkinteger(L, 3);
 	auto pw = lua_tointeger(L, 4);
@@ -40,18 +40,20 @@ static int newimage(lua_State* L) {
 }
 
 static int delimage(lua_State* L) {
-	auto img = reinterpret_cast<ID3D11Texture2D*>(luaL_checkinteger(L, 1));
+	auto img = reinterpret_cast<ID3D11Texture2D*>(lua_tointeger(L, 1));
 	img->Release();
 	return 0;
 }
 
-static int drawimage(lua_State* L) {
-	auto d = luaL_checkudata(L, 1, "core.image");
+static int putimage(lua_State* L) {
+	auto dst = reinterpret_cast<ID3D11Texture2D*>(lua_tointeger(L, 1));
+	auto src = reinterpret_cast<ID3D11Texture2D*>(lua_tointeger(L, 2));
+	if (dst == nullptr) dst = screen->texture;
 
-	lua_getiuservalue(L, 1, 1);
-	auto src = static_cast<ID3D11Texture2D*>(lua_touserdata(L, -1));
+	auto dx = lua_tointeger(L, 3);
+	auto dy = lua_tointeger(L, 4);
 
-
+	devicecontext->CopySubresourceRegion(dst, 0, dx, dy, 0, src, 0, NULL);
 
 	return 0;
 }
@@ -59,6 +61,7 @@ static int drawimage(lua_State* L) {
 static const struct luaL_Reg imagelib[] = {
 	{"create", newimage},
 	{"delete", delimage},
+	{"copy", putimage},
 	{NULL, NULL}
 };
 
