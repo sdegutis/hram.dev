@@ -5,7 +5,7 @@ print(pcall(function()
 print('in foo!')
 
 t = thread.spawn([[
-    local a, b, c == ...
+    local a, b, c = ...
 	print("in thread!", memory, b,c,a)
 ]], 0x7f, nil, 'hey')
 
