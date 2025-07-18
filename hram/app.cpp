@@ -10,10 +10,6 @@
 
 lua_State* mvm;
 
-ID3D11Texture2D* img;
-
-
-
 void app::boot()
 {
 	openConsole();
@@ -30,14 +26,6 @@ void app::boot()
 	lua_settop(mvm, 0);
 
 	luaL_dofile(mvm, "foo.lua");
-
-	auto data = new uint8_t[4 * 4 * 4];
-	for (int i = 0; i < 4 * 4 * 4; i++) data[i] = rand() % 0xff;
-	img = createImage(device, (uint32_t*)data, 4, 4);
-	delete[] data;
-
-	devicecontext->CopySubresourceRegion(screen->texture, 0, 6, 10, 0, img, 0, NULL);
-
 }
 
 void app::mouseMoved(int x, int y) {
@@ -45,12 +33,6 @@ void app::mouseMoved(int x, int y) {
 	lua_pushinteger(mvm, x);
 	lua_pushinteger(mvm, y);
 	lua_pcall(mvm, 2, 0, 0);
-
-	devicecontext->CopySubresourceRegion(screen->texture, 0, x, y, 0, img, 0, NULL);
-
-	//screen->pset(mousex, mousey, RGB(rand() % 0xff, rand() % 0xff, rand() % 0xff));
-	//devicecontext->CopySubresourceRegion(screen->texture, 0, x, y, 0, img, 0, NULL);
-		//s.copyTo(*screen, mousex, mousey);
 }
 
 void app::mouseDown(int b) {
