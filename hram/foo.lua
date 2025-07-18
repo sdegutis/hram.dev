@@ -1,5 +1,7 @@
 -- foo
 
+print(pcall(function()
+
 print('in foo!')
 
 require 'bar'
@@ -56,3 +58,5 @@ end
 function keychar(s)
 	print("key char", s)
 end
+
+end))
