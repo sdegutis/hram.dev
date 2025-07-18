@@ -4,78 +4,77 @@
 #include <memory>
 
 static int newmemory(lua_State* L) {
-	auto n = luaL_checkinteger(L, 1);
-	auto d = static_cast<uint8_t*>(lua_newuserdatauv(L, n, 1));
-	memset(d, 0, n);
-	lua_pushinteger(L, n);
-	lua_setiuservalue(L, -2, 1);
-	luaL_getmetatable(L, "core.memory");
-	lua_setmetatable(L, -2);
+	auto len = luaL_checkinteger(L, 1);
+	auto mem = new uint8_t[len];
+	lua_pushinteger(L, reinterpret_cast<uint64_t>(mem));
 	return 1;
 }
 
+static int delmemory(lua_State* L) {
+	auto mem = reinterpret_cast<uint8_t*>(lua_tointeger(L, 1));
+	delete[] mem;
+	return 0;
+}
+
+static int filmemory(lua_State* L) {
+	auto mem = reinterpret_cast<uint8_t*>(lua_tointeger(L, 1));
+	auto val = lua_tointeger(L, 2);
+	auto len = lua_tointeger(L, 3);
+	memset(mem, val, len);
+	return 0;
+}
+
 static int getmemory(lua_State* L) {
-	auto d = static_cast<uint8_t*>(luaL_checkudata(L, 1, "core.memory"));
-	auto n = luaL_checkinteger(L, 2);
-	lua_pushinteger(L, d[n]);
+	auto mem = lua_tointeger(L, 1);
+	auto siz = lua_tointeger(L, 2);
+
+	lua_Integer val = 0;
+	switch (siz) {
+	case 8:   val = *reinterpret_cast<uint8_t*>(mem);  break;
+	case 16:  val = *reinterpret_cast<uint16_t*>(mem); break;
+	case 32:  val = *reinterpret_cast<uint32_t*>(mem); break;
+	case 64:  val = *reinterpret_cast<uint64_t*>(mem); break;
+	case -8:  val = *reinterpret_cast<int8_t*>(mem);   break;
+	case -16: val = *reinterpret_cast<int16_t*>(mem);  break;
+	case -32: val = *reinterpret_cast<int32_t*>(mem);  break;
+	case -64: val = *reinterpret_cast<int64_t*>(mem);  break;
+	}
+
+	lua_pushinteger(L, val);
 	return 1;
 }
 
 static int setmemory(lua_State* L) {
-	auto d = static_cast<uint8_t*>(luaL_checkudata(L, 1, "core.memory"));
-	auto n = luaL_checkinteger(L, 2);
-	auto v = luaL_checkinteger(L, 3);
-	d[n] = v;
-	return 0;
-}
+	auto mem = lua_tointeger(L, 1);
+	auto siz = lua_tointeger(L, 2);
+	auto val = lua_tointeger(L, 3);
 
-static int lenmemory(lua_State* L) {
-	auto d = static_cast<uint8_t*>(luaL_checkudata(L, 1, "core.memory"));
-	lua_getiuservalue(L, 1, 1);
+	lua_Integer set = 0;
+	switch (siz) {
+	case 8:   set = *reinterpret_cast<uint8_t*>(mem) = val;  break;
+	case 16:  set = *reinterpret_cast<uint16_t*>(mem) = val; break;
+	case 32:  set = *reinterpret_cast<uint32_t*>(mem) = val; break;
+	case 64:  set = *reinterpret_cast<uint64_t*>(mem) = val; break;
+	case -8:  set = *reinterpret_cast<int8_t*>(mem) = val;   break;
+	case -16: set = *reinterpret_cast<int16_t*>(mem) = val;  break;
+	case -32: set = *reinterpret_cast<int32_t*>(mem) = val;  break;
+	case -64: set = *reinterpret_cast<int64_t*>(mem) = val;  break;
+	}
+
+	lua_pushinteger(L, set);
 	return 1;
 }
 
-static int resizemem(lua_State* L) {
-	lua_pushnil(L);
-	return 1;
-
-	//auto d = static_cast<uint8_t*>(luaL_checkudata(L, 1, "core.memory"));
-	//lua_getiuservalue(L, 1, 1);
-	//return 1;
-}
-
-static const struct luaL_Reg memorylib_f[] = {
-	{"alloc", newmemory},
-	{NULL, NULL}
-};
-
-static const struct luaL_Reg memorylib_m[] = {
-	{"__newindex", setmemory},
-	{"__index", getmemory},
-	{"__len", lenmemory},
-	{"__mod", resizemem},
-	{NULL, NULL}
+static const luaL_Reg memorylib[] = {
+	{"malloc", newmemory},
+	{"free",   delmemory},
+	{"get",    getmemory},
+	{"set",    setmemory},
+	{"fill",   filmemory},
+	{NULL,NULL}
 };
 
 int luaopen_memory(lua_State* L) {
-
-	auto a = static_cast<uint8_t*>(malloc(100));
-	auto b = static_cast<uint32_t*>(malloc(100));
-
-	printf("a %x\n", a);
-	printf("a %x\n", &a[0]);
-	printf("a %x\n", &a[1]);
-	printf("a %x\n", &a[2]);
-
-	printf("b %x\n", b);
-	printf("b %x\n", &b[0]);
-	printf("b %x\n", &b[1]);
-	printf("b %x\n", &b[2]);
-
-	luaL_newmetatable(L, "core.memory");
-	lua_pushvalue(L, -1);
-	lua_setfield(L, -2, "__index");
-	luaL_setfuncs(L, memorylib_m, 0);
-	luaL_newlib(L, memorylib_f);
+	luaL_newlib(L, memorylib);
 	return 1;
 }

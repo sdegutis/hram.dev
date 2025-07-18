@@ -4,16 +4,26 @@ print('in foo!')
 
 require 'bar'
 
-local memory = require "memory"
-local image = require "image"
 
 
-local m = memory.alloc(3*3*4)
+local m = memory.malloc(10)
+print(m)
+
+memory.fill(m, 0x0, 10)
+
+--[[
+print(memory.get(m, 8))
+print(memory.set(m, -16, 256))
+print(memory.get(m, 8))
+--]]
+
 --for i = 0,#m-1 do m[i] = math.random(0xff)-1 end
 
-for i=0,#m-1 do print(i,m[i]) end
-m[3]=24
-for i=0,#m-1 do print(i,m[i]) end
+print()
+
+for i=0,10-1 do print(i, memory.get(m+i, 8)) end
+memory.set(m+3, 32, 32769)
+for i=0,10-1 do print(i, memory.get(m+i, 8)) end
 
 
 local img = image.create(m, 4, 4)

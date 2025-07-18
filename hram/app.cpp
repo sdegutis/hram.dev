@@ -21,15 +21,11 @@ void app::boot()
 	mvm = luaL_newstate();
 	luaL_openlibs(mvm);
 
-	lua_getglobal(mvm, "package");
-	lua_pushstring(mvm, "preload");
-	lua_gettable(mvm, -2);
+	luaopen_memory(mvm);
+	lua_setglobal(mvm, "memory");
 
-	lua_pushcfunction(mvm, luaopen_memory);
-	lua_setfield(mvm, -2, "memory");
-
-	lua_pushcfunction(mvm, luaopen_image);
-	lua_setfield(mvm, -2, "image");
+	luaopen_image(mvm);
+	lua_setglobal(mvm, "image");
 
 	lua_settop(mvm, 0);
 
