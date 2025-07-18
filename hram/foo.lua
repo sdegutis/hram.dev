@@ -4,11 +4,14 @@ print(pcall(function()
 
 print('in foo!')
 
-print(thread.spawn([[
-	print("in thread!", memory)
-]]))
+t = thread.spawn([[
+    local a, b, c == ...
+	print("in thread!", memory, b,c,a)
+]], 0x7f, nil, 'hey')
 
-require 'bar'
+-- print(t)
+
+-- require 'bar'
 
 
 
