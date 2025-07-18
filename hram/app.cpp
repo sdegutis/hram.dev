@@ -7,6 +7,7 @@
 #include "image.h"
 #include "memory.h"
 #include "thread.h"
+#include "mutex.h"
 
 static lua_State* mvm;
 
@@ -41,6 +42,9 @@ lua_State* app::newvm()
 
 	luaopen_thread(L);
 	lua_setglobal(L, "thread");
+
+	luaopen_mutex(L);
+	lua_setglobal(L, "mutex");
 
 	return L;
 }

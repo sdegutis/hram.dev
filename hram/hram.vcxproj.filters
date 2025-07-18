@@ -42,6 +42,9 @@
     <ClCompile Include="thread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="mutex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="util.h">
@@ -63,6 +66,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="thread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mutex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

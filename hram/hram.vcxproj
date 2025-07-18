@@ -147,6 +147,7 @@
     <ClCompile Include="image.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="memory.cpp" />
+    <ClCompile Include="mutex.cpp" />
     <ClCompile Include="screen.cpp" />
     <ClCompile Include="thread.cpp" />
     <ClCompile Include="util.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="app.h" />
     <ClInclude Include="image.h" />
     <ClInclude Include="memory.h" />
+    <ClInclude Include="mutex.h" />
     <ClInclude Include="screen.h" />
     <ClInclude Include="thread.h" />
     <ClInclude Include="util.h" />

@@ -4,10 +4,21 @@ print(pcall(function()
 
 print('in foo!')
 
+m = mutex.create()
+
 t = thread.spawn([[
-    local a, b, c = ...
-	print("in thread!", memory, b,c,a)
-]], 0x7f, nil, 'hey')
+    local m = ...
+	mutex.lock(m)
+	print('locked in thread')
+	mutex.unlock(m)
+	print('done in thread')
+]], m)
+
+
+mutex.lock(m)
+print('locked in main')
+mutex.unlock(m)
+print('done in main')
 
 -- print(t)
 
