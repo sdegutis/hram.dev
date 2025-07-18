@@ -6,28 +6,14 @@ require 'bar'
 
 
 
-local m = memory.malloc(10)
-print(m)
-
-memory.fill(m, 0x0, 10)
-
---[[
-print(memory.get(m, 8))
-print(memory.set(m, -16, 256))
-print(memory.get(m, 8))
---]]
-
---for i = 0,#m-1 do m[i] = math.random(0xff)-1 end
-
-print()
-
-for i=0,10-1 do print(i, memory.get(m+i, 8)) end
-memory.fill(m, 0x3, 10)
-memory.set(m+3, 32, 32769)
-for i=0,10-1 do print(i, memory.get(m+i, 8)) end
+local m = memory.malloc(3*3*4)
+for i = 0,3*3*4 do memory.set(m+i, 8, math.random(0xff)-1) end
 
 
-local img = image.create(m, 4, 4)
+
+local img = image.create(m, 3, 3)
+
+image.delete(img)
 
 -- img:draw(nil, 2, 3)
 

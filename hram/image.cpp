@@ -28,27 +28,19 @@ ID3D11Texture2D* createImage(ID3D11Device* device, void* data, int w, int h, int
 }
 
 static int newimage(lua_State* L) {
-	auto d = luaL_checkudata(L, 1, "core.memory");
+	auto mem = reinterpret_cast<void*>(luaL_checkinteger(L, 1));
 	auto w = luaL_checkinteger(L, 2);
 	auto h = luaL_checkinteger(L, 3);
 	auto pw = lua_tointeger(L, 4);
 
-	auto img = createImage(device, d, w, h, pw);
-
-	lua_newuserdatauv(L, 0, 1);
-
-	luaL_getmetatable(L, "core.image");
-	lua_setmetatable(L, -2);
-
-	lua_pushlightuserdata(L, img);
-	lua_setiuservalue(L, -2, 1);
+	auto img = createImage(device, mem, w, h, pw);
+	lua_pushinteger(L, reinterpret_cast<uint64_t>(img));
 
 	return 1;
 }
 
 static int delimage(lua_State* L) {
-	lua_getiuservalue(L, 1, 1);
-	auto img = static_cast<ID3D11Texture2D*>(lua_touserdata(L, -1));
+	auto img = reinterpret_cast<ID3D11Texture2D*>(luaL_checkinteger(L, 1));
 	img->Release();
 	return 0;
 }
@@ -64,23 +56,14 @@ static int drawimage(lua_State* L) {
 	return 0;
 }
 
-static const struct luaL_Reg imagelib_f[] = {
+static const struct luaL_Reg imagelib[] = {
 	{"create", newimage},
-	{NULL, NULL}
-};
-
-static const struct luaL_Reg imagelib_m[] = {
-	{"__gc", delimage},
-	{"draw", drawimage},
+	{"delete", delimage},
 	{NULL, NULL}
 };
 
 int luaopen_image(lua_State* L) {
-	luaL_newmetatable(L, "core.image");
-	lua_pushvalue(L, -1);
-	lua_setfield(L, -2, "__index");
-	luaL_setfuncs(L, imagelib_m, 0);
-	luaL_newlib(L, imagelib_f);
+	luaL_newlib(L, imagelib);
 	return 1;
 }
 
