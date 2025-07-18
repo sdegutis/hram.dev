@@ -6,7 +6,7 @@ print('in foo!')
 
 m = mutex.create()
 
-t = thread.spawn([[
+t = thread.create([[
     local m = ...
 	mutex.lock(m)
 	print('locked in thread')
