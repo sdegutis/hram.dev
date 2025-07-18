@@ -14,11 +14,12 @@ t = thread.create([[
 	print('done in thread')
 ]], m)
 
-
+thread.sleep(1000)
 mutex.lock(m)
 print('locked in main')
 mutex.unlock(m)
 print('done in main')
+
 
 -- print(t)
 

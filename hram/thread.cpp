@@ -74,11 +74,18 @@ static int dtchthread(lua_State* L) {
 	return 0;
 }
 
+static int slpthread(lua_State* L) {
+	auto ms = luaL_checkinteger(L, 1);
+	std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+	return 0;
+}
+
 static const luaL_Reg threadlib[] = {
 	{"create", newthread},
 	{"delete", delthread},
 	{"join",   jointhread},
 	{"detach", dtchthread},
+	{"sleep",  slpthread},
 	{NULL,NULL}
 };
 
