@@ -28,19 +28,24 @@ static int getmemory(lua_State* L) {
 	auto mem = lua_tointeger(L, 1);
 	auto siz = lua_tointeger(L, 2);
 
+	int good = 0;
 	lua_Integer val = 0;
 	switch (siz) {
-	case 8:   val = *reinterpret_cast<uint8_t*>(mem);  break;
-	case 16:  val = *reinterpret_cast<uint16_t*>(mem); break;
-	case 32:  val = *reinterpret_cast<uint32_t*>(mem); break;
-	case 64:  val = *reinterpret_cast<uint64_t*>(mem); break;
-	case -8:  val = *reinterpret_cast<int8_t*>(mem);   break;
-	case -16: val = *reinterpret_cast<int16_t*>(mem);  break;
-	case -32: val = *reinterpret_cast<int32_t*>(mem);  break;
-	case -64: val = *reinterpret_cast<int64_t*>(mem);  break;
+	case 8:   val = *reinterpret_cast<uint8_t*>(mem);  good = 1; break;
+	case 16:  val = *reinterpret_cast<uint16_t*>(mem); good = 1; break;
+	case 32:  val = *reinterpret_cast<uint32_t*>(mem); good = 1; break;
+	case 64:  val = *reinterpret_cast<uint64_t*>(mem); good = 1; break;
+	case -8:  val = *reinterpret_cast<int8_t*>(mem);   good = 1; break;
+	case -16: val = *reinterpret_cast<int16_t*>(mem);  good = 1; break;
+	case -32: val = *reinterpret_cast<int32_t*>(mem);  good = 1; break;
+	case -64: val = *reinterpret_cast<int64_t*>(mem);  good = 1; break;
 	}
 
-	lua_pushinteger(L, val);
+	if (good)
+		lua_pushinteger(L, val);
+	else
+		lua_pushnil(L);
+
 	return 1;
 }
 
@@ -49,19 +54,24 @@ static int setmemory(lua_State* L) {
 	auto siz = lua_tointeger(L, 2);
 	auto val = lua_tointeger(L, 3);
 
+	int good = 0;
 	lua_Integer set = 0;
 	switch (siz) {
-	case 8:   set = *reinterpret_cast<uint8_t*>(mem) = val;  break;
-	case 16:  set = *reinterpret_cast<uint16_t*>(mem) = val; break;
-	case 32:  set = *reinterpret_cast<uint32_t*>(mem) = val; break;
-	case 64:  set = *reinterpret_cast<uint64_t*>(mem) = val; break;
-	case -8:  set = *reinterpret_cast<int8_t*>(mem) = val;   break;
-	case -16: set = *reinterpret_cast<int16_t*>(mem) = val;  break;
-	case -32: set = *reinterpret_cast<int32_t*>(mem) = val;  break;
-	case -64: set = *reinterpret_cast<int64_t*>(mem) = val;  break;
+	case 8:   set = *reinterpret_cast<uint8_t*>(mem) = val;  good = 1; break;
+	case 16:  set = *reinterpret_cast<uint16_t*>(mem) = val; good = 1; break;
+	case 32:  set = *reinterpret_cast<uint32_t*>(mem) = val; good = 1; break;
+	case 64:  set = *reinterpret_cast<uint64_t*>(mem) = val; good = 1; break;
+	case -8:  set = *reinterpret_cast<int8_t*>(mem) = val;   good = 1; break;
+	case -16: set = *reinterpret_cast<int16_t*>(mem) = val;  good = 1; break;
+	case -32: set = *reinterpret_cast<int32_t*>(mem) = val;  good = 1; break;
+	case -64: set = *reinterpret_cast<int64_t*>(mem) = val;  good = 1; break;
 	}
 
-	lua_pushinteger(L, set);
+	if (good)
+		lua_pushinteger(L, set);
+	else
+		lua_pushnil(L);
+
 	return 1;
 }
 
