@@ -11,13 +11,21 @@ for i = 0,3*3*4-1 do memory.set(m+i, 8, math.random(0xff)-1) end
 local img = image.create(m, 3, 3)
 memory.free(m)
 
+local m2 = memory.malloc(9*9*4)
+memory.fill(m2, 0, 9*9*4)
+local img2 = image.create(m2, 9, 9)
+memory.free(m2)
 
-image.copy(nil, img, 2, 3)
+
+image.copy(img2, img, 0, 0, 0, 0, 3, 3)
+image.copy(img2, img, 6, 0, 0, 0, 3, 3)
+image.copy(img2, img, 0, 6, 0, 0, 3, 3)
+image.copy(img2, img, 6, 6, 0, 0, 3, 3)
 
 
 
 function mousemove(x, y)
-	image.copy(nil, img, x, y)
+	image.copy(nil, img2, x, y)
 	print("mouse moved", x, y)
 end
 

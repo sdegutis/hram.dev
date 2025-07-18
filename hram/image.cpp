@@ -53,7 +53,21 @@ static int putimage(lua_State* L) {
 	auto dx = lua_tointeger(L, 3);
 	auto dy = lua_tointeger(L, 4);
 
-	devicecontext->CopySubresourceRegion(dst, 0, dx, dy, 0, src, 0, NULL);
+	if (lua_gettop(L) == 4) {
+		printf("here\n");
+		devicecontext->CopySubresourceRegion(dst, 0, dx, dy, 0, src, 0, NULL);
+	}
+	else {
+		auto sx = lua_tointeger(L, 5);
+		auto sy = lua_tointeger(L, 6);
+		auto sw = lua_tointeger(L, 7);
+		auto sh = lua_tointeger(L, 8);
+		D3D11_BOX box;
+		box.left = sx; box.right = sx + sw;
+		box.top = sy; box.bottom = sy + sh;
+		box.front = 0; box.back = 1;
+		devicecontext->CopySubresourceRegion(dst, 0, dx, dy, 0, src, 0, &box);
+	}
 
 	return 0;
 }
