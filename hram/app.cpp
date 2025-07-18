@@ -23,8 +23,6 @@ void app::boot()
 	luaopen_image(mvm);
 	lua_setglobal(mvm, "image");
 
-	lua_settop(mvm, 0);
-
 	luaL_dofile(mvm, "foo.lua");
 }
 
