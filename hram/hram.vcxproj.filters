@@ -150,6 +150,9 @@
     <ClCompile Include="..\lua\lstate.c">
       <Filter>Vendor\Lua</Filter>
     </ClCompile>
+    <ClCompile Include="..\lpeg\lpcode.c">
+      <Filter>Vendor\Lpeg</Filter>
+    </ClCompile>
     <ClCompile Include="..\lpeg\lpcset.c">
       <Filter>Vendor\Lpeg</Filter>
     </ClCompile>
@@ -163,9 +166,6 @@
       <Filter>Vendor\Lpeg</Filter>
     </ClCompile>
     <ClCompile Include="..\lpeg\lpcap.c">
-      <Filter>Vendor\Lpeg</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lpeg\lpcode.c">
       <Filter>Vendor\Lpeg</Filter>
     </ClCompile>
   </ItemGroup>
@@ -278,13 +278,16 @@
     <ClInclude Include="..\lua\lprefix.h">
       <Filter>Vendor\Lua</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lpeg\lpcap.h">
+      <Filter>Vendor\Lpeg</Filter>
+    </ClInclude>
     <ClInclude Include="..\lpeg\lpcode.h">
       <Filter>Vendor\Lpeg</Filter>
     </ClInclude>
     <ClInclude Include="..\lpeg\lpcset.h">
-      <Filter>Vendor\Lpeg</Filter>
-    </ClInclude>
-    <ClInclude Include="..\lpeg\lpeg.h">
       <Filter>Vendor\Lpeg</Filter>
     </ClInclude>
     <ClInclude Include="..\lpeg\lpprint.h">
@@ -299,12 +302,6 @@
     <ClInclude Include="..\lpeg\lpvm.h">
       <Filter>Vendor\Lpeg</Filter>
     </ClInclude>
-    <ClInclude Include="..\lpeg\lpcap.h">
-      <Filter>Vendor\Lpeg</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PixelShader.hlsl">
@@ -313,13 +310,5 @@
     <FxCompile Include="VertexShader.hlsl">
       <Filter>Resource Files</Filter>
     </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="bar.lua">
-      <Filter>Core</Filter>
-    </None>
-    <None Include="foo.lua">
-      <Filter>Core</Filter>
-    </None>
   </ItemGroup>
 </Project>

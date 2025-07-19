@@ -1,3 +1,0 @@
--- bar
-
-print "in bar!?"
