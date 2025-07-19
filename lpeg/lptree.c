@@ -1390,8 +1390,8 @@ static struct luaL_Reg metareg[] = {
 #endif
 
 
-LPEG_API int luaopen_lpeg(lua_State* L);
-LPEG_API int luaopen_lpeg(lua_State* L) {
+int luaopen_lpeg(lua_State* L);
+int luaopen_lpeg(lua_State* L) {
 	luaL_newmetatable(L, PATTERN_T);
 	lua_pushnumber(L, MAXBACK);  /* initialize maximum backtracking */
 	lua_setfield(L, LUA_REGISTRYINDEX, MAXSTACKIDX);
