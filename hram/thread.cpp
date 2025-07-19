@@ -8,8 +8,32 @@
 
 #include "app.h"
 
+#include <Windows.h>
+#include <heapapi.h>
+
 static int newthread(lua_State* L) {
 	auto s = luaL_checkstring(L, 1);
+
+
+
+
+	HANDLE heap = HeapCreate(HEAP_CREATE_ENABLE_EXECUTE | HEAP_GENERATE_EXCEPTIONS, 1000, 2000);
+	char* mem = (char*)HeapAlloc(heap, 0, 100);
+	int i = 0;
+	mem[i++] = 0x48;
+	mem[i++] = 0x89;
+	mem[i++] = 0xc8;
+	mem[i++] = 0x48;
+	mem[i++] = 0xff;
+	mem[i++] = 0xc0;
+	mem[i++] = 0xc3;
+	typedef int(*Func)(int);
+	Func fn = (Func)mem;
+	int res = fn(123);
+	printf("result = [%d]\n", res);
+
+
+
 
 	std::vector<std::variant<
 		nullptr_t,
