@@ -1,5 +1,5 @@
 #include <intsafe.h>
-#include <asmjit/asmjit.h>
+#include <asmjit/host.h>
 #include <asmtk/asmtk.h>
 #include <string>
 
@@ -24,82 +24,6 @@ extern "C" int assemble_string(void* dst, size_t* dst_size, char* src) {
 	return 0;
 }
 
-static const char* sErrorString[] = {
-	"Ok",
-	"OutOfMemory",
-	"InvalidArgument",
-	"InvalidState",
-	"InvalidArch",
-	"NotInitialized",
-	"AlreadyInitialized",
-	"FeatureNotEnabled",
-	"TooManyHandles",
-	"TooLarge",
-	"NoCodeGenerated",
-	"InvalidDirective",
-	"InvalidLabel",
-	"TooManyLabels",
-	"LabelAlreadyBound",
-	"LabelAlreadyDefined",
-	"LabelNameTooLong",
-	"InvalidLabelName",
-	"InvalidParentLabel",
-	"InvalidSection",
-	"TooManySections",
-	"InvalidSectionName",
-	"TooManyRelocations",
-	"InvalidRelocEntry",
-	"RelocOffsetOutOfRange",
-	"InvalidAssignment",
-	"InvalidInstruction",
-	"InvalidRegType",
-	"InvalidRegGroup",
-	"InvalidPhysId",
-	"InvalidVirtId",
-	"InvalidElementIndex",
-	"InvalidPrefixCombination",
-	"InvalidLockPrefix",
-	"InvalidXAcquirePrefix",
-	"InvalidXReleasePrefix",
-	"InvalidRepPrefix",
-	"InvalidRexPrefix",
-	"InvalidExtraReg",
-	"InvalidKMaskUse",
-	"InvalidKZeroUse",
-	"InvalidBroadcast",
-	"InvalidEROrSAE",
-	"InvalidAddress",
-	"InvalidAddressIndex",
-	"InvalidAddressScale",
-	"InvalidAddress64Bit",
-	"InvalidAddress64BitZeroExtension",
-	"InvalidDisplacement",
-	"InvalidSegment",
-	"InvalidImmediate",
-	"InvalidOperandSize",
-	"AmbiguousOperandSize",
-	"OperandSizeMismatch",
-	"InvalidOption",
-	"OptionAlreadyDefined",
-	"InvalidTypeId",
-	"InvalidUseOfGpbHi",
-	"InvalidUseOfGpq",
-	"InvalidUseOfF80",
-	"NotConsecutiveRegs",
-	"ConsecutiveRegsAllocation",
-	"IllegalVirtReg",
-	"TooManyVirtRegs",
-	"NoMorePhysRegs",
-	"OverlappedRegs",
-	"OverlappingStackRegWithRegArg",
-	"ExpressionLabelNotBound",
-	"ExpressionOverflow",
-	"FailedToOpenAnonymousMemory",
-	"FailedToOpenFile",
-	"ProtectionFailure",
-	"<Unknown>",
-};
-
 extern "C" const char* assembly_error(int err) {
-	return sErrorString[err];
+	return asmjit::DebugUtils::errorAsString(err);
 }

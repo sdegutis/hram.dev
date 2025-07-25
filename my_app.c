@@ -104,8 +104,8 @@ void boot() {
 		}
 		printf("\n");
 
-		int c = getchar();
-		printf("%c\n", c);
+		//int c = getchar();
+		//printf("%c\n", c);
 
 	}
 
