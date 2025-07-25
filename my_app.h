@@ -1,9 +1,6 @@
 #pragma once
 
-#include <lua/lua.h>
 #include <intsafe.h>
-
-lua_State* newvm();
 
 void boot();
 void tick(DWORD delta, DWORD now);

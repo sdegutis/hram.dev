@@ -16,12 +16,6 @@
     <Filter Include="Vendor">
       <UniqueIdentifier>{e3da9a3c-fd97-4c67-a78a-548551752b5d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Vendor\Lua">
-      <UniqueIdentifier>{0234df12-2854-4c0a-8d4f-612269ad393b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Vendor\LPeg">
-      <UniqueIdentifier>{123c93aa-1e0a-46f9-969b-47701f5182b3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Vendor\asmjit">
       <UniqueIdentifier>{a25bf29e-7b6d-4d9b-a6ab-20ca073db125}</UniqueIdentifier>
     </Filter>
@@ -30,120 +24,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="lua\lapi.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\lauxlib.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\lbaselib.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\lcode.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\lcorolib.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\lctype.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\ldblib.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\ldebug.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\ldo.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\ldump.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\lfunc.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\lgc.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\linit.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\liolib.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\llex.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\lmathlib.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\lmem.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\loadlib.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\lobject.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\lopcodes.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\loslib.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\lparser.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\lstate.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\lstring.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\lstrlib.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\ltable.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\ltablib.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\ltm.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\lundump.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\lutf8lib.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\lvm.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lua\lzio.c">
-      <Filter>Vendor\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="lpeg\lpcap.c">
-      <Filter>Vendor\LPeg</Filter>
-    </ClCompile>
-    <ClCompile Include="lpeg\lpcode.c">
-      <Filter>Vendor\LPeg</Filter>
-    </ClCompile>
-    <ClCompile Include="lpeg\lpcset.c">
-      <Filter>Vendor\LPeg</Filter>
-    </ClCompile>
-    <ClCompile Include="lpeg\lpprint.c">
-      <Filter>Vendor\LPeg</Filter>
-    </ClCompile>
-    <ClCompile Include="lpeg\lptree.c">
-      <Filter>Vendor\LPeg</Filter>
-    </ClCompile>
-    <ClCompile Include="lpeg\lpvm.c">
-      <Filter>Vendor\LPeg</Filter>
-    </ClCompile>
     <ClCompile Include="my_app.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -153,16 +33,7 @@
     <ClCompile Include="my_main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="my_memory.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="my_sync.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="my_window.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="my_asmkeys.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="asmjit\arm\a64assembler.cpp">
@@ -350,121 +221,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="lua\lapi.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\lauxlib.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\lcode.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\lctype.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\ldebug.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\ldo.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\lfunc.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\lgc.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\ljumptab.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\llex.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\llimits.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\lmem.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\lobject.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\lopcodes.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\lopnames.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\lparser.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\lprefix.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\lstate.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\lstring.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\ltable.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\ltm.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\lua.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\luaconf.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\lualib.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\lundump.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\lvm.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\lzio.h">
-      <Filter>Vendor\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lpeg\lpcap.h">
-      <Filter>Vendor\LPeg</Filter>
-    </ClInclude>
-    <ClInclude Include="lpeg\lpcode.h">
-      <Filter>Vendor\LPeg</Filter>
-    </ClInclude>
-    <ClInclude Include="lpeg\lpcset.h">
-      <Filter>Vendor\LPeg</Filter>
-    </ClInclude>
-    <ClInclude Include="lpeg\lpprint.h">
-      <Filter>Vendor\LPeg</Filter>
-    </ClInclude>
-    <ClInclude Include="lpeg\lptree.h">
-      <Filter>Vendor\LPeg</Filter>
-    </ClInclude>
-    <ClInclude Include="lpeg\lptypes.h">
-      <Filter>Vendor\LPeg</Filter>
-    </ClInclude>
-    <ClInclude Include="lpeg\lpvm.h">
-      <Filter>Vendor\LPeg</Filter>
-    </ClInclude>
     <ClInclude Include="my_app.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="my_assembly.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="my_memory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="my_sync.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="my_window.h">
@@ -775,9 +535,6 @@
     </ClInclude>
     <ClInclude Include="asmtk\strtod.h">
       <Filter>Vendor\asmtk</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\lua.hpp">
-      <Filter>Vendor\Lua</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

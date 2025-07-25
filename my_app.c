@@ -1,7 +1,5 @@
 #include "my_app.h"
 
-#include <lua/lualib.h>
-#include <lua/lauxlib.h>
 #include <Windows.h>
 #include <stdio.h>
 #include "resource.h"
@@ -9,9 +7,6 @@
 #include <KnownFolders.h>
 
 #include "my_window.h"
-#include "my_memory.h"
-#include "my_sync.h"
-#include "my_assembly.h"
 #include "my_licenses.h"
 #include "my_fontsheet.h"
 
@@ -19,8 +14,6 @@
 void draw();
 void toggleFullscreen();
 void blitimmediately();
-
-static lua_State* L;
 
 struct AppState {
 	UINT16 appversion;
@@ -44,41 +37,13 @@ struct AppState {
 
 struct AppState* sys = 0x30000;
 
-
-int luaopen_lpeg(lua_State* L);
-
-lua_State* newvm() {
-	lua_State* L = luaL_newstate();
-
-	luaL_openlibs(L);
-
-	lua_pushglobaltable(L);
-	luaopen_memory(L);
-
-	luaopen_asm(L);
-	lua_setglobal(L, "asm");
-
-	luaopen_sync(L);
-	lua_setglobal(L, "sync");
-
-	luaopen_lpeg(L);
-	lua_setglobal(L, "lpeg");
-	lua_settop(L, 0);
-
-	return L;
-}
-
-
 int aplusbtimes2(int a, int b) {
 	return (a + b) * 2;
 }
 
-int fullscreen(lua_State* L) {
-	toggleFullscreen();
-	return 0;
-}
-
 static void initfont();
+const char* assembly_error(int err);
+int assemble_string(void* dst, size_t* dst_size, char* src);
 
 void boot() {
 
@@ -107,21 +72,45 @@ void boot() {
 	DWORD size = SizeofResource(handle, rc);
 	const char* data = LockResource(rcData);
 
-	L = newvm();
-
 	PWSTR wpath;
-	UINT8 ansipath[MAX_PATH];
+	UINT8 userdir[MAX_PATH];
 	SHGetKnownFolderPath(&FOLDERID_RoamingAppData, 0, NULL, &wpath);
-	WideCharToMultiByte(CP_UTF8, 0, wpath, -1, ansipath, MAX_PATH, NULL, NULL);
+	WideCharToMultiByte(CP_UTF8, 0, wpath, -1, userdir, MAX_PATH, NULL, NULL);
 	CoTaskMemFree(wpath);
-	lua_pushstring(L, ansipath);
-	lua_setglobal(L, "userdir");
 
-	lua_pushboolean(L, skipwelcome);
-	lua_setglobal(L, "skipwelcome");
+	unsigned char* base = 0x33000;
+	memset(base, 100, 100);
 
-	luaL_loadbuffer(L, data, size, "<boot>");
-	lua_pcallk(L, 0, 0, 0, 0, NULL);
+	for (int i = 0; i < 10; i++) {
+		printf("%x ", base[i]);
+	}
+	printf("\n");
+
+	char* src = "mov rax rbx\n"
+		"vaddpd zmm0, zmm1, [rax + 128]\n";
+
+	size_t asmsize = 0x1000;
+	int err = assemble_string(0x33000, &asmsize, src);
+
+	if (err) {
+		printf("err = %s\n", assembly_error(err));
+		printf("err = %d\n", err);
+	}
+	else {
+
+
+		for (int i = 0; i < asmsize; i++) {
+			printf("%x ", base[i]);
+		}
+		printf("\n");
+
+		int c = getchar();
+		printf("%c\n", c);
+
+	}
+
+	//luaL_loadbuffer(L, data, size, "<boot>");
+	//lua_pcallk(L, 0, 0, 0, 0, NULL);
 }
 
 enum asmevent {
@@ -138,8 +127,8 @@ enum asmevent {
 void callsig(enum asmevent ev, UINT32 arg) {
 	sys->eventid = ev;
 	sys->eventarg = arg;
-	lua_getglobal(L, "sig");
-	lua_call(L, 0, 0);
+	//lua_getglobal(L, "sig");
+	//lua_call(L, 0, 0);
 }
 
 void blitimmediately() {
