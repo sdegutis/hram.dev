@@ -1,5 +1,3 @@
-#include "my_window.h"
-
 #pragma comment(lib, "shlwapi")
 #pragma comment(lib, "Dwmapi")
 #pragma comment(lib, "user32")
@@ -8,11 +6,22 @@
 
 #include <windowsx.h>
 #include <dwmapi.h>
+#include "my_screen.h"
 
 #include "PixelShader.h"
 #include "VertexShader.h"
 
-#include "my_app.h"
+void mouseMoved(int x, int y);
+void mouseDown(int b);
+void mouseUp(int b);
+void mouseWheel(int d);
+
+void keyDown(int vk);
+void keyUp(int vk);
+void syskeyDown(int vk);
+void syskeyUp(int vk);
+void keyChar(const char ch);
+void sysChar(const char ch);
 
 WINDOWPLACEMENT lastwinpos = { sizeof(lastwinpos) };
 

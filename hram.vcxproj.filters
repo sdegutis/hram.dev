@@ -24,9 +24,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="my_app.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="my_assembly.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -221,13 +218,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="my_app.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="my_window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="my_fontsheet.h">
@@ -532,6 +523,9 @@
     </ClInclude>
     <ClInclude Include="asmtk\strtod.h">
       <Filter>Vendor\asmtk</Filter>
+    </ClInclude>
+    <ClInclude Include="my_screen.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
