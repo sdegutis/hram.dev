@@ -41,7 +41,6 @@ extern ID3D11DeviceContext* devicecontext;
 extern struct Screen screen;
 
 
-void tick(DWORD delta, DWORD now);
 void draw();
 void toggleFullscreen();
 void blitimmediately();

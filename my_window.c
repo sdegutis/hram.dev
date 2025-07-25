@@ -11,6 +11,8 @@
 #include "PixelShader.h"
 #include "VertexShader.h"
 
+void tick(DWORD delta, DWORD now);
+
 void mouseMoved(int x, int y);
 void mouseDown(int b);
 void mouseUp(int b);
