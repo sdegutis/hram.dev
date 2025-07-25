@@ -115,13 +115,12 @@ static void setup() {
 	}
 	printf("\n");
 
-	char* src = "mov rax, rbx\n"
-		"vaddpd zmm0, zmm1, [rax + 128]\n";
+	char* src = "mov rax, rcx\n"
+		"inc rax\n"
+		"ret\n";
 
 	size_t asmsize = 0x1000;
 	int err = assemble_string(0x33000, &asmsize, src);
-
-	UINT64(*F)(UINT64 n) = 0x33000;
 
 	if (err) {
 		printf("err = %s\n", assembly_error(err));
@@ -138,10 +137,11 @@ static void setup() {
 		//int c = getchar();
 		//printf("%c\n", c);
 
-	}
+		UINT64(*F)(UINT64 n) = 0x33000;
+		UINT64 res = F(3);
+		printf("res = %d\n", res);
 
-	UINT64 res = F(3);
-	printf("res = %d\n", res);
+	}
 
 	//luaL_loadbuffer(L, data, size, "<setup>");
 	//lua_pcallk(L, 0, 0, 0, 0, NULL);
