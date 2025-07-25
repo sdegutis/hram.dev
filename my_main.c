@@ -115,8 +115,10 @@ static void setup() {
 	}
 	printf("\n");
 
-	char* src = "mov rax, rcx\n"
-		"inc rax\n"
+	char* src =
+		"sub rsp, 24\n"
+		"call [0x30040]\n"
+		"add rsp, 24\n"
 		"ret\n";
 
 	size_t asmsize = 0x1000;
