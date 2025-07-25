@@ -56,7 +56,7 @@ struct AppState {
 	UINT32 time;
 	UINT8 mousex;
 	UINT8 mousey;
-	UINT16 codesize;
+	UINT16 reserved1;
 	UINT8 keys[32];
 	UINT64 addrs[26];
 	UINT8 screen[128 * 72];
@@ -143,8 +143,8 @@ static void setup() {
 
 		"ret\n";
 
-	sys->codesize = 0x2000;
-	int err = assemble_string(usersignal, &sys->codesize, src);
+	size_t codesize = 0x2000;
+	int err = assemble_string(usersignal, &codesize, src);
 
 	if (err) {
 		printf("err = %s\n", assembly_error(err));
@@ -152,8 +152,9 @@ static void setup() {
 	}
 	else {
 
+		printf("size = %d\n", codesize);
 
-		for (int i = 0; i < sys->codesize; i++) {
+		for (int i = 0; i < codesize; i++) {
 			printf("%x ", base[i]);
 		}
 		printf("\n");
