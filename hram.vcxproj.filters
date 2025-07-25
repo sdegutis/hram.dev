@@ -22,8 +22,11 @@
     <Filter Include="Vendor\LPeg">
       <UniqueIdentifier>{123c93aa-1e0a-46f9-969b-47701f5182b3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Vendor\Zycore">
-      <UniqueIdentifier>{8214b9ef-75ca-4ab6-989d-d1658cadf210}</UniqueIdentifier>
+    <Filter Include="Vendor\asmjit">
+      <UniqueIdentifier>{a25bf29e-7b6d-4d9b-a6ab-20ca073db125}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vendor\asmtk">
+      <UniqueIdentifier>{bee6a94a-bc35-4b4c-b604-2fb7e590296c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -144,7 +147,7 @@
     <ClCompile Include="my_app.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="my_assembly.c">
+    <ClCompile Include="my_assembly.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="my_main.c">
@@ -162,98 +165,188 @@
     <ClCompile Include="my_asmkeys.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\Allocator.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\arm\a64assembler.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\ArgParse.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\arm\a64builder.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\Bitset.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\arm\a64compiler.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\Decoder.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\arm\a64emithelper.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\DecoderData.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\arm\a64formatter.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\Disassembler.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\arm\a64func.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\Encoder.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\arm\a64instapi.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\EncoderData.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\arm\a64instdb.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\Format.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\arm\a64operand.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\Formatter.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\arm\a64rapass.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\FormatterATT.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\arm\armformatter.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\FormatterBase.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\core\archtraits.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\FormatterBuffer.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\core\assembler.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\FormatterIntel.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\core\builder.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\List.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\core\codeholder.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\Memory.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\core\codewriter.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\MetaInfo.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\core\compiler.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\Mnemonic.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\core\constpool.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\Process.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\core\cpuinfo.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\Register.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\core\emithelper.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\Segment.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\core\emitter.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\SharedData.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\core\emitterutils.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\String.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\core\environment.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\String_zydis.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\core\errorhandler.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\Synchronization.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\core\formatter.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\Terminal.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\core\func.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\Thread.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\core\funcargscontext.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\Utils.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\core\globals.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\Vector.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\core\inst.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\Zycore.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\core\instdb.cpp">
+      <Filter>Vendor\asmjit</Filter>
     </ClCompile>
-    <ClCompile Include="zycore-src\Zydis.c">
-      <Filter>Vendor\Zycore</Filter>
+    <ClCompile Include="asmjit\core\jitallocator.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\core\jitruntime.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\core\logger.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\core\operand.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\core\osutils.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\core\ralocal.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\core\rapass.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\core\rastack.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\core\string.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\core\support.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\core\target.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\core\type.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\core\virtmem.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\core\zone.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\core\zonehash.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\core\zonelist.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\core\zonestack.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\core\zonetree.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\core\zonevector.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\x86\x86assembler.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\x86\x86builder.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\x86\x86compiler.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\x86\x86emithelper.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\x86\x86formatter.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\x86\x86func.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\x86\x86instapi.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\x86\x86instdb.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\x86\x86operand.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmjit\x86\x86rapass.cpp">
+      <Filter>Vendor\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="asmtk\asmparser.cpp">
+      <Filter>Vendor\asmtk</Filter>
+    </ClCompile>
+    <ClCompile Include="asmtk\asmtokenizer.cpp">
+      <Filter>Vendor\asmtk</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -377,161 +470,314 @@
     <ClInclude Include="my_window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="zycore\Allocator.h">
-      <Filter>Vendor\Zycore</Filter>
-    </ClInclude>
-    <ClInclude Include="zycore\API\Memory.h">
-      <Filter>Vendor\Zycore</Filter>
-    </ClInclude>
-    <ClInclude Include="zycore\API\Process.h">
-      <Filter>Vendor\Zycore</Filter>
-    </ClInclude>
-    <ClInclude Include="zycore\API\Synchronization.h">
-      <Filter>Vendor\Zycore</Filter>
-    </ClInclude>
-    <ClInclude Include="zycore\API\Terminal.h">
-      <Filter>Vendor\Zycore</Filter>
-    </ClInclude>
-    <ClInclude Include="zycore\API\Thread.h">
-      <Filter>Vendor\Zycore</Filter>
-    </ClInclude>
-    <ClInclude Include="zycore\ArgParse.h">
-      <Filter>Vendor\Zycore</Filter>
-    </ClInclude>
-    <ClInclude Include="zycore\Atomic.h">
-      <Filter>Vendor\Zycore</Filter>
-    </ClInclude>
-    <ClInclude Include="zycore\Bitset.h">
-      <Filter>Vendor\Zycore</Filter>
-    </ClInclude>
-    <ClInclude Include="zycore\Comparison.h">
-      <Filter>Vendor\Zycore</Filter>
-    </ClInclude>
-    <ClInclude Include="zycore\Defines.h">
-      <Filter>Vendor\Zycore</Filter>
-    </ClInclude>
-    <ClInclude Include="zycore\Format.h">
-      <Filter>Vendor\Zycore</Filter>
-    </ClInclude>
-    <ClInclude Include="zycore\Internal\AtomicGNU.h">
-      <Filter>Vendor\Zycore</Filter>
-    </ClInclude>
-    <ClInclude Include="zycore\Internal\AtomicMSVC.h">
-      <Filter>Vendor\Zycore</Filter>
-    </ClInclude>
-    <ClInclude Include="zycore\LibC.h">
-      <Filter>Vendor\Zycore</Filter>
-    </ClInclude>
-    <ClInclude Include="zycore\List.h">
-      <Filter>Vendor\Zycore</Filter>
-    </ClInclude>
-    <ClInclude Include="zycore\Object.h">
-      <Filter>Vendor\Zycore</Filter>
-    </ClInclude>
-    <ClInclude Include="zycore\Status.h">
-      <Filter>Vendor\Zycore</Filter>
-    </ClInclude>
-    <ClInclude Include="zycore\String.h">
-      <Filter>Vendor\Zycore</Filter>
-    </ClInclude>
-    <ClInclude Include="zycore\Types.h">
-      <Filter>Vendor\Zycore</Filter>
-    </ClInclude>
-    <ClInclude Include="zycore\Vector.h">
-      <Filter>Vendor\Zycore</Filter>
-    </ClInclude>
-    <ClInclude Include="zycore\Zycore.h">
-      <Filter>Vendor\Zycore</Filter>
-    </ClInclude>
     <ClInclude Include="my_licenses.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="my_fontsheet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\Decoder.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\a64.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\Internal\DecoderData.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\arm\a64archtraits_p.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\DecoderTypes.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\arm\a64assembler.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\Defines.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\arm\a64builder.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\Disassembler.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\arm\a64compiler.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\Encoder.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\arm\a64emithelper_p.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\Internal\EncoderData.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\arm\a64emitter.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\Generated\EnumInstructionCategory.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\arm\a64formatter_p.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\Generated\EnumISAExt.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\arm\a64func_p.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\Generated\EnumISASet.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\arm\a64globals.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\Generated\EnumMnemonic.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\arm\a64instapi_p.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\Generated\EnumRegister.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\arm\a64instdb.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\Formatter.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\arm\a64instdb_p.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\Internal\FormatterATT.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\arm\a64operand.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\Internal\FormatterBase.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\arm\a64rapass_p.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\FormatterBuffer.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\arm\armformatter_p.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\Internal\FormatterIntel.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\arm\armglobals.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\MetaInfo.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\arm\armutils.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\Mnemonic.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\arm.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\Register.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\asmjit-scope-begin.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\Segment.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\asmjit-scope-end.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\Internal\SharedData.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\asmjit.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\SharedTypes.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\core\api-build_p.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\ShortString.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\core\api-config.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\Status.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\core\archcommons.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\Internal\String.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\core\archtraits.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\Utils.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\core\assembler.h">
+      <Filter>Vendor\asmjit</Filter>
     </ClInclude>
-    <ClInclude Include="zydis\Zydis.h">
-      <Filter>Vendor\Zycore</Filter>
+    <ClInclude Include="asmjit\core\builder.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\builder_p.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\codebuffer.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\codeholder.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\codewriter_p.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\compiler.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\compilerdefs.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\constpool.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\cpuinfo.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\emithelper_p.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\emitter.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\emitterutils_p.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\environment.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\errorhandler.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\fixup.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\formatter.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\formatter_p.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\func.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\funcargscontext_p.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\globals.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\inst.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\instdb_p.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\jitallocator.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\jitruntime.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\logger.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\misc_p.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\operand.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\osutils.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\osutils_p.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\raassignment_p.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\rabuilders_p.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\radefs_p.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\ralocal_p.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\rapass_p.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\rastack_p.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\string.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\support.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\support_p.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\target.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\type.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\virtmem.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\zone.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\zonehash.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\zonelist.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\zonestack.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\zonestring.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\zonetree.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core\zonevector.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\core.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\host.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\x86\x86archtraits_p.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\x86\x86assembler.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\x86\x86builder.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\x86\x86compiler.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\x86\x86emithelper_p.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\x86\x86emitter.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\x86\x86formatter_p.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\x86\x86func_p.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\x86\x86globals.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\x86\x86instapi_p.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\x86\x86instdb.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\x86\x86instdb_p.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\x86\x86opcode_p.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\x86\x86operand.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\x86\x86rapass_p.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmjit\x86.h">
+      <Filter>Vendor\asmjit</Filter>
+    </ClInclude>
+    <ClInclude Include="asmtk\asmparser.h">
+      <Filter>Vendor\asmtk</Filter>
+    </ClInclude>
+    <ClInclude Include="asmtk\asmtk.h">
+      <Filter>Vendor\asmtk</Filter>
+    </ClInclude>
+    <ClInclude Include="asmtk\asmtokenizer.h">
+      <Filter>Vendor\asmtk</Filter>
+    </ClInclude>
+    <ClInclude Include="asmtk\elfdefs.h">
+      <Filter>Vendor\asmtk</Filter>
+    </ClInclude>
+    <ClInclude Include="asmtk\globals.h">
+      <Filter>Vendor\asmtk</Filter>
+    </ClInclude>
+    <ClInclude Include="asmtk\parserutils.h">
+      <Filter>Vendor\asmtk</Filter>
+    </ClInclude>
+    <ClInclude Include="asmtk\strtod.h">
+      <Filter>Vendor\asmtk</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\lua.hpp">
+      <Filter>Vendor\Lua</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -551,54 +797,6 @@
     <None Include="_boot.lua" />
     <None Include="mytextfi.bin">
       <Filter>Resource Files</Filter>
-    </None>
-    <None Include="zydis\Generated\AccessedFlags.inc">
-      <Filter>Vendor\Zycore</Filter>
-    </None>
-    <None Include="zydis\Generated\DecoderTables.inc">
-      <Filter>Vendor\Zycore</Filter>
-    </None>
-    <None Include="zydis\Generated\EncoderTables.inc">
-      <Filter>Vendor\Zycore</Filter>
-    </None>
-    <None Include="zydis\Generated\EnumInstructionCategory.inc">
-      <Filter>Vendor\Zycore</Filter>
-    </None>
-    <None Include="zydis\Generated\EnumISAExt.inc">
-      <Filter>Vendor\Zycore</Filter>
-    </None>
-    <None Include="zydis\Generated\EnumISASet.inc">
-      <Filter>Vendor\Zycore</Filter>
-    </None>
-    <None Include="zydis\Generated\EnumMnemonic.inc">
-      <Filter>Vendor\Zycore</Filter>
-    </None>
-    <None Include="zydis\Generated\EnumRegister.inc">
-      <Filter>Vendor\Zycore</Filter>
-    </None>
-    <None Include="zydis\Generated\FormatterStrings.inc">
-      <Filter>Vendor\Zycore</Filter>
-    </None>
-    <None Include="zydis\Generated\GetCcInfo.inc">
-      <Filter>Vendor\Zycore</Filter>
-    </None>
-    <None Include="zydis\Generated\GetRelInfo.inc">
-      <Filter>Vendor\Zycore</Filter>
-    </None>
-    <None Include="zydis\Generated\InstructionDefinitions.inc">
-      <Filter>Vendor\Zycore</Filter>
-    </None>
-    <None Include="zydis\Generated\InstructionEncodings.inc">
-      <Filter>Vendor\Zycore</Filter>
-    </None>
-    <None Include="zydis\Generated\OperandDefinitions.inc">
-      <Filter>Vendor\Zycore</Filter>
-    </None>
-    <None Include="zydis\Generated\RegisterClassLookup.inc">
-      <Filter>Vendor\Zycore</Filter>
-    </None>
-    <None Include="zydis\Generated\RegisterLookup.inc">
-      <Filter>Vendor\Zycore</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

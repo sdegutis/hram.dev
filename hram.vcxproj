@@ -74,11 +74,11 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>ZYCORE_STATIC_BUILD;ZYDIS_STATIC_BUILD;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ASMJIT_STATIC;ASMTK_STATIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)/zydis;$(SolutionDir)/lua;$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -91,11 +91,11 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>ZYCORE_STATIC_BUILD;ZYDIS_STATIC_BUILD;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ASMJIT_STATIC;ASMTK_STATIC;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)/zydis;$(SolutionDir)/lua;$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -106,11 +106,11 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>ZYCORE_STATIC_BUILD;ZYDIS_STATIC_BUILD;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ASMJIT_STATIC;ASMTK_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)/zydis;$(SolutionDir)/lua;$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -123,11 +123,11 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>ZYCORE_STATIC_BUILD;ZYDIS_STATIC_BUILD;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ASMJIT_STATIC;ASMTK_STATIC;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)/zydis;$(SolutionDir)/lua;$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -135,9 +135,70 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="asmjit\arm\a64assembler.cpp" />
+    <ClCompile Include="asmjit\arm\a64builder.cpp" />
+    <ClCompile Include="asmjit\arm\a64compiler.cpp" />
+    <ClCompile Include="asmjit\arm\a64emithelper.cpp" />
+    <ClCompile Include="asmjit\arm\a64formatter.cpp" />
+    <ClCompile Include="asmjit\arm\a64func.cpp" />
+    <ClCompile Include="asmjit\arm\a64instapi.cpp" />
+    <ClCompile Include="asmjit\arm\a64instdb.cpp" />
+    <ClCompile Include="asmjit\arm\a64operand.cpp" />
+    <ClCompile Include="asmjit\arm\a64rapass.cpp" />
+    <ClCompile Include="asmjit\arm\armformatter.cpp" />
+    <ClCompile Include="asmjit\core\archtraits.cpp" />
+    <ClCompile Include="asmjit\core\assembler.cpp" />
+    <ClCompile Include="asmjit\core\builder.cpp" />
+    <ClCompile Include="asmjit\core\codeholder.cpp" />
+    <ClCompile Include="asmjit\core\codewriter.cpp" />
+    <ClCompile Include="asmjit\core\compiler.cpp" />
+    <ClCompile Include="asmjit\core\constpool.cpp" />
+    <ClCompile Include="asmjit\core\cpuinfo.cpp" />
+    <ClCompile Include="asmjit\core\emithelper.cpp" />
+    <ClCompile Include="asmjit\core\emitter.cpp" />
+    <ClCompile Include="asmjit\core\emitterutils.cpp" />
+    <ClCompile Include="asmjit\core\environment.cpp" />
+    <ClCompile Include="asmjit\core\errorhandler.cpp" />
+    <ClCompile Include="asmjit\core\formatter.cpp" />
+    <ClCompile Include="asmjit\core\func.cpp" />
+    <ClCompile Include="asmjit\core\funcargscontext.cpp" />
+    <ClCompile Include="asmjit\core\globals.cpp" />
+    <ClCompile Include="asmjit\core\inst.cpp" />
+    <ClCompile Include="asmjit\core\instdb.cpp" />
+    <ClCompile Include="asmjit\core\jitallocator.cpp" />
+    <ClCompile Include="asmjit\core\jitruntime.cpp" />
+    <ClCompile Include="asmjit\core\logger.cpp" />
+    <ClCompile Include="asmjit\core\operand.cpp" />
+    <ClCompile Include="asmjit\core\osutils.cpp" />
+    <ClCompile Include="asmjit\core\ralocal.cpp" />
+    <ClCompile Include="asmjit\core\rapass.cpp" />
+    <ClCompile Include="asmjit\core\rastack.cpp" />
+    <ClCompile Include="asmjit\core\string.cpp" />
+    <ClCompile Include="asmjit\core\support.cpp" />
+    <ClCompile Include="asmjit\core\target.cpp" />
+    <ClCompile Include="asmjit\core\type.cpp" />
+    <ClCompile Include="asmjit\core\virtmem.cpp" />
+    <ClCompile Include="asmjit\core\zone.cpp" />
+    <ClCompile Include="asmjit\core\zonehash.cpp" />
+    <ClCompile Include="asmjit\core\zonelist.cpp" />
+    <ClCompile Include="asmjit\core\zonestack.cpp" />
+    <ClCompile Include="asmjit\core\zonetree.cpp" />
+    <ClCompile Include="asmjit\core\zonevector.cpp" />
+    <ClCompile Include="asmjit\x86\x86assembler.cpp" />
+    <ClCompile Include="asmjit\x86\x86builder.cpp" />
+    <ClCompile Include="asmjit\x86\x86compiler.cpp" />
+    <ClCompile Include="asmjit\x86\x86emithelper.cpp" />
+    <ClCompile Include="asmjit\x86\x86formatter.cpp" />
+    <ClCompile Include="asmjit\x86\x86func.cpp" />
+    <ClCompile Include="asmjit\x86\x86instapi.cpp" />
+    <ClCompile Include="asmjit\x86\x86instdb.cpp" />
+    <ClCompile Include="asmjit\x86\x86operand.cpp" />
+    <ClCompile Include="asmjit\x86\x86rapass.cpp" />
+    <ClCompile Include="asmtk\asmparser.cpp" />
+    <ClCompile Include="asmtk\asmtokenizer.cpp" />
     <ClCompile Include="my_app.c" />
     <ClCompile Include="my_asmkeys.c" />
-    <ClCompile Include="my_assembly.c" />
+    <ClCompile Include="my_assembly.cpp" />
     <ClCompile Include="lpeg\lpcap.c" />
     <ClCompile Include="lpeg\lpcode.c" />
     <ClCompile Include="lpeg\lpcset.c" />
@@ -180,39 +241,109 @@
     <ClCompile Include="my_memory.c" />
     <ClCompile Include="my_sync.c" />
     <ClCompile Include="my_window.c" />
-    <ClCompile Include="zycore-src\Allocator.c" />
-    <ClCompile Include="zycore-src\ArgParse.c" />
-    <ClCompile Include="zycore-src\Bitset.c" />
-    <ClCompile Include="zycore-src\Decoder.c" />
-    <ClCompile Include="zycore-src\DecoderData.c" />
-    <ClCompile Include="zycore-src\Disassembler.c" />
-    <ClCompile Include="zycore-src\Encoder.c" />
-    <ClCompile Include="zycore-src\EncoderData.c" />
-    <ClCompile Include="zycore-src\Format.c" />
-    <ClCompile Include="zycore-src\Formatter.c" />
-    <ClCompile Include="zycore-src\FormatterATT.c" />
-    <ClCompile Include="zycore-src\FormatterBase.c" />
-    <ClCompile Include="zycore-src\FormatterBuffer.c" />
-    <ClCompile Include="zycore-src\FormatterIntel.c" />
-    <ClCompile Include="zycore-src\List.c" />
-    <ClCompile Include="zycore-src\Memory.c" />
-    <ClCompile Include="zycore-src\MetaInfo.c" />
-    <ClCompile Include="zycore-src\Mnemonic.c" />
-    <ClCompile Include="zycore-src\Process.c" />
-    <ClCompile Include="zycore-src\Register.c" />
-    <ClCompile Include="zycore-src\Segment.c" />
-    <ClCompile Include="zycore-src\SharedData.c" />
-    <ClCompile Include="zycore-src\String.c" />
-    <ClCompile Include="zycore-src\String_zydis.c" />
-    <ClCompile Include="zycore-src\Synchronization.c" />
-    <ClCompile Include="zycore-src\Terminal.c" />
-    <ClCompile Include="zycore-src\Thread.c" />
-    <ClCompile Include="zycore-src\Utils.c" />
-    <ClCompile Include="zycore-src\Vector.c" />
-    <ClCompile Include="zycore-src\Zycore.c" />
-    <ClCompile Include="zycore-src\Zydis.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="asmjit\a64.h" />
+    <ClInclude Include="asmjit\arm.h" />
+    <ClInclude Include="asmjit\arm\a64archtraits_p.h" />
+    <ClInclude Include="asmjit\arm\a64assembler.h" />
+    <ClInclude Include="asmjit\arm\a64builder.h" />
+    <ClInclude Include="asmjit\arm\a64compiler.h" />
+    <ClInclude Include="asmjit\arm\a64emithelper_p.h" />
+    <ClInclude Include="asmjit\arm\a64emitter.h" />
+    <ClInclude Include="asmjit\arm\a64formatter_p.h" />
+    <ClInclude Include="asmjit\arm\a64func_p.h" />
+    <ClInclude Include="asmjit\arm\a64globals.h" />
+    <ClInclude Include="asmjit\arm\a64instapi_p.h" />
+    <ClInclude Include="asmjit\arm\a64instdb.h" />
+    <ClInclude Include="asmjit\arm\a64instdb_p.h" />
+    <ClInclude Include="asmjit\arm\a64operand.h" />
+    <ClInclude Include="asmjit\arm\a64rapass_p.h" />
+    <ClInclude Include="asmjit\arm\armformatter_p.h" />
+    <ClInclude Include="asmjit\arm\armglobals.h" />
+    <ClInclude Include="asmjit\arm\armutils.h" />
+    <ClInclude Include="asmjit\asmjit-scope-begin.h" />
+    <ClInclude Include="asmjit\asmjit-scope-end.h" />
+    <ClInclude Include="asmjit\asmjit.h" />
+    <ClInclude Include="asmjit\core.h" />
+    <ClInclude Include="asmjit\core\api-build_p.h" />
+    <ClInclude Include="asmjit\core\api-config.h" />
+    <ClInclude Include="asmjit\core\archcommons.h" />
+    <ClInclude Include="asmjit\core\archtraits.h" />
+    <ClInclude Include="asmjit\core\assembler.h" />
+    <ClInclude Include="asmjit\core\builder.h" />
+    <ClInclude Include="asmjit\core\builder_p.h" />
+    <ClInclude Include="asmjit\core\codebuffer.h" />
+    <ClInclude Include="asmjit\core\codeholder.h" />
+    <ClInclude Include="asmjit\core\codewriter_p.h" />
+    <ClInclude Include="asmjit\core\compiler.h" />
+    <ClInclude Include="asmjit\core\compilerdefs.h" />
+    <ClInclude Include="asmjit\core\constpool.h" />
+    <ClInclude Include="asmjit\core\cpuinfo.h" />
+    <ClInclude Include="asmjit\core\emithelper_p.h" />
+    <ClInclude Include="asmjit\core\emitter.h" />
+    <ClInclude Include="asmjit\core\emitterutils_p.h" />
+    <ClInclude Include="asmjit\core\environment.h" />
+    <ClInclude Include="asmjit\core\errorhandler.h" />
+    <ClInclude Include="asmjit\core\fixup.h" />
+    <ClInclude Include="asmjit\core\formatter.h" />
+    <ClInclude Include="asmjit\core\formatter_p.h" />
+    <ClInclude Include="asmjit\core\func.h" />
+    <ClInclude Include="asmjit\core\funcargscontext_p.h" />
+    <ClInclude Include="asmjit\core\globals.h" />
+    <ClInclude Include="asmjit\core\inst.h" />
+    <ClInclude Include="asmjit\core\instdb_p.h" />
+    <ClInclude Include="asmjit\core\jitallocator.h" />
+    <ClInclude Include="asmjit\core\jitruntime.h" />
+    <ClInclude Include="asmjit\core\logger.h" />
+    <ClInclude Include="asmjit\core\misc_p.h" />
+    <ClInclude Include="asmjit\core\operand.h" />
+    <ClInclude Include="asmjit\core\osutils.h" />
+    <ClInclude Include="asmjit\core\osutils_p.h" />
+    <ClInclude Include="asmjit\core\raassignment_p.h" />
+    <ClInclude Include="asmjit\core\rabuilders_p.h" />
+    <ClInclude Include="asmjit\core\radefs_p.h" />
+    <ClInclude Include="asmjit\core\ralocal_p.h" />
+    <ClInclude Include="asmjit\core\rapass_p.h" />
+    <ClInclude Include="asmjit\core\rastack_p.h" />
+    <ClInclude Include="asmjit\core\string.h" />
+    <ClInclude Include="asmjit\core\support.h" />
+    <ClInclude Include="asmjit\core\support_p.h" />
+    <ClInclude Include="asmjit\core\target.h" />
+    <ClInclude Include="asmjit\core\type.h" />
+    <ClInclude Include="asmjit\core\virtmem.h" />
+    <ClInclude Include="asmjit\core\zone.h" />
+    <ClInclude Include="asmjit\core\zonehash.h" />
+    <ClInclude Include="asmjit\core\zonelist.h" />
+    <ClInclude Include="asmjit\core\zonestack.h" />
+    <ClInclude Include="asmjit\core\zonestring.h" />
+    <ClInclude Include="asmjit\core\zonetree.h" />
+    <ClInclude Include="asmjit\core\zonevector.h" />
+    <ClInclude Include="asmjit\host.h" />
+    <ClInclude Include="asmjit\x86.h" />
+    <ClInclude Include="asmjit\x86\x86archtraits_p.h" />
+    <ClInclude Include="asmjit\x86\x86assembler.h" />
+    <ClInclude Include="asmjit\x86\x86builder.h" />
+    <ClInclude Include="asmjit\x86\x86compiler.h" />
+    <ClInclude Include="asmjit\x86\x86emithelper_p.h" />
+    <ClInclude Include="asmjit\x86\x86emitter.h" />
+    <ClInclude Include="asmjit\x86\x86formatter_p.h" />
+    <ClInclude Include="asmjit\x86\x86func_p.h" />
+    <ClInclude Include="asmjit\x86\x86globals.h" />
+    <ClInclude Include="asmjit\x86\x86instapi_p.h" />
+    <ClInclude Include="asmjit\x86\x86instdb.h" />
+    <ClInclude Include="asmjit\x86\x86instdb_p.h" />
+    <ClInclude Include="asmjit\x86\x86opcode_p.h" />
+    <ClInclude Include="asmjit\x86\x86operand.h" />
+    <ClInclude Include="asmjit\x86\x86rapass_p.h" />
+    <ClInclude Include="asmtk\asmparser.h" />
+    <ClInclude Include="asmtk\asmtk.h" />
+    <ClInclude Include="asmtk\asmtokenizer.h" />
+    <ClInclude Include="asmtk\elfdefs.h" />
+    <ClInclude Include="asmtk\globals.h" />
+    <ClInclude Include="asmtk\parserutils.h" />
+    <ClInclude Include="asmtk\strtod.h" />
+    <ClInclude Include="lua\lua.hpp" />
     <ClInclude Include="my_app.h" />
     <ClInclude Include="my_assembly.h" />
     <ClInclude Include="my_fontsheet.h" />
@@ -255,56 +386,6 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="my_sync.h" />
     <ClInclude Include="my_window.h" />
-    <ClInclude Include="zycore\Allocator.h" />
-    <ClInclude Include="zycore\API\Memory.h" />
-    <ClInclude Include="zycore\API\Process.h" />
-    <ClInclude Include="zycore\API\Synchronization.h" />
-    <ClInclude Include="zycore\API\Terminal.h" />
-    <ClInclude Include="zycore\API\Thread.h" />
-    <ClInclude Include="zycore\ArgParse.h" />
-    <ClInclude Include="zycore\Atomic.h" />
-    <ClInclude Include="zycore\Bitset.h" />
-    <ClInclude Include="zycore\Comparison.h" />
-    <ClInclude Include="zycore\Defines.h" />
-    <ClInclude Include="zycore\Format.h" />
-    <ClInclude Include="zycore\Internal\AtomicGNU.h" />
-    <ClInclude Include="zycore\Internal\AtomicMSVC.h" />
-    <ClInclude Include="zycore\LibC.h" />
-    <ClInclude Include="zycore\List.h" />
-    <ClInclude Include="zycore\Object.h" />
-    <ClInclude Include="zycore\Status.h" />
-    <ClInclude Include="zycore\String.h" />
-    <ClInclude Include="zycore\Types.h" />
-    <ClInclude Include="zycore\Vector.h" />
-    <ClInclude Include="zycore\Zycore.h" />
-    <ClInclude Include="zydis\Decoder.h" />
-    <ClInclude Include="zydis\DecoderTypes.h" />
-    <ClInclude Include="zydis\Defines.h" />
-    <ClInclude Include="zydis\Disassembler.h" />
-    <ClInclude Include="zydis\Encoder.h" />
-    <ClInclude Include="zydis\Formatter.h" />
-    <ClInclude Include="zydis\FormatterBuffer.h" />
-    <ClInclude Include="zydis\Generated\EnumInstructionCategory.h" />
-    <ClInclude Include="zydis\Generated\EnumISAExt.h" />
-    <ClInclude Include="zydis\Generated\EnumISASet.h" />
-    <ClInclude Include="zydis\Generated\EnumMnemonic.h" />
-    <ClInclude Include="zydis\Generated\EnumRegister.h" />
-    <ClInclude Include="zydis\Internal\DecoderData.h" />
-    <ClInclude Include="zydis\Internal\EncoderData.h" />
-    <ClInclude Include="zydis\Internal\FormatterATT.h" />
-    <ClInclude Include="zydis\Internal\FormatterBase.h" />
-    <ClInclude Include="zydis\Internal\FormatterIntel.h" />
-    <ClInclude Include="zydis\Internal\SharedData.h" />
-    <ClInclude Include="zydis\Internal\String.h" />
-    <ClInclude Include="zydis\MetaInfo.h" />
-    <ClInclude Include="zydis\Mnemonic.h" />
-    <ClInclude Include="zydis\Register.h" />
-    <ClInclude Include="zydis\Segment.h" />
-    <ClInclude Include="zydis\SharedTypes.h" />
-    <ClInclude Include="zydis\ShortString.h" />
-    <ClInclude Include="zydis\Status.h" />
-    <ClInclude Include="zydis\Utils.h" />
-    <ClInclude Include="zydis\Zydis.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PixelShader.hlsl">
@@ -364,22 +445,6 @@
     <ResourceCompile Include="hram.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="zydis\Generated\AccessedFlags.inc" />
-    <None Include="zydis\Generated\DecoderTables.inc" />
-    <None Include="zydis\Generated\EncoderTables.inc" />
-    <None Include="zydis\Generated\EnumInstructionCategory.inc" />
-    <None Include="zydis\Generated\EnumISAExt.inc" />
-    <None Include="zydis\Generated\EnumISASet.inc" />
-    <None Include="zydis\Generated\EnumMnemonic.inc" />
-    <None Include="zydis\Generated\EnumRegister.inc" />
-    <None Include="zydis\Generated\FormatterStrings.inc" />
-    <None Include="zydis\Generated\GetCcInfo.inc" />
-    <None Include="zydis\Generated\GetRelInfo.inc" />
-    <None Include="zydis\Generated\InstructionDefinitions.inc" />
-    <None Include="zydis\Generated\InstructionEncodings.inc" />
-    <None Include="zydis\Generated\OperandDefinitions.inc" />
-    <None Include="zydis\Generated\RegisterClassLookup.inc" />
-    <None Include="zydis\Generated\RegisterLookup.inc" />
     <None Include="_boot.lua" />
     <None Include="mytextfi.bin" />
   </ItemGroup>
