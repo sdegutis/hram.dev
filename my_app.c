@@ -84,7 +84,7 @@ void boot() {
 	}
 	printf("\n");
 
-	char* src = "mov rax rbx\n"
+	char* src = "mov rax, rbx\n"
 		"vaddpd zmm0, zmm1, [rax + 128]\n";
 
 	size_t asmsize = 0x1000;

@@ -6,7 +6,7 @@
 extern "C" int assemble_string(void* dst, size_t* dst_size, char* src) {
 	asmjit::Environment env(asmjit::Arch::kHost);
 	asmjit::CodeHolder code;
-	code.init(env);
+	code.init(env, (uint64_t)dst);
 	asmjit::x86::Assembler a(&code);
 	asmtk::AsmParser p(&a);
 
