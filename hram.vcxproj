@@ -304,7 +304,6 @@
     <ClInclude Include="asmtk\strtod.h" />
     <ClInclude Include="my_app.h" />
     <ClInclude Include="my_fontsheet.h" />
-    <ClInclude Include="my_licenses.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="my_window.h" />
   </ItemGroup>

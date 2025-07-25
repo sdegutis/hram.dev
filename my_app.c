@@ -7,7 +7,6 @@
 #include <KnownFolders.h>
 
 #include "my_window.h"
-#include "my_licenses.h"
 #include "my_fontsheet.h"
 
 
@@ -58,7 +57,6 @@ void boot() {
 
 	sys->appversion = 221;
 
-	memcpy(&sys->userdata, third_party_licenses, sizeof(third_party_licenses));
 	initfont();
 
 	int funcs = 0;

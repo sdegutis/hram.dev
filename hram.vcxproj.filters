@@ -230,9 +230,6 @@
     <ClInclude Include="my_window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="my_licenses.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="my_fontsheet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
