@@ -18,7 +18,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, in
 		return 0;
 	}
 
-	void* sysmem = VirtualAlloc(0x30000, 0x4000, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+	void* sysmem = VirtualAlloc(0x30000, 0x8000, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
 	if (!sysmem) {
 		MessageBox(NULL, L"Could not allocate sufficient memory.", L"Fatal error", 0);
 		return 1;
@@ -62,10 +62,12 @@ struct AppState {
 	UINT8 screen[128 * 72];
 	UINT8 font[16 * 4 * 6 * 6];
 	CHAR reserved2[512];
-	PUINT8 userdata;
 };
 
 struct AppState* sys = 0x30000;
+void (*usersignal)() = 0x34000;
+static char* userasm = 0x34000;
+static char* usersrc = 0x35000;
 
 int aplusbtimes2(int a, int b) {
 	return (a + b) * 2;
@@ -74,6 +76,19 @@ int aplusbtimes2(int a, int b) {
 static void initfont();
 const char* assembly_error(int err);
 int assemble_string(void* dst, size_t* dst_size, char* src);
+
+enum asmevent {
+	asmevent_init,
+	asmevent_tick,
+	asmevent_mousemove,
+	asmevent_mousewheel,
+	asmevent_mousedown,
+	asmevent_mouseup,
+	asmevent_keydown,
+	asmevent_keyup,
+};
+
+void callsig(enum asmevent ev, UINT32 arg);
 
 static void setup() {
 
@@ -107,7 +122,7 @@ static void setup() {
 	WideCharToMultiByte(CP_UTF8, 0, wpath, -1, userdir, MAX_PATH, NULL, NULL);
 	CoTaskMemFree(wpath);
 
-	unsigned char* base = 0x33000;
+	unsigned char* base = userasm;
 	memset(base, 100, 100);
 
 	for (int i = 0; i < 10; i++) {
@@ -116,14 +131,20 @@ static void setup() {
 	printf("\n");
 
 	char* src =
-		"mov byte [0x30100+10], 0xf0\n"
+		"mov rax, 0xff\n"
+		"mov [0x30100], rax\n"
+
+		//"mov rax, [0x30100]\n"
+		//"mov [0x3010], rax\n"
+
 		"sub rsp, 24\n"
 		"call [0x30040]\n"
 		"add rsp, 24\n"
+
 		"ret\n";
 
-	sys->codesize = 0x1000;
-	int err = assemble_string(0x33000, &sys->codesize, src);
+	sys->codesize = 0x2000;
+	int err = assemble_string(usersignal, &sys->codesize, src);
 
 	if (err) {
 		printf("err = %s\n", assembly_error(err));
@@ -137,35 +158,14 @@ static void setup() {
 		}
 		printf("\n");
 
-		//int c = getchar();
-		//printf("%c\n", c);
-
-		UINT64(*F)(UINT64 n) = 0x33000;
-		UINT64 res = F(3);
-		printf("res = %d\n", res);
-
+		callsig(asmevent_init, 0);
 	}
-
-	//luaL_loadbuffer(L, data, size, "<setup>");
-	//lua_pcallk(L, 0, 0, 0, 0, NULL);
 }
-
-enum asmevent {
-	asmevent_tick,
-	asmevent_mousemove,
-	asmevent_mousewheel,
-	asmevent_mousedown,
-	asmevent_mouseup,
-	asmevent_keydown,
-	asmevent_keyup,
-	asmevent_keychar,
-};
 
 void callsig(enum asmevent ev, UINT32 arg) {
 	sys->eventid = ev;
 	sys->eventarg = arg;
-	//lua_getglobal(L, "sig");
-	//lua_call(L, 0, 0);
+	usersignal();
 }
 
 void blitimmediately() {
@@ -239,11 +239,11 @@ void syskeyUp(int vk) {
 }
 
 void keyChar(const char ch) {
-	callsig(asmevent_keychar, ch);
+	//callsig(asmevent_keychar, ch);
 }
 
 void sysChar(const char ch) {
-	callsig(asmevent_keychar, ch);
+	//callsig(asmevent_keychar, ch);
 }
 
 
