@@ -363,10 +363,6 @@
     <ResourceCompile Include="hram.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="_boot.lua" />
-    <None Include="mytextfi.bin" />
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="icon1.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

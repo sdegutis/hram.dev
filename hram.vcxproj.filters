@@ -542,12 +542,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="_boot.lua" />
-    <None Include="mytextfi.bin">
-      <Filter>Resource Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="icon1.ico">
       <Filter>Resource Files</Filter>
     </Image>
