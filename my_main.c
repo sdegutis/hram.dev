@@ -6,11 +6,12 @@
 #include <KnownFolders.h>
 
 #include "my_main.h"
-#include "my_font.h"
 #include "my_window.h"
 #include "my_asm.h"
 #include "my_memory.h"
 
+
+#define APP_VERSION (100)
 
 static void openConsole();
 static void checkLicense();
@@ -73,7 +74,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, in
 		}
 		printf("\n");
 
-		callsig(asmevent_init, sys->appversion);
+		callsig(asmevent_init, APP_VERSION);
 	}
 
 

@@ -197,7 +197,6 @@
     <ClCompile Include="asmtk\asmparser.cpp" />
     <ClCompile Include="asmtk\asmtokenizer.cpp" />
     <ClCompile Include="my_asm.cpp" />
-    <ClCompile Include="my_font.c" />
     <ClCompile Include="my_main.c" />
     <ClCompile Include="my_memory.c" />
     <ClCompile Include="my_window.c" />
@@ -304,7 +303,6 @@
     <ClInclude Include="asmtk\parserutils.h" />
     <ClInclude Include="asmtk\strtod.h" />
     <ClInclude Include="my_asm.h" />
-    <ClInclude Include="my_font.h" />
     <ClInclude Include="my_main.h" />
     <ClInclude Include="my_memory.h" />
     <ClInclude Include="my_window.h" />
