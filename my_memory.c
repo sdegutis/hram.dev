@@ -5,7 +5,7 @@
 #include "my_screen.h"
 #include "my_window.h"
 
-struct System* sys = 0x30000;
+struct Memory* sys = 0x30000;
 void (*usersignal)(UINT32 evid, UINT32 evarg) = 0x34000;
 char* usersrc = 0x36000;
 

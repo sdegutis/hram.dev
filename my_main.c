@@ -5,6 +5,7 @@
 #include <shlobj_core.h>
 #include <KnownFolders.h>
 
+#include "my_main.h"
 #include "my_font.h"
 #include "my_window.h"
 #include "my_asm.h"
@@ -13,30 +14,10 @@
 
 static void openConsole();
 static void checkLicense();
-static void setup();
+static void loadUserCodeFromDisk();
 static void callsig(enum asmevent ev, UINT32 arg);
 
 static int running = 1;
-
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, int nCmdShow) {
-	checkLicense();
-	setupMemory();
-	setupWindow(hInstance, nCmdShow);
-	openConsole();
-	setup();
-	runLoop();
-	return 0;
-}
-
-static void checkLicense() {
-	SYSTEMTIME time;
-	GetSystemTime(&time);
-	if (time.wYear > 2025 || time.wMonth > 7 || time.wDay > 27) {
-		MessageBox(NULL, L"This HRAM beta version has expired, please get a new one, thanks!", L"HRAM beta version expired", 0);
-		ExitProcess(0);
-	}
-}
-
 
 enum asmevent {
 	asmevent_init,
@@ -49,24 +30,13 @@ enum asmevent {
 	asmevent_keyup,
 };
 
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, int nCmdShow) {
+	checkLicense();
+	setupMemory();
+	setupWindow(hInstance, nCmdShow);
+	openConsole();
+	loadUserCodeFromDisk();
 
-static void openConsole() {
-	AllocConsole();
-	freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
-	freopen_s((FILE**)stdin, "CONIN$", "r", stdin);
-}
-
-static void setup() {
-
-
-
-	PWSTR wpath;
-	UINT8 userdir[MAX_PATH];
-	SHGetKnownFolderPath(&FOLDERID_RoamingAppData, 0, NULL, &wpath);
-	WideCharToMultiByte(CP_UTF8, 0, wpath, -1, userdir, MAX_PATH, NULL, NULL);
-	CoTaskMemFree(wpath);
-
-	/*
 	unsigned char* base = usersignal;
 	memset(base, 0, 100);
 
@@ -105,7 +75,37 @@ static void setup() {
 
 		callsig(asmevent_init, 0);
 	}
-	*/
+
+
+	runLoop();
+	return 0;
+}
+
+static void checkLicense() {
+	SYSTEMTIME time;
+	GetSystemTime(&time);
+	if (time.wYear > 2025 || time.wMonth > 7 || time.wDay > 27) {
+		MessageBox(NULL, L"This HRAM beta version has expired, please get a new one, thanks!", L"HRAM beta version expired", 0);
+		ExitProcess(0);
+	}
+}
+
+
+
+static void openConsole() {
+	AllocConsole();
+	freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
+	freopen_s((FILE**)stdin, "CONIN$", "r", stdin);
+}
+
+static void loadUserCodeFromDisk() {
+	PWSTR wpath;
+	UINT8 userdir[MAX_PATH];
+	SHGetKnownFolderPath(&FOLDERID_RoamingAppData, 0, NULL, &wpath);
+	WideCharToMultiByte(CP_UTF8, 0, wpath, -1, userdir, MAX_PATH, NULL, NULL);
+	CoTaskMemFree(wpath);
+
+
 }
 
 
@@ -118,12 +118,6 @@ static void callsig(enum asmevent ev, UINT32 arg) {
 void tick(DWORD delta, DWORD now) {
 	sys->time = now;
 	callsig(asmevent_tick, delta);
-
-	if (sys->inflags & 1) {
-		blitimmediately();
-	}
-
-	sys->inflags = 0;
 }
 
 void mouseMoved(int x, int y) {
@@ -133,18 +127,8 @@ void mouseMoved(int x, int y) {
 }
 
 void togglekeystate(int vk, int down) {
-	UINT8 bit = 0;
-	if /**/ (vk == VK_CONTROL) bit = 1;
-	else if (vk == VK_MENU)    bit = 2;
-	else if (vk == VK_SHIFT)   bit = 3;
-
-	if (bit) {
-		bit--;
-		sys->keymods = sys->keymods & ~(1 << bit) | down << bit;
-	}
-
 	UINT8 byteindex = vk / 8;
-	bit = vk % 8;
+	UINT8 bit = vk % 8;
 	sys->keys[byteindex] = (sys->keys[byteindex] & ~(1 << bit)) | (down << bit);
 }
 

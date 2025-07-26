@@ -2,12 +2,12 @@
 
 #include <intsafe.h>
 
-struct System {
+struct Memory {
 	UINT16 appversion;
 	UINT8 r1;
 	UINT8 r2;
-	UINT8 inflags;
-	UINT8 keymods;
+	UINT8 r3;
+	UINT8 r4;
 	UINT8 cursorcol;
 	UINT8 cursorrow;
 	UINT32 time;
@@ -21,7 +21,7 @@ struct System {
 	CHAR reserved2[512];
 };
 
-extern struct System* sys;
+extern struct Memory* sys;
 extern void (*usersignal)(UINT32 evid, UINT32 evarg);
 extern char* usersrc;
 
