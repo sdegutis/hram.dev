@@ -542,6 +542,9 @@
     <ClInclude Include="my_memory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="my_main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="VertexShader.hlsl">

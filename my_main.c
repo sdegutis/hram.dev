@@ -11,17 +11,12 @@
 #include "my_memory.h"
 
 
-// forward decl
-
 static void openConsole();
 static void checkLicense();
 static void setup();
+static void callsig(enum asmevent ev, UINT32 arg);
 
-
-// memory
-
-
-// main
+static int running = 1;
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, int nCmdShow) {
 	checkLicense();
@@ -43,10 +38,6 @@ static void checkLicense() {
 }
 
 
-
-
-
-
 enum asmevent {
 	asmevent_init,
 	asmevent_tick,
@@ -58,7 +49,6 @@ enum asmevent {
 	asmevent_keyup,
 };
 
-void callsig(enum asmevent ev, UINT32 arg);
 
 static void openConsole() {
 	AllocConsole();
@@ -76,6 +66,7 @@ static void setup() {
 	WideCharToMultiByte(CP_UTF8, 0, wpath, -1, userdir, MAX_PATH, NULL, NULL);
 	CoTaskMemFree(wpath);
 
+	/*
 	unsigned char* base = usersignal;
 	memset(base, 0, 100);
 
@@ -114,11 +105,11 @@ static void setup() {
 
 		callsig(asmevent_init, 0);
 	}
+	*/
 }
 
-static int running = 1;
 
-void callsig(enum asmevent ev, UINT32 arg) {
+static void callsig(enum asmevent ev, UINT32 arg) {
 	if (running) {
 		usersignal(ev, arg);
 	}

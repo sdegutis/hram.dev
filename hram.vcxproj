@@ -305,6 +305,7 @@
     <ClInclude Include="asmtk\strtod.h" />
     <ClInclude Include="my_asm.h" />
     <ClInclude Include="my_font.h" />
+    <ClInclude Include="my_main.h" />
     <ClInclude Include="my_memory.h" />
     <ClInclude Include="my_window.h" />
     <ClInclude Include="resource.h" />
