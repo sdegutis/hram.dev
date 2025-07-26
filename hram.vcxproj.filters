@@ -24,7 +24,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="my_assembly.cpp">
+    <ClCompile Include="my_asm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="my_main.c">
@@ -531,6 +531,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="my_font.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="my_asm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

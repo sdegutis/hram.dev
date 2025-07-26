@@ -7,43 +7,19 @@
 
 #include "my_font.h"
 #include "my_window.h"
+#include "my_asm.h"
 
 
 // forward decl
 
+static void openConsole();
 static void checkLicense();
-static void createMemory();
+static void setupMemory();
 static void setup();
+static void blitimmediately();
 
 
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, int nCmdShow) {
-	checkLicense();
-	createMemory();
-	setupWindow(hInstance, nCmdShow);
-	setup();
-	runLoop();
-	return 0;
-}
-
-
-static void checkLicense() {
-	SYSTEMTIME time;
-	GetSystemTime(&time);
-	if (time.wYear > 2025 || time.wMonth > 7 || time.wDay > 27) {
-		MessageBox(NULL, L"This HRAM beta version has expired, please get a new one, thanks!", L"HRAM beta version expired", 0);
-		ExitProcess(0);
-	}
-}
-
-static void createMemory() {
-	void* sysmem = VirtualAlloc(0x30000, 0x8000, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
-	if (!sysmem) {
-		MessageBox(NULL, L"Could not allocate sufficient memory.", L"Fatal error", 0);
-		ExitProcess(1);
-	}
-}
-
-void blitimmediately();
+// memory
 
 struct System {
 	UINT16 appversion;
@@ -69,7 +45,45 @@ void (*usersignal)(UINT32 evid, UINT32 evarg) = 0x34000;
 static char* usersrc = 0x36000;
 
 
-const char* assemble_string(void* dst, size_t* dst_size, char* src);
+// main
+
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, int nCmdShow) {
+	openConsole();
+	checkLicense();
+	setupMemory();
+	setupWindow(hInstance, nCmdShow);
+	setup();
+	runLoop();
+	return 0;
+}
+
+static void checkLicense() {
+	SYSTEMTIME time;
+	GetSystemTime(&time);
+	if (time.wYear > 2025 || time.wMonth > 7 || time.wDay > 27) {
+		MessageBox(NULL, L"This HRAM beta version has expired, please get a new one, thanks!", L"HRAM beta version expired", 0);
+		ExitProcess(0);
+	}
+}
+
+static void setupMemory() {
+	void* sysmem = VirtualAlloc(0x30000, 0x8000, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+	if (!sysmem) {
+		MessageBox(NULL, L"Could not allocate sufficient memory.", L"Fatal error", 0);
+		ExitProcess(1);
+	}
+
+	sys->appversion = 221;
+	initfont(sys->font);
+
+	int funcs = 0;
+	sys->addrs[funcs++] = toggleFullscreen;
+	sys->addrs[funcs++] = blitimmediately;
+}
+
+
+
+
 
 enum asmevent {
 	asmevent_init,
@@ -84,18 +98,15 @@ enum asmevent {
 
 void callsig(enum asmevent ev, UINT32 arg);
 
-static void setup() {
-
+static void openConsole() {
 	AllocConsole();
 	freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
 	freopen_s((FILE**)stdin, "CONIN$", "r", stdin);
+}
 
-	sys->appversion = 221;
-	initfont(sys->font);
+static void setup() {
 
-	int funcs = 0;
-	sys->addrs[funcs++] = toggleFullscreen;
-	sys->addrs[funcs++] = blitimmediately;
+
 
 	PWSTR wpath;
 	UINT8 userdir[MAX_PATH];
@@ -151,7 +162,7 @@ void callsig(enum asmevent ev, UINT32 arg) {
 	}
 }
 
-void blitimmediately() {
+static void blitimmediately() {
 	devicecontext->lpVtbl->UpdateSubresource(devicecontext, screen.texture, 0, NULL, &sys->screen, 128, 0);
 	draw();
 }
