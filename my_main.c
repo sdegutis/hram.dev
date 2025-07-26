@@ -74,10 +74,6 @@ struct AppState* sys = 0x30000;
 void (*usersignal)() = 0x34000;
 static char* usersrc = 0x36000;
 
-int aplusbtimes2(int a, int b) {
-	return (a + b) * 2;
-}
-
 static void initfont();
 const char* assembly_error(int err);
 int assemble_string(void* dst, size_t* dst_size, char* src);
@@ -111,7 +107,6 @@ static void setup() {
 	initfont();
 
 	int funcs = 0;
-	sys->addrs[funcs++] = aplusbtimes2;
 	sys->addrs[funcs++] = toggleFullscreen;
 	sys->addrs[funcs++] = blitimmediately;
 
