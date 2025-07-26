@@ -8,8 +8,7 @@
 static void initfont();
 
 struct Memory* sys = 0x30000;
-void (*usersignal)(UINT32 evid, UINT32 evarg) = 0x34000;
-char* usersrc = 0x36000;
+void (*usersignal)(UINT32 evid, UINT32 evarg);
 
 void setupMemory() {
 	void* sysmem = VirtualAlloc(0x30000, 0x8000, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
@@ -19,6 +18,8 @@ void setupMemory() {
 	}
 
 	initfont();
+
+	usersignal = sys->program;
 
 	int funcs = 0;
 	sys->addrs[funcs++] = blitimmediately;

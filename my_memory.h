@@ -14,11 +14,13 @@ struct Memory {
 	UINT8 screen[128 * 72];
 	UINT8 font[16 * 4 * 6 * 6];
 	CHAR reserved2[512];
+	UINT8 freemem[0x1000];
+	UINT8 program[0x2000];
+	char progsrc[0x2000];
 };
 
 extern struct Memory* sys;
 extern void (*usersignal)(UINT32 evid, UINT32 evarg);
-extern char* usersrc;
 
 void setupMemory();
 void blitimmediately();

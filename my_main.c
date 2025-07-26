@@ -45,7 +45,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, in
 	setupWindow(hInstance, nCmdShow);
 
 	size_t codesize = 0x2000;
-	const char* err = assemble_string(usersignal, &codesize, usersrc);
+	const char* err = assemble_string(usersignal, &codesize, sys->progsrc);
 
 	if (err) {
 		printf("err = %s\n", err);
