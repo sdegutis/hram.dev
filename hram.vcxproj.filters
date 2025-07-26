@@ -216,12 +216,12 @@
     <ClCompile Include="asmtk\asmtokenizer.cpp">
       <Filter>Vendor\asmtk</Filter>
     </ClCompile>
+    <ClCompile Include="my_font.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="my_fontsheet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="asmjit\a64.h">
@@ -528,6 +528,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="my_window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="my_font.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

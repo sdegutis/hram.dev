@@ -5,7 +5,7 @@
 #include <shlobj_core.h>
 #include <KnownFolders.h>
 
-#include "my_fontsheet.h"
+#include "my_font.h"
 #include "my_window.h"
 
 
@@ -68,7 +68,7 @@ struct System* sys = 0x30000;
 void (*usersignal)(UINT32 evid, UINT32 evarg) = 0x34000;
 static char* usersrc = 0x36000;
 
-static void initfont();
+
 const char* assemble_string(void* dst, size_t* dst_size, char* src);
 
 enum asmevent {
@@ -97,7 +97,7 @@ static void setup() {
 
 	sys->appversion = 221;
 
-	initfont();
+	initfont(sys->font);
 
 	int funcs = 0;
 	sys->addrs[funcs++] = toggleFullscreen;
@@ -241,24 +241,3 @@ void sysChar(const char ch) {
 	//callsig(asmevent_keychar, ch);
 }
 
-
-
-#define FW (4)
-#define FH (6)
-#define SW (16)
-#define SH (6)
-
-static void initfont() {
-	PUINT8 ptr = sys->font;
-	int z = 0;
-	for (int sy = 0; sy < SH; sy++) {
-		for (int sx = 0; sx < SW; sx++) {
-			for (int fy = 0; fy < FH; fy++) {
-				for (int fx = 0; fx < FW; fx++) {
-					int i = (fy * SW * FW) + (sy * SH * SW * FW) + (sx * FW) + fx;
-					*ptr++ = fontdata[i] ? 0xf0 : 0;
-				}
-			}
-		}
-	}
-}
