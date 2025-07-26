@@ -200,6 +200,7 @@
     <ClCompile Include="my_file.c" />
     <ClCompile Include="my_main.c" />
     <ClCompile Include="my_memory.c" />
+    <ClCompile Include="my_userprog.c" />
     <ClCompile Include="my_window.c" />
   </ItemGroup>
   <ItemGroup>
@@ -307,6 +308,7 @@
     <ClInclude Include="my_file.h" />
     <ClInclude Include="my_main.h" />
     <ClInclude Include="my_memory.h" />
+    <ClInclude Include="my_userprog.h" />
     <ClInclude Include="my_window.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="my_screen.h" />

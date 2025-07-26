@@ -4,6 +4,7 @@
 
 #include "resource.h"
 
+#include "my_userprog.h"
 #include "my_screen.h"
 #include "my_main.h"
 #include "my_window.h"
@@ -21,6 +22,8 @@ static void callsig(enum asmevent ev, UINT32 arg);
 static int running = 1;
 
 struct Program mainProg;
+
+struct Program* activeProg = &userProg;
 
 
 enum asmevent {
@@ -40,9 +43,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, in
 	checkLicense();
 	setupMemory();
 	setupMainProg();
+	setupUserProg();
 	openConsole();
 	loadUserCodeFromDisk();
 	setupWindow(hInstance, nCmdShow);
+
+
 
 	size_t codesize = 0x2000;
 	const char* err = assemble_string(usersignal, &codesize, sys->progsrc);
@@ -53,7 +59,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, in
 	}
 	else {
 		printf("size = %d\n", codesize);
-		callsig(asmevent_init, APP_VERSION);
+
+
+		activeProg->init();
+
+		//callsig(asmevent_init, APP_VERSION);
 	}
 
 
@@ -70,7 +80,9 @@ static void checkLicense() {
 	}
 }
 
+static void init() {
 
+}
 
 static void openConsole() {
 	AllocConsole();
@@ -78,75 +90,65 @@ static void openConsole() {
 	freopen_s((FILE**)stdin, "CONIN$", "r", stdin);
 }
 
-static void callsig(enum asmevent ev, UINT32 arg) {
-	if (running) {
-		usersignal(ev, arg);
-	}
-}
-
-void tick(DWORD delta, DWORD now) {
+static void tick(DWORD delta, DWORD now) {
 	sys->time = now;
-	callsig(asmevent_tick, delta);
+	activeProg->tick(delta, now);
 }
 
-void mouseMoved(int x, int y) {
+static void mouseMoved(int x, int y) {
 	sys->mousex = x;
 	sys->mousey = y;
-	callsig(asmevent_mousemove, 7);
+	activeProg->mouseMoved(x, y);
 }
 
-void togglekeystate(int vk, int down) {
+static void togglekeystate(int vk, int down) {
 	UINT8 byteindex = vk / 8;
 	UINT8 bit = vk % 8;
 	sys->keys[byteindex] = (sys->keys[byteindex] & ~(1 << bit)) | (down << bit);
 }
 
-void mouseDown(int b) {
-	callsig(asmevent_mousedown, b);
+static void mouseDown(int b) {
+	activeProg->mouseDown(b);
 }
 
-void mouseUp(int b) {
-	callsig(asmevent_mouseup, b);
+static void mouseUp(int b) {
+	activeProg->mouseUp(b);
 }
 
-void mouseWheel(int d) {
-	callsig(asmevent_mousewheel, d);
+static void mouseWheel(int d) {
+	activeProg->mouseWheel(d);
 }
 
-void keyDown(int vk) {
+static void keyDown(int vk) {
 	togglekeystate(vk, 1);
-	callsig(asmevent_keydown, vk);
+	activeProg->keyDown(vk);
 }
 
-void keyUp(int vk) {
+static void keyUp(int vk) {
 	togglekeystate(vk, 0);
-	callsig(asmevent_keyup, vk);
+	activeProg->keyUp(vk);
 }
 
-void syskeyDown(int vk) {
+static void syskeyDown(int vk) {
 	togglekeystate(vk, 1);
 	if (vk == VK_RETURN) { toggleFullscreen(); }
-	callsig(asmevent_keydown, vk);
+	activeProg->syskeyDown(vk);
 }
 
-void syskeyUp(int vk) {
+static void syskeyUp(int vk) {
 	togglekeystate(vk, 0);
-	callsig(asmevent_keyup, vk);
+	activeProg->syskeyUp(vk);
 }
 
-void keyChar(const char ch) {
-	//callsig(asmevent_keychar, ch);
+static void keyChar(const char ch) {
+	activeProg->keyChar(ch);
 }
 
-void sysChar(const char ch) {
-	//callsig(asmevent_keychar, ch);
+static void sysChar(const char ch) {
+	activeProg->sysChar(ch);
 }
 
-void init() {
-
-}
-
-void setupMainProg() {
+static void setupMainProg() {
 	mainProg.init = init;
 	mainProg.tick = tick;
 	mainProg.mouseMoved = mouseMoved;
