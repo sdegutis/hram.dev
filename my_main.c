@@ -73,7 +73,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, in
 		}
 		printf("\n");
 
-		callsig(asmevent_init, 0);
+		callsig(asmevent_init, sys->appversion);
 	}
 
 
