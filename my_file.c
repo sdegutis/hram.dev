@@ -33,19 +33,14 @@ void loadUserCodeFromDisk() {
 
 		DWORD written;
 		BOOL ok = WriteFile(file, src, sizeof(src) - 1, &written, NULL);
-		printf("ok: %d\n", ok);
-		printf("written: %d\n", written);
+		//printf("ok: %d\n", ok);
+		//printf("written: %d\n", written);
 		StringCchCopyA(usersrc, sizeof(src), src);
 	}
 	else {
 		DWORD read;
 		BOOL ok = ReadFile(file, usersrc, 0x2000, &read, NULL);
-		printf("ok: %d\n", ok);
-		printf("read: %d\n", read);
+		//printf("ok: %d\n", ok);
+		//printf("read: %d\n", read);
 	}
-
-	printf("SOURCE\n");
-	printf("======\n");
-	printf("%s", usersrc);
-	printf("======\n");
 }

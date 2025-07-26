@@ -38,26 +38,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, in
 	loadUserCodeFromDisk();
 	setupWindow(hInstance, nCmdShow);
 
-	char* src =
-		"mov rax, rcx\n"
-		"mov [0x30100], rax\n"
-
-		"mov rax, [0x30006]\n"
-		"mov [0x30109], rax\n"
-
-		//"mov rax, [0x30107]\n"
-		//"mul rax, 128\n"
-		//"add rax, [0x30106]\n"
-		//"mov [0x30100+rax], rax\n"
-
-		"sub rsp, 24\n"
-		"call [0x30030]\n"
-		"add rsp, 24\n"
-
-		"ret\n";
+	//"mov rax, [0x30107]\n"
+	//"mul rax, 128\n"
+	//"add rax, [0x30106]\n"
+	//"mov [0x30100+rax], rax\n"
 
 	size_t codesize = 0x2000;
-	const char* err = assemble_string(usersignal, &codesize, src);
+	const char* err = assemble_string(usersignal, &codesize, usersrc);
 
 	if (err) {
 		printf("err = %s\n", err);
