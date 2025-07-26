@@ -3,6 +3,7 @@
 #include <intsafe.h>
 
 struct Program {
+	void (*init)();
 	void (*tick)(DWORD delta, DWORD now);
 	void (*mouseMoved)(int x, int y);
 	void (*mouseDown)(int b);

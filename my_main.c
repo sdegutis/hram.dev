@@ -142,7 +142,12 @@ void sysChar(const char ch) {
 	//callsig(asmevent_keychar, ch);
 }
 
+void init() {
+
+}
+
 void setupMainProg() {
+	mainProg.init = init;
 	mainProg.tick = tick;
 	mainProg.mouseMoved = mouseMoved;
 	mainProg.mouseDown = mouseDown;
