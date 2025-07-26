@@ -134,7 +134,7 @@ static void setup() {
 		"mov rax, 0xff\n"
 		"mov [0x30100], rax\n"
 
-		"mov rax, [0x30100]\n"
+		"mov rax, [0x3000c]\n"
 		"mov [0x30109], rax\n"
 
 		"sub rsp, 24\n"
