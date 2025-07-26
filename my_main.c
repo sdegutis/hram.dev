@@ -53,7 +53,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, in
 	//	"mov [0x30109], rax\n"
 
 	//	"sub rsp, 24\n"
-	//	"call [0x30038]\n"
+	//	"call [0x30030]\n"
 	//	"add rsp, 24\n"
 
 	//	"ret\n";

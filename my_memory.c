@@ -21,8 +21,8 @@ void setupMemory() {
 	initfont();
 
 	int funcs = 0;
-	sys->addrs[funcs++] = toggleFullscreen;
 	sys->addrs[funcs++] = blitimmediately;
+	sys->addrs[funcs++] = toggleFullscreen;
 }
 
 void blitimmediately() {
