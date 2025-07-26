@@ -51,10 +51,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, in
 
 void blitimmediately();
 
-struct AppState {
+struct System {
 	UINT16 appversion;
-	UINT8 eventid;
-	UINT8 eventarg;
+	UINT8 r1;
+	UINT8 r2;
 	UINT8 inflags;
 	UINT8 keymods;
 	UINT8 cursorcol;
@@ -70,13 +70,12 @@ struct AppState {
 	CHAR reserved2[512];
 };
 
-struct AppState* sys = 0x30000;
-void (*usersignal)() = 0x34000;
+struct System* sys = 0x30000;
+void (*usersignal)(UINT32 evid, UINT32 evarg) = 0x34000;
 static char* usersrc = 0x36000;
 
 static void initfont();
-const char* assembly_error(int err);
-int assemble_string(void* dst, size_t* dst_size, char* src);
+const char* assemble_string(void* dst, size_t* dst_size, char* src);
 
 enum asmevent {
 	asmevent_init,
@@ -138,17 +137,16 @@ static void setup() {
 		"mov [0x30109], rax\n"
 
 		"sub rsp, 24\n"
-		"call [0x30040]\n"
+		"call [0x30038]\n"
 		"add rsp, 24\n"
 
 		"ret\n";
 
 	size_t codesize = 0x2000;
-	int err = assemble_string(usersignal, &codesize, src);
+	const char* err = assemble_string(usersignal, &codesize, src);
 
 	if (err) {
-		printf("err = %s\n", assembly_error(err));
-		printf("err = %d\n", err);
+		printf("err = %s\n", err);
 	}
 	else {
 
@@ -163,10 +161,12 @@ static void setup() {
 	}
 }
 
+static int running = 1;
+
 void callsig(enum asmevent ev, UINT32 arg) {
-	sys->eventid = ev;
-	sys->eventarg = arg;
-	usersignal();
+	if (running) {
+		usersignal(ev, arg);
+	}
 }
 
 void blitimmediately() {

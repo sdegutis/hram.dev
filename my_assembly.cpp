@@ -3,7 +3,7 @@
 #include <asmtk/asmtk.h>
 #include <string>
 
-extern "C" int assemble_string(void* dst, size_t* dst_size, char* src) {
+extern "C" const char* assemble_string(void* dst, size_t* dst_size, char* src) {
 	asmjit::Environment env(asmjit::Arch::kHost);
 	asmjit::CodeHolder code;
 	code.init(env, (uint64_t)dst);
@@ -11,19 +11,15 @@ extern "C" int assemble_string(void* dst, size_t* dst_size, char* src) {
 	asmtk::AsmParser p(&a);
 
 	asmjit::Error err = p.parse(src);
-	if (err) return err;
+	if (err) return asmjit::DebugUtils::errorAsString(err);
 
 	err = code.flatten();
-	if (err) return err;
+	if (err) return asmjit::DebugUtils::errorAsString(err);
 
 	err = code.copyFlattenedData(dst, *dst_size, asmjit::CopySectionFlags::kPadSectionBuffer);
-	if (err) return err;
+	if (err) return asmjit::DebugUtils::errorAsString(err);
 
 	*dst_size = code.codeSize();
 
-	return 0;
-}
-
-extern "C" const char* assembly_error(int err) {
-	return asmjit::DebugUtils::errorAsString(err);
+	return NULL;
 }
