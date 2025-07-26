@@ -34,7 +34,6 @@ enum asmevent {
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, int nCmdShow) {
 	checkLicense();
 	setupMemory();
-	setupWindow(hInstance, nCmdShow);
 	openConsole();
 	loadUserCodeFromDisk();
 
@@ -74,10 +73,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, in
 		}
 		printf("\n");
 
-		callsig(asmevent_init, APP_VERSION);
+		//callsig(asmevent_init, APP_VERSION);
 	}
 
 
+	setupWindow(hInstance, nCmdShow);
 	runLoop();
 	return 0;
 }
@@ -99,14 +99,32 @@ static void openConsole() {
 	freopen_s((FILE**)stdin, "CONIN$", "r", stdin);
 }
 
+#include <Shlwapi.h>
+#include <strsafe.h>
+
 static void loadUserCodeFromDisk() {
-	PWSTR wpath;
-	UINT8 userdir[MAX_PATH];
-	SHGetKnownFolderPath(&FOLDERID_RoamingAppData, 0, NULL, &wpath);
-	WideCharToMultiByte(CP_UTF8, 0, wpath, -1, userdir, MAX_PATH, NULL, NULL);
-	CoTaskMemFree(wpath);
+	PWSTR buf;
+	PWSTR userfile[MAX_PATH];
+	SHGetKnownFolderPath(&FOLDERID_RoamingAppData, 0, NULL, &buf);
+	StrCpyW(userfile, buf);
+	CoTaskMemFree(buf);
+
+	PathAppendW(userfile, L"hram\\hsig.s");
+
+	HANDLE file = CreateFileW(userfile, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	printf("file? %d\n", file == INVALID_HANDLE_VALUE);
+	printf("file? %d\n", CloseHandle(file));
+
+	printf("exist = %d\n", PathFileExistsW(userfile));
+	printf("path = %ls\n", userfile);
 
 
+	//WideCharToMultiByte(CP_UTF8, 0, wpath, -1, userdir, MAX_PATH, NULL, NULL);
+
+
+
+
+	//printf("%s\n", userdir);
 }
 
 
