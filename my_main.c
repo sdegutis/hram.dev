@@ -90,24 +90,12 @@ static void setup() {
 	freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
 	freopen_s((FILE**)stdin, "CONIN$", "r", stdin);
 
-	CHAR szFileName[MAX_PATH];
-	GetModuleFileNameA(NULL, szFileName, MAX_PATH);
-	char* exename = strrchr(szFileName, '\\') + 1;
-	BOOL skipwelcome = strchr(exename, '0') != NULL;
-
 	sys->appversion = 221;
-
 	initfont(sys->font);
 
 	int funcs = 0;
 	sys->addrs[funcs++] = toggleFullscreen;
 	sys->addrs[funcs++] = blitimmediately;
-
-	HMODULE handle = GetModuleHandle(NULL);
-	HRSRC rc = FindResource(handle, MAKEINTRESOURCE(IDR_MYTEXTFILE), MAKEINTRESOURCE(TEXTFILE));
-	HGLOBAL rcData = LoadResource(handle, rc);
-	DWORD size = SizeofResource(handle, rc);
-	const char* data = LockResource(rcData);
 
 	PWSTR wpath;
 	UINT8 userdir[MAX_PATH];
