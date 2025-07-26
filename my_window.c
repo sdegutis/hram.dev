@@ -187,7 +187,7 @@ void runLoop() {
 
 		if (delta >= 30) {
 			last = now;
-			tick(delta, now);
+			mainProg.tick(delta, now);
 		}
 	}
 }
@@ -296,18 +296,17 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 	switch (uMsg) {
 
 	case WM_SYSKEYUP:
-		syskeyUp((int)wParam);
+		mainProg.syskeyUp((int)wParam);
 		return 0;
 
 	case WM_SYSKEYDOWN:
-		syskeyDown((int)wParam);
-		if (wParam == VK_RETURN) { toggleFullscreen(); }
+		mainProg.syskeyDown((int)wParam);
 		return 0;
 
-	case WM_SYSCHAR:    sysChar((const char)wParam); return 0;
-	case WM_CHAR:       keyChar((const char)wParam); return 0;
-	case WM_KEYUP:      keyUp((int)wParam);          return 0;
-	case WM_KEYDOWN:    keyDown((int)wParam);        return 0;
+	case WM_SYSCHAR:    mainProg.sysChar((const char)wParam); return 0;
+	case WM_CHAR:       mainProg.keyChar((const char)wParam); return 0;
+	case WM_KEYUP:      mainProg.keyUp((int)wParam);          return 0;
+	case WM_KEYDOWN:    mainProg.keyDown((int)wParam);        return 0;
 
 	case WM_GETMINMAXINFO: {
 		LPMINMAXINFO lpMMI = (LPMINMAXINFO)lParam;
@@ -350,13 +349,13 @@ LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 
-	case WM_LBUTTONUP:   mouseUp(0);   return 0;
-	case WM_LBUTTONDOWN: mouseDown(0); return 0;
-	case WM_RBUTTONUP:   mouseUp(2);   return 0;
-	case WM_RBUTTONDOWN: mouseDown(2); return 0;
-	case WM_MBUTTONUP:   mouseUp(1);   return 0;
-	case WM_MBUTTONDOWN: mouseDown(1); return 0;
-	case WM_MOUSEWHEEL:  mouseWheel(GET_WHEEL_DELTA_WPARAM(wParam)); return 0;
+	case WM_LBUTTONUP:   mainProg.mouseUp(0);   return 0;
+	case WM_LBUTTONDOWN: mainProg.mouseDown(0); return 0;
+	case WM_RBUTTONUP:   mainProg.mouseUp(2);   return 0;
+	case WM_RBUTTONDOWN: mainProg.mouseDown(2); return 0;
+	case WM_MBUTTONUP:   mainProg.mouseUp(1);   return 0;
+	case WM_MBUTTONDOWN: mainProg.mouseDown(1); return 0;
+	case WM_MOUSEWHEEL:  mainProg.mouseWheel(GET_WHEEL_DELTA_WPARAM(wParam)); return 0;
 
 	case WM_MOUSEMOVE: {
 		static int mousex;
@@ -364,7 +363,7 @@ LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		int x = GET_X_LPARAM(lParam) / scale;
 		int y = GET_Y_LPARAM(lParam) / scale;
 		if (x != mousex || y != mousey)
-			mouseMoved(mousex = x, mousey = y);
+			mainProg.mouseMoved(mousex = x, mousey = y);
 		return 0;
 	}
 

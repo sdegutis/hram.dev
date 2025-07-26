@@ -20,6 +20,9 @@ static void callsig(enum asmevent ev, UINT32 arg);
 
 static int running = 1;
 
+struct Program mainProg;
+
+
 enum asmevent {
 	asmevent_init,
 	asmevent_tick,
@@ -31,9 +34,12 @@ enum asmevent {
 	asmevent_keyup,
 };
 
+void setupMainProg();
+
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, int nCmdShow) {
 	checkLicense();
 	setupMemory();
+	setupMainProg();
 	openConsole();
 	loadUserCodeFromDisk();
 	setupWindow(hInstance, nCmdShow);
@@ -123,6 +129,7 @@ void keyUp(int vk) {
 
 void syskeyDown(int vk) {
 	togglekeystate(vk, 1);
+	if (vk == VK_RETURN) { toggleFullscreen(); }
 	callsig(asmevent_keydown, vk);
 }
 
@@ -139,3 +146,16 @@ void sysChar(const char ch) {
 	//callsig(asmevent_keychar, ch);
 }
 
+void setupMainProg() {
+	mainProg.tick = tick;
+	mainProg.mouseMoved = mouseMoved;
+	mainProg.mouseDown = mouseDown;
+	mainProg.mouseUp = mouseUp;
+	mainProg.mouseWheel = mouseWheel;
+	mainProg.keyDown = keyDown;
+	mainProg.keyUp = keyUp;
+	mainProg.syskeyDown = syskeyDown;
+	mainProg.syskeyUp = syskeyUp;
+	mainProg.keyChar = keyChar;
+	mainProg.sysChar = sysChar;
+}
