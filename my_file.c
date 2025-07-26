@@ -19,16 +19,16 @@ void loadUserCodeFromDisk() {
 
 	if (GetLastError() != ERROR_ALREADY_EXISTS) {
 		static const char src[] =
-			"mov rax, rcx        ; copy event arg to rax\n"
-			"mov [0x30100], rax  ; copy rax to screen pixel 1\n"
-			"\n"
-			"mov rax, [0x30006]\n"
-			"mov [0x30109], rax\n"
-			"\n"
-			"sub rsp, 24\n"
-			"call [0x30030]\n"
-			"add rsp, 24\n"
-			"\n"
+			//"mov rax, rcx        ; copy event arg to rax\n"
+			//"mov [0x30100], rax  ; copy rax to screen pixel 1\n"
+			//"\n"
+			//"mov rax, [0x30006]\n"
+			//"mov [0x30109], rax\n"
+			//"\n"
+			//"sub rsp, 24\n"
+			//"call [0x30030]\n"
+			//"add rsp, 24\n"
+			//"\n"
 			"ret\n";
 
 		DWORD written;
