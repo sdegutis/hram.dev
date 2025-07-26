@@ -44,16 +44,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, in
 	loadUserCodeFromDisk();
 	setupWindow(hInstance, nCmdShow);
 
-	//"mov rax, [0x30107]\n"
-	//"mul rax, 128\n"
-	//"add rax, [0x30106]\n"
-	//"mov [0x30100+rax], rax\n"
-
 	size_t codesize = 0x2000;
 	const char* err = assemble_string(usersignal, &codesize, usersrc);
 
 	if (err) {
 		printf("err = %s\n", err);
+		running = 0;
 	}
 	else {
 		printf("size = %d\n", codesize);
