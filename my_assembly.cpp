@@ -20,6 +20,5 @@ extern "C" const char* assemble_string(void* dst, size_t* dst_size, char* src) {
 	if (err) return asmjit::DebugUtils::errorAsString(err);
 
 	*dst_size = code.codeSize();
-
 	return NULL;
 }

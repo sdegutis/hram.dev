@@ -71,7 +71,12 @@ LRESULT CALLBACK WindowProc2(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 #include "resource.h"
 
-int setupWindow(HINSTANCE hInstance, int nCmdShow) {
+void FAIL() {
+	MessageBox(NULL, L"Could not setup window.", L"Fatal error", 0);
+	ExitProcess(1);
+}
+
+void setupWindow(HINSTANCE hInstance, int nCmdShow) {
 	scale = 5;
 	winw = screen.w * scale;
 	winh = screen.h * scale;
@@ -103,7 +108,7 @@ int setupWindow(HINSTANCE hInstance, int nCmdShow) {
 		winbox.right - winbox.left,
 		winbox.bottom - winbox.top,
 		NULL, NULL, hInstance, NULL);
-	if (hwnd == NULL) { return 1; }
+	if (hwnd == NULL) { FAIL(); }
 
 	const BOOL isDarkMode = 1;
 	HRESULT result = DwmSetWindowAttribute(hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE, &isDarkMode, sizeof(isDarkMode));
@@ -120,7 +125,7 @@ int setupWindow(HINSTANCE hInstance, int nCmdShow) {
 		0, L"HRAM SubWindow Class", L"", WS_CHILD | WS_VISIBLE,
 		subx, suby, subw, subh,
 		hwnd, NULL, hInstance, NULL);
-	if (hsub == NULL) { return 1; }
+	if (hsub == NULL) { FAIL(); }
 
 	DXGI_SWAP_CHAIN_DESC swapchaindesc;
 	ZeroMemory(&swapchaindesc, sizeof(swapchaindesc));
@@ -135,27 +140,27 @@ int setupWindow(HINSTANCE hInstance, int nCmdShow) {
 	D3D_FEATURE_LEVEL featurelevels[] = { D3D_FEATURE_LEVEL_11_0 };
 	HRESULT res;
 	res = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, D3D11_CREATE_DEVICE_BGRA_SUPPORT | D3D11_CREATE_DEVICE_SINGLETHREADED, featurelevels, ARRAYSIZE(featurelevels), D3D11_SDK_VERSION, &swapchaindesc, &swapchain, &device, NULL, &devicecontext);
-	if (res != S_OK) return 1;
+	if (res != S_OK) FAIL();
 
 	res = swapchain->lpVtbl->GetBuffer(swapchain, 0, &IID_ID3D11Texture2D, (void**)&framebuffer);
-	if (res != S_OK || framebuffer == NULL) return 1;
+	if (res != S_OK || framebuffer == NULL) FAIL();
 
 	res = device->lpVtbl->CreateRenderTargetView(device, framebuffer, NULL, &framebufferRTV);
-	if (res != S_OK) return 1;
+	if (res != S_OK) FAIL();
 
 	res = device->lpVtbl->CreateVertexShader(device, MyVertexShader, sizeof(MyVertexShader), 0, &vertexshader);
-	if (res != S_OK) return 1;
+	if (res != S_OK) FAIL();
 
 	res = device->lpVtbl->CreatePixelShader(device, MyPixelShader, sizeof(MyPixelShader), 0, &pixelshader);
-	if (res != S_OK) return 1;
+	if (res != S_OK) FAIL();
 
 	D3D11_RASTERIZER_DESC rasterizerdesc = { D3D11_FILL_SOLID, D3D11_CULL_BACK };
 	res = device->lpVtbl->CreateRasterizerState(device, &rasterizerdesc, &rasterizerstate);
-	if (res != S_OK) return 1;
+	if (res != S_OK) FAIL();
 
 	D3D11_SAMPLER_DESC samplerdesc = { D3D11_FILTER_MIN_MAG_MIP_POINT, D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_WRAP };
 	res = device->lpVtbl->CreateSamplerState(device, &samplerdesc, &samplerstate);
-	if (res != S_OK) return 1;
+	if (res != S_OK) FAIL();
 
 	D3D11_VIEWPORT viewport = { 0, 0, (float)subw, (float)subh, 0, 1 };
 	devicecontext->lpVtbl->RSSetViewports(devicecontext, 1, &viewport);
@@ -166,7 +171,7 @@ int setupWindow(HINSTANCE hInstance, int nCmdShow) {
 	screen.texture = createImage(device, mem, screen.w, screen.h, 0);
 	HeapFree(GetProcessHeap(), 0, mem);
 	res = device->lpVtbl->CreateShaderResourceView(device, screen.texture, NULL, &screen.texturesrv);
-	if (res != S_OK) return 1;
+	if (res != S_OK) FAIL();
 
 	ShowWindow(hwnd, nCmdShow);
 	SetForegroundWindow(hwnd);

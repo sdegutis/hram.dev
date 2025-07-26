@@ -11,34 +11,37 @@
 
 // forward decl
 
+static void checkLicense();
+static void createMemory();
 static void setup();
 
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, int nCmdShow) {
-	SYSTEMTIME time;
-	GetSystemTime(&time);
-	if (time.wYear > 2025 || time.wMonth > 7 || time.wDay > 27) {
-		MessageBox(NULL, L"This HRAM beta version has expired, please get a new one, thanks!", L"HRAM beta version expired", 0);
-		return 0;
-	}
-
-	void* sysmem = VirtualAlloc(0x30000, 0x8000, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
-	if (!sysmem) {
-		MessageBox(NULL, L"Could not allocate sufficient memory.", L"Fatal error", 0);
-		return 1;
-	}
-
-	if (setupWindow(hInstance, nCmdShow)) {
-		MessageBox(NULL, L"Could not setup window.", L"Fatal error", 0);
-		return 1;
-	}
-
+	checkLicense();
+	createMemory();
+	setupWindow(hInstance, nCmdShow);
 	setup();
 	runLoop();
 	return 0;
 }
 
 
+static void checkLicense() {
+	SYSTEMTIME time;
+	GetSystemTime(&time);
+	if (time.wYear > 2025 || time.wMonth > 7 || time.wDay > 27) {
+		MessageBox(NULL, L"This HRAM beta version has expired, please get a new one, thanks!", L"HRAM beta version expired", 0);
+		ExitProcess(0);
+	}
+}
+
+static void createMemory() {
+	void* sysmem = VirtualAlloc(0x30000, 0x8000, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+	if (!sysmem) {
+		MessageBox(NULL, L"Could not allocate sufficient memory.", L"Fatal error", 0);
+		ExitProcess(1);
+	}
+}
 
 void blitimmediately();
 

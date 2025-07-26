@@ -3,7 +3,7 @@
 #include <Windows.h>
 #include <d3d11.h>
 
-int setupWindow(HINSTANCE hInstance, int nCmdShow);
+void setupWindow(HINSTANCE hInstance, int nCmdShow);
 void toggleFullscreen();
 void runLoop();
 void draw();
