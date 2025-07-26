@@ -46,6 +46,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, in
 		"mov rax, [0x30006]\n"
 		"mov [0x30109], rax\n"
 
+		//"mov rax, [0x30107]\n"
+		//"mul rax, 128\n"
+		//"add rax, [0x30106]\n"
+		//"mov [0x30100+rax], rax\n"
+
 		"sub rsp, 24\n"
 		"call [0x30030]\n"
 		"add rsp, 24\n"
