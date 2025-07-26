@@ -6,9 +6,22 @@
 #include <KnownFolders.h>
 #include "my_fontsheet.h"
 
+// window.h
+
 int setupWindow(HINSTANCE hInstance, int nCmdShow);
-static void setup();
+void toggleFullscreen();
 void runLoop();
+void draw();
+
+extern ID3D11Device* device;
+extern ID3D11DeviceContext* devicecontext;
+extern struct Screen screen;
+
+
+// forward decl
+
+static void setup();
+
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, int nCmdShow) {
 	SYSTEMTIME time;
@@ -36,13 +49,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, in
 
 
 
-extern ID3D11Device* device;
-extern ID3D11DeviceContext* devicecontext;
-extern struct Screen screen;
-
-
-void draw();
-void toggleFullscreen();
 void blitimmediately();
 
 struct AppState {
@@ -66,8 +72,7 @@ struct AppState {
 
 struct AppState* sys = 0x30000;
 void (*usersignal)() = 0x34000;
-static char* userasm = 0x34000;
-static char* usersrc = 0x35000;
+static char* usersrc = 0x36000;
 
 int aplusbtimes2(int a, int b) {
 	return (a + b) * 2;
@@ -122,8 +127,8 @@ static void setup() {
 	WideCharToMultiByte(CP_UTF8, 0, wpath, -1, userdir, MAX_PATH, NULL, NULL);
 	CoTaskMemFree(wpath);
 
-	unsigned char* base = userasm;
-	memset(base, 100, 100);
+	unsigned char* base = usersignal;
+	memset(base, 0, 100);
 
 	for (int i = 0; i < 10; i++) {
 		printf("%x ", base[i]);
