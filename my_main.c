@@ -17,17 +17,13 @@
 
 static void openConsole();
 static void checkLicense();
-static void callsig(enum asmevent ev, UINT32 arg);
-
-static int running = 1;
+void setupMainProg();
 
 struct Program mainProg;
-
 struct Program* activeProg = &userProg;
 
 
 
-void setupMainProg();
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, int nCmdShow) {
 	checkLicense();
@@ -45,10 +41,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, in
 
 	if (err) {
 		printf("err = %s\n", err);
-		running = 0;
 	}
 	else {
-		printf("size = %d\n", codesize);
+		printf("size = %llu\n", codesize);
 
 
 		activeProg->init();
