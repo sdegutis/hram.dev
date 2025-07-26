@@ -26,16 +26,6 @@ struct Program mainProg;
 struct Program* activeProg = &userProg;
 
 
-enum asmevent {
-	asmevent_init,
-	asmevent_tick,
-	asmevent_mousemove,
-	asmevent_mousewheel,
-	asmevent_mousedown,
-	asmevent_mouseup,
-	asmevent_keydown,
-	asmevent_keyup,
-};
 
 void setupMainProg();
 
