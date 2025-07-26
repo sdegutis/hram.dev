@@ -199,6 +199,7 @@
     <ClCompile Include="my_asm.cpp" />
     <ClCompile Include="my_font.c" />
     <ClCompile Include="my_main.c" />
+    <ClCompile Include="my_memory.c" />
     <ClCompile Include="my_window.c" />
   </ItemGroup>
   <ItemGroup>
@@ -304,6 +305,7 @@
     <ClInclude Include="asmtk\strtod.h" />
     <ClInclude Include="my_asm.h" />
     <ClInclude Include="my_font.h" />
+    <ClInclude Include="my_memory.h" />
     <ClInclude Include="my_window.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="my_screen.h" />

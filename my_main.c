@@ -8,50 +8,26 @@
 #include "my_font.h"
 #include "my_window.h"
 #include "my_asm.h"
+#include "my_memory.h"
 
 
 // forward decl
 
 static void openConsole();
 static void checkLicense();
-static void setupMemory();
 static void setup();
-static void blitimmediately();
 
 
 // memory
-
-struct System {
-	UINT16 appversion;
-	UINT8 r1;
-	UINT8 r2;
-	UINT8 inflags;
-	UINT8 keymods;
-	UINT8 cursorcol;
-	UINT8 cursorrow;
-	UINT32 time;
-	UINT8 mousex;
-	UINT8 mousey;
-	UINT16 reserved1;
-	UINT8 keys[32];
-	UINT64 addrs[26];
-	UINT8 screen[128 * 72];
-	UINT8 font[16 * 4 * 6 * 6];
-	CHAR reserved2[512];
-};
-
-struct System* sys = 0x30000;
-void (*usersignal)(UINT32 evid, UINT32 evarg) = 0x34000;
-static char* usersrc = 0x36000;
 
 
 // main
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, int nCmdShow) {
-	openConsole();
 	checkLicense();
 	setupMemory();
 	setupWindow(hInstance, nCmdShow);
+	openConsole();
 	setup();
 	runLoop();
 	return 0;
@@ -66,20 +42,6 @@ static void checkLicense() {
 	}
 }
 
-static void setupMemory() {
-	void* sysmem = VirtualAlloc(0x30000, 0x8000, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
-	if (!sysmem) {
-		MessageBox(NULL, L"Could not allocate sufficient memory.", L"Fatal error", 0);
-		ExitProcess(1);
-	}
-
-	sys->appversion = 221;
-	initfont(sys->font);
-
-	int funcs = 0;
-	sys->addrs[funcs++] = toggleFullscreen;
-	sys->addrs[funcs++] = blitimmediately;
-}
 
 
 
@@ -160,11 +122,6 @@ void callsig(enum asmevent ev, UINT32 arg) {
 	if (running) {
 		usersignal(ev, arg);
 	}
-}
-
-static void blitimmediately() {
-	devicecontext->lpVtbl->UpdateSubresource(devicecontext, screen.texture, 0, NULL, &sys->screen, 128, 0);
-	draw();
 }
 
 void tick(DWORD delta, DWORD now) {

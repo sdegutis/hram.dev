@@ -219,6 +219,9 @@
     <ClCompile Include="my_font.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="my_memory.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -534,6 +537,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="my_asm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="my_memory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
