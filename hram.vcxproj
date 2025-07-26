@@ -302,6 +302,7 @@
     <ClInclude Include="asmtk\parserutils.h" />
     <ClInclude Include="asmtk\strtod.h" />
     <ClInclude Include="my_fontsheet.h" />
+    <ClInclude Include="my_window.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="my_screen.h" />
   </ItemGroup>

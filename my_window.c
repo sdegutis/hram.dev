@@ -6,6 +6,8 @@
 
 #include <windowsx.h>
 #include <dwmapi.h>
+
+#include "my_window.h"
 #include "my_screen.h"
 
 #include "PixelShader.h"
@@ -62,7 +64,6 @@ int winh;
 
 void draw();
 void toggleFullscreen();
-void setup_screen(ID3D11Device* device, struct Screen* scr);
 ID3D11Texture2D* createImage(ID3D11Device* device, void* data, UINT w, UINT h, UINT pw);
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

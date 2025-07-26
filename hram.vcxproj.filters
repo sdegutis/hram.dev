@@ -527,6 +527,9 @@
     <ClInclude Include="my_screen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="my_window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="VertexShader.hlsl">

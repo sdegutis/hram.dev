@@ -4,18 +4,9 @@
 #include "resource.h"
 #include <shlobj_core.h>
 #include <KnownFolders.h>
+
 #include "my_fontsheet.h"
-
-// window.h
-
-int setupWindow(HINSTANCE hInstance, int nCmdShow);
-void toggleFullscreen();
-void runLoop();
-void draw();
-
-extern ID3D11Device* device;
-extern ID3D11DeviceContext* devicecontext;
-extern struct Screen screen;
+#include "my_window.h"
 
 
 // forward decl
