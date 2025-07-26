@@ -3,11 +3,12 @@
 #include <intsafe.h>
 
 struct Memory {
+	UINT32 time;
 	UINT8 cursorcol;
 	UINT8 cursorrow;
-	UINT32 time;
 	UINT8 mousex;
 	UINT8 mousey;
+	UINT8 reserved1[8];
 	UINT8 keys[32];
 	UINT64 addrs[26];
 	UINT8 screen[128 * 72];
