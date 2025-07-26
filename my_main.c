@@ -18,7 +18,7 @@ static void checkLicense();
 static void loadUserCodeFromDisk();
 static void callsig(enum asmevent ev, UINT32 arg);
 
-static int running = 1;
+static int running = 0;
 
 enum asmevent {
 	asmevent_init,
@@ -37,44 +37,44 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, in
 	openConsole();
 	loadUserCodeFromDisk();
 
-	unsigned char* base = usersignal;
-	memset(base, 0, 100);
+	//unsigned char* base = usersignal;
+	//memset(base, 0, 100);
 
-	for (int i = 0; i < 10; i++) {
-		printf("%x ", base[i]);
-	}
-	printf("\n");
+	//for (int i = 0; i < 10; i++) {
+	//	printf("%x ", base[i]);
+	//}
+	//printf("\n");
 
-	char* src =
-		"mov rax, 0xff\n"
-		"mov [0x30100], rax\n"
+	//char* src =
+	//	"mov rax, 0xff\n"
+	//	"mov [0x30100], rax\n"
 
-		"mov rax, [0x30006]\n"
-		"mov [0x30109], rax\n"
+	//	"mov rax, [0x30006]\n"
+	//	"mov [0x30109], rax\n"
 
-		"sub rsp, 24\n"
-		"call [0x30038]\n"
-		"add rsp, 24\n"
+	//	"sub rsp, 24\n"
+	//	"call [0x30038]\n"
+	//	"add rsp, 24\n"
 
-		"ret\n";
+	//	"ret\n";
 
-	size_t codesize = 0x2000;
-	const char* err = assemble_string(usersignal, &codesize, src);
+	//size_t codesize = 0x2000;
+	//const char* err = assemble_string(usersignal, &codesize, src);
 
-	if (err) {
-		printf("err = %s\n", err);
-	}
-	else {
+	//if (err) {
+	//	printf("err = %s\n", err);
+	//}
+	//else {
 
-		printf("size = %d\n", codesize);
+	//	printf("size = %d\n", codesize);
 
-		for (int i = 0; i < codesize; i++) {
-			printf("%x ", base[i]);
-		}
-		printf("\n");
+	//	for (int i = 0; i < codesize; i++) {
+	//		printf("%x ", base[i]);
+	//	}
+	//	printf("\n");
 
-		//callsig(asmevent_init, APP_VERSION);
-	}
+	//	//callsig(asmevent_init, APP_VERSION);
+	//}
 
 
 	setupWindow(hInstance, nCmdShow);
@@ -111,12 +111,12 @@ static void loadUserCodeFromDisk() {
 
 	PathAppendW(userfile, L"hram\\hsig.s");
 
-	HANDLE file = CreateFileW(userfile, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-	printf("file? %d\n", file == INVALID_HANDLE_VALUE);
-	printf("file? %d\n", CloseHandle(file));
+	//HANDLE file = CreateFileW(userfile, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	//printf("file? %d\n", file == INVALID_HANDLE_VALUE);
+	//printf("file? %d\n", CloseHandle(file));
 
-	printf("exist = %d\n", PathFileExistsW(userfile));
-	printf("path = %ls\n", userfile);
+	//printf("exist = %d\n", PathFileExistsW(userfile));
+	//printf("path = %ls\n", userfile);
 
 
 	//WideCharToMultiByte(CP_UTF8, 0, wpath, -1, userdir, MAX_PATH, NULL, NULL);
