@@ -122,9 +122,9 @@ void tick(DWORD delta, DWORD now) {
 }
 
 void mouseMoved(int x, int y) {
-	callsig(asmevent_mousemove, 7);
 	sys->mousex = x;
 	sys->mousey = y;
+	callsig(asmevent_mousemove, 7);
 }
 
 void togglekeystate(int vk, int down) {
