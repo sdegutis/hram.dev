@@ -18,7 +18,7 @@ static void checkLicense();
 static void loadUserCodeFromDisk();
 static void callsig(enum asmevent ev, UINT32 arg);
 
-static int running = 0;
+static int running = 1;
 
 enum asmevent {
 	asmevent_init,
@@ -36,48 +36,34 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, in
 	setupMemory();
 	openConsole();
 	loadUserCodeFromDisk();
-
-	//unsigned char* base = usersignal;
-	//memset(base, 0, 100);
-
-	//for (int i = 0; i < 10; i++) {
-	//	printf("%x ", base[i]);
-	//}
-	//printf("\n");
-
-	//char* src =
-	//	"mov rax, 0xff\n"
-	//	"mov [0x30100], rax\n"
-
-	//	"mov rax, [0x30006]\n"
-	//	"mov [0x30109], rax\n"
-
-	//	"sub rsp, 24\n"
-	//	"call [0x30030]\n"
-	//	"add rsp, 24\n"
-
-	//	"ret\n";
-
-	//size_t codesize = 0x2000;
-	//const char* err = assemble_string(usersignal, &codesize, src);
-
-	//if (err) {
-	//	printf("err = %s\n", err);
-	//}
-	//else {
-
-	//	printf("size = %d\n", codesize);
-
-	//	for (int i = 0; i < codesize; i++) {
-	//		printf("%x ", base[i]);
-	//	}
-	//	printf("\n");
-
-	//	//callsig(asmevent_init, APP_VERSION);
-	//}
-
-
 	setupWindow(hInstance, nCmdShow);
+
+
+	char* src =
+		"mov rax, rcx\n"
+		"mov [0x30100], rax\n"
+
+		"mov rax, [0x30006]\n"
+		"mov [0x30109], rax\n"
+
+		"sub rsp, 24\n"
+		"call [0x30030]\n"
+		"add rsp, 24\n"
+
+		"ret\n";
+
+	size_t codesize = 0x2000;
+	const char* err = assemble_string(usersignal, &codesize, src);
+
+	if (err) {
+		printf("err = %s\n", err);
+	}
+	else {
+		printf("size = %d\n", codesize);
+		callsig(asmevent_init, APP_VERSION);
+	}
+
+
 	runLoop();
 	return 0;
 }
