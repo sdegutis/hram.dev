@@ -11,3 +11,5 @@ void draw();
 extern ID3D11Device* device;
 extern ID3D11DeviceContext* devicecontext;
 extern struct Screen screen;
+
+extern HWND hwnd;

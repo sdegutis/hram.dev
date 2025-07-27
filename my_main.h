@@ -18,3 +18,5 @@ struct Program {
 };
 
 extern struct Program mainProg;
+
+void reloadUserScript();

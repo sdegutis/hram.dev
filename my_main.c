@@ -30,11 +30,23 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, in
 	setupMemory();
 	setupMainProg();
 	setupUserProg();
-	//openConsole();
+	openConsole();
 	loadUserCodeFromDisk();
 	setupWindow(hInstance, nCmdShow);
+	reloadUserScript();
+	runLoop();
+	return 0;
+}
 
+void reloadUserScript() {
+	DWORD read;
+	SetFilePointer(file, 0, NULL, FILE_BEGIN);
+	ReadFile(file, sys->progsrc, 0x2000, &read, NULL);
+	sys->progsrc[read] = 0;
 
+	printf("============\n");
+	printf("%s\n", sys->progsrc);
+	printf("============\n");
 
 	size_t codesize = 0x2000;
 	const char* err = assemble_string(usersignal, &codesize, sys->progsrc);
@@ -43,23 +55,15 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, in
 		printf("err = %s\n", err);
 	}
 	else {
-		printf("size = %llu\n", codesize);
-
-
 		activeProg->init();
-
-		//callsig(asmevent_init, APP_VERSION);
+		printf("size = %llu\n", codesize);
 	}
-
-
-	runLoop();
-	return 0;
 }
 
 static void checkLicense() {
 	SYSTEMTIME time;
 	GetSystemTime(&time);
-	if (time.wYear > 2025 || time.wMonth > 7 || time.wDay > 27) {
+	if (time.wYear > 2025 || time.wMonth > 7 || time.wDay > 29) {
 		MessageBox(NULL, L"This HRAM beta version has expired, please get a new one, thanks!", L"HRAM beta version expired", 0);
 		ExitProcess(0);
 	}
