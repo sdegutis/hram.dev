@@ -169,26 +169,28 @@ void setupWindow(HINSTANCE hInstance, int nCmdShow) {
 	return 0;
 }
 
-void runLoop() {
-	DWORD last = 0, now, delta;
-	MSG msg = { 0 };
+static void checkTick() {
+	static DWORD last = 0;
+	DWORD now = GetTickCount();
+	DWORD delta = now - last;
+	if (delta >= 30) {
+		last = now;
+		mainProg.tick(delta, now);
+	}
+}
 
+void runLoop() {
+	MSG msg = { 0 };
 	while (1) {
 		Sleep(1);
 
-		now = GetTickCount();
-		delta = now - last;
-
-		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 			if (msg.message == WM_QUIT) ExitProcess(0);
+			checkTick();
 		}
-
-		if (delta >= 30) {
-			last = now;
-			mainProg.tick(delta, now);
-		}
+		checkTick();
 	}
 }
 
