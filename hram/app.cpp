@@ -9,7 +9,7 @@
 #include "thread.h"
 #include "mutex.h"
 
-int luaopen_lpeg(lua_State* L);
+extern "C" int luaopen_lpeg(lua_State* L);
 
 static lua_State* mvm;
 
