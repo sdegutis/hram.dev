@@ -363,3 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 /PixelShader.h
 /VertexShader.h
+!/asmjit/x86
+!/asmjit/arm
