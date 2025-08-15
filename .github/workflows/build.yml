@@ -19,4 +19,4 @@ jobs:
         uses: microsoft/setup-msbuild@v2
       
       - name: Build app
-        run: msbuild hram.sln /p:configuration=Release /p:platform=x64 /t:restore
+        run: msbuild hram.sln /p:configuration=Release /p:platform=x64
