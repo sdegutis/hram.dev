@@ -26,7 +26,7 @@ struct Program* activeProg = &userProg;
 
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, PWSTR pCmdLine, int nCmdShow) {
-	checkLicense();
+	//checkLicense();
 	setupMemory();
 	setupMainProg();
 	setupUserProg();
