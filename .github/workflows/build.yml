@@ -20,4 +20,4 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'x64/Release/hram.exe'
+          path: 'x64/Release/'
