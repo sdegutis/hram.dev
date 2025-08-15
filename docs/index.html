@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" href="https://fonts.gstatic.com/s/firacode/v26/uU9NCBsR6Z2vfE9aq3bh3dSD.woff2" as="font" type="font/woff" crossorigin>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+  @font-face {
+    font-family: 'Fira Code';
+    font-style: normal;
+    font-weight: 300 700;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/firacode/v26/uU9NCBsR6Z2vfE9aq3bh3dSD.woff2) format('woff2');
+  }
+
+  html {
+    color-scheme: light dark;
+    background-color: light-dark(#ddd, #333);
+    color:            light-dark(#000, #ddd);
+    font-family: 'Fira Code';
+    font-optical-sizing: auto;
+  }
+
+  body {
+    margin: 0 calc(100vw / 2 - 40ch / 2);
+  }
+
+  main {
+    white-space: pre;
+    overflow-x: visible;
+    width: 40ch;
+    display: inline-block;
+    position: relative;
+    --inset: -12px;
+  }
+
+  @media (min-width: 70ch) {
+    body { margin-top: 2em; margin-bottom: 2em }
+    main { --inset: -2em }
+  }
+
+  main:focus {
+    caret-color: red;
+    outline: none;
+    border-right: 1px solid #0007;
+  }
+
+  main::selection {
+    background-color: #9099;
+  }
+
+  main::before {
+    content: '';
+    z-index: -1;
+    position: absolute;
+    inset: 0 var(--inset);
+    background-color: light-dark(#333, #000);
+    opacity: .1;
+  }
+
+  a { font-weight: bold; text-decoration: none }
+  a:hover { text-decoration: underline }
+
+  h1, h2 { all: unset; font-weight: bold; }
+  a, u { text-underline-offset: 2px; }
+  a { color: light-dark(#940, #f91) }
+  b { color: light-dark(#909, #f7f) }
+  u { color: light-dark(#070, #1d1) }
+  i { color: light-dark(#409, #7cf) }
+
+  h2 {
+    scroll-margin-top: 1em;
+  }
+
+  h1 { color: #f7f }
+
+  #buynow { display: inline-block; }
+  #buynow:hover { text-decoration: none; }
+  #buynow:hover span { text-decoration: underline; }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    if (location.protocol==='file:') {
+      const main = document.querySelector('main')
+      main.contentEditable = true
+      document.onkeydown = e => {
+        if (e.ctrlKey && e.key=='s') {
+          e.preventDefault()
+          navigator.clipboard.writeText(main.innerHTML)
+        }
+      }
+    }
+  })
+</script>
+
+<title>hram.dev</title>
+
+
+<main id="top">
+
+<h1>
+       _  _    ___     _     _  _   
+      | || |  | _ \   / \   | \/ |  
+      | __ |  |   /  | ^ |  | __ |  
+      |_||_|  |_\_\  |_|_|  |_||_|  
+
+    THE HAND ROLLED ASSEMBLY MACHINE
+    ================================
+   
+       /// assembly made fun! ///   
+</h1>
+
+          ( gif coming soon )
+
+
+HRAM is a <i>1979-era computer</i> simulator
+that lets you experience the <i>pure joy</i>
+of <i>real assembly</i> computer programming
+
+the <i>simplicity</i> of HRAM makes it ideal
+whether you're just <i>learning assembly</i>
+or an <i>expert</i> wanting a real challenge
+
+
+        <a href="https://buy.stripe.com/00waEYcY44Rjg0L8fJ3ks06" id="buynow">|--------------------|
+|                    |
+|    <span>BUY IT TODAY</span>    |
+|                    |
+|--------------------|</a>
+
+     download   ::  <a href="hram-120.zip">hram-120.zip</a>
+     price      ::  <i>$10.24 usd</i>
+     platforms  ::  <i>x64 windows 10+</i>
+     community  ::  <a target="_blank" href="https://groups.google.com/g/90sdev">google groups</a>
+
+<b id="manual">========================================
+   _  _    _      _   _ _    _    _
+  | \/ |  / \  |\| | | | |  / \  | |    
+  | __ | | ^ | | \ | | | | | ^ | | |_   
+  |_||_| |_|_| |_|\| |___| |_|_| |___|  
+</b>
+
+========================================
+<h2 id="specs"><a href="#specs"># specs</a></h2>                            <a href="#top"># top</a>
+
+  graphics   ::  <i>128x72</i>, 8-bit screen
+  colors     ::  red/green, <i>256</i> total
+  memory     ::  <i>32kb</i>, all pages <i>exec</i>
+
+
+========================================
+<h2 id="overview"><a href="#overview"># overview</a></h2>                         <a href="#top"># top</a>
+
+you write real, native assembly
+that uses real memory addresses
+in order to write to the screen
+and handle keyboard/mouse input
+
+your code is a signal handler function
+with signature void signal(byte, byte)
+and is called on certain system events
+whose args are defined in signal table
+
+typically you respond to input/signals
+then update the screen memory and blit
+in order to make small fun video games
+
+
+========================================
+<h2 id="memory-table"><a href="#memory-table"># memory table</a></h2>                     <a href="#top"># top</a>
+
+<b>  ADDR     SIZE   PURPOSE</b>
+  <u>0x30000</u>     <i>4</i>   clock (+/- 15ms)
+  <u>0x30004</u>     <i>2</i>   caret (col row)
+  <u>0x30006</u>     <i>2</i>   mouse (x y)
+  <u>0x30008</u>    <i> 8</i>   [reserved]
+  <u>0x30010</u>    <i>20</i>   keys (256 bits)
+  <u>0x30030</u>    <i>d0</i>   c-addresses
+  <u>0x30100</u>  <i>2400</i>   screen[72][128]
+  <u>0x32500</u>   <i>900</i>   fontsheet[16x6][4x6]
+  <u>0x32e00</u>   <i>200</i>   [reserved]
+  <u>0x33000</u>  <i>1000</i>   free memory
+  <u>0x34000</u>  <i>2000</i>   assembly program
+  <u>0x36000</u>  <i>2000</i>   assembly source
+
+
+========================================
+<h2 id="signal-table"><a href="#signal-table"># signal table</a></h2>                     <a href="#top"># top</a>
+
+<b>  EVENT       CL   DL</b>
+  init         <u>0</u>   <i>hram-version</i>
+  frame        <u>1</u>   <i>delta</i>
+  mousemove    <u>2</u>   n/a
+  mousewheel   <u>3</u>   <i>delta</i>
+  mousedown    <u>4</u>   <i>button</i>
+  mouseup      <u>5</u>   <i>button</i>
+  keydown      <u>6</u>   <i>keycode</i>
+  keyup        <u>7</u>   <i>keycode</i>
+
+
+========================================
+<h2 id="signal-table"><a href="#signal-table"># c-addresses</a> </h2>                     <a href="#top"># top</a>
+
+  void <b>blit</b>()
+  void <b>togglefullscreen</b>()
+  <i>[rest reserved]</i>
+
+
+========================================
+<h2 id="recipes"><a href="#recipes"># recipes</a> </h2>                         <a href="#top"># top</a>
+
+<i>; set single pixel</i>
+
+<b>mov</b> byte ptr [<u>0x30101</u>], 0xf0
+
+
+<i>; draw mouse
+</i>
+<b>mov</b> <i>al</i>, [<u>0x30007</u>]  <i>; al = mousey</i>
+<b>mov</b> <i>bl</i>, 128        <i>; bl = 128</i>
+<b>mul</b> <i>bl</i>             <i>; al = al * bl</i>
+<b>add</b> <i>al</i>, [<u>0x30006</u>]  <i>; al = al + mousex</i>
+                   <i>; al + 0x30100 = 0xf0</i>
+<b>mov</b> byte ptr [<i>rax</i> + <u>0x30100</u>], 0xf0
+
+
+<i>; call blit()
+</i>
+<b>sub</b> <i>rsp</i>, <u>24</u>        <i>; setup shadow stack</i>
+<b>call</b> [<u>0x30030</u>]     <i>; call *(0x30030)</i>
+<b>add</b> <i>rsp</i>, <u>24</u>        <i>; remove shadow stack</i>
+
+
+            [ END OF MANUAL ]
+
+
+
+
+  <i>====================================
+  copyright (c) novo cantico llc, 2025</i>
+
+</main>
