@@ -29,4 +29,6 @@ jobs:
 
       - uses: ncipollo/release-action@v1
         with:
+          commit: win32asmjit
+          tag: ${{ github.event.repository.updated_at }}
           artifacts: "hram.zip"
