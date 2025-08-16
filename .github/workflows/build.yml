@@ -19,14 +19,11 @@ jobs:
       - name: Build app
         run: msbuild hram.sln /p:configuration=Release /p:platform=x64
 
-      # - name: Upload Artifact
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: 'hram'
-      #     path: 'x64/Release/hram.exe'
+      - name: Create zip file
+        run: Compress-Archive x64/Release/hram.exe hram.zip
 
       - name: Upload Release Asset
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run:
-          gh release upload ${{github.event.release.tag_name}} "x64/Release/hram.exe"
+          gh release upload ${{github.event.release.tag_name}} hram.zip
