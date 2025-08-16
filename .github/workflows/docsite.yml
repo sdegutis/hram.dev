@@ -6,8 +6,6 @@ on:
   push:
     branches: ["win32asmjit"]
     paths:
-      - '!.vscode/**'
-      - '!.gitignore'
       - 'docs/**'
 
   # Allows you to run this workflow manually from the Actions tab
