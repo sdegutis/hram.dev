@@ -27,3 +27,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run:
           gh release upload ${{github.event.release.tag_name}} hram.zip
+          gh release upload ${{github.event.release.tag_name}} x64/Release/hram.exe
