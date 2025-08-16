@@ -23,20 +23,25 @@ jobs:
       - name: Build app
         run: msbuild hram.sln /p:configuration=Release /p:platform=x64
 
-      - name: Upload Artifact
-        id: artifact-upload-step
-        uses: actions/upload-artifact@v4
-        with:
-          name: 'hram'
-          path: 'x64/Release/hram.exe'
+      # - name: Upload Artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: 'hram'
+      #     path: 'x64/Release/hram.exe'
 
       - name: Put current date into a variable
         run: |
           $NOW=& Get-Date -format yyyy-MM-dd.HH-mm
           echo "NOW=$NOW" >> $env:GITHUB_ENV
 
+      # - uses: ncipollo/release-action@v1
+      #   with:
+      #     commit: win32asmjit
+      #     tag: ${{env.NOW}}
+      #     artifacts: ${{ steps.artifact-upload-step.outputs.artifact-url }}
+
       - uses: ncipollo/release-action@v1
         with:
           commit: win32asmjit
           tag: ${{env.NOW}}
-          artifacts: ${{ steps.artifact-upload-step.outputs.artifact-url }}
+          artifacts: "x64/Release/hram.exe"
