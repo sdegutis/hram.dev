@@ -52,7 +52,7 @@ static const char src[] =
 
 DWORD WINAPI ThreadProc(_In_ LPVOID lpParameter) {
 	while (1) {
-		printf("waiting\n");
+		printf("waiting...\n");
 		WaitForSingleObject(watcher, INFINITE);
 		FindNextChangeNotification(watcher);
 		SendMessage(hwnd, WM_APP + 1, 0, 0);
